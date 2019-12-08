@@ -7,9 +7,22 @@
 //
 
 import Foundation
+import Coredatable
 import CoreData
 
-final class Person: NSManagedObject {
-    @NSManaged var id: Int
-    @NSManaged var name: String
+final class Person: NSManagedObject, CoreDataCodable {
+    typealias CodingKeys = CoreDataDefaultCodingKeys
+    
+    @NSManaged var personId: Int
+    @NSManaged var fullName: String
+}
+
+final class PersonDiffKeys: NSManagedObject, CoreDataCodable {
+    @NSManaged var personId: Int
+    @NSManaged var fullName: String
+    
+    enum CodingKeys: String, CoreDataCodingKey {
+        case personId = "id"
+        case fullName = "name"
+    }
 }
