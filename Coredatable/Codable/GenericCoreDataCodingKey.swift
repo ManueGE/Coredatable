@@ -1,5 +1,5 @@
 //
-//  CoreDataCodingKey.swift
+//  GenericCoreDataCodingKey.swift
 //  Coredatable
 //
 //  Created by Manu on 08/12/2019.
@@ -12,7 +12,7 @@ import Foundation
 /// The reason of having this instead of using default `CodingKey` is that in a `CodingKey` enum, there is no way to access the raw name of the case,
 /// and we need it to use it as property name in a core data entity.
 /// For that reason, we build this protocol and any enum that implements it (and no `CodingKey`) can access its case name.
-public protocol CoreDataCodingKey {
+public protocol GenericCoreDataCodingKey {
     init?(stringValue: String)
     var stringValue: String { get }
     
@@ -20,27 +20,31 @@ public protocol CoreDataCodingKey {
     var propertyName: String { get }
 }
 
-/// Extension which automatically implements CoreDataCodingKey in `RawRepresentable` where `RawValue` is `String`
-/// It uses the raw nome of the enum case as property name
-public extension CoreDataCodingKey where Self: RawRepresentable, RawValue == String {
+/// Use this alias in string typed enums to make them conform `GenericCoreDataCodingKey` automatically
+public typealias CoreDataCodingKey = GenericCoreDataCodingKey & CaseIterable
+
+
+/// Extension which automatically implements `GenericCoreDataCodingKey` in string typed enums which are `CaseIterable` too.
+/// It uses the raw nome of the enum case as `propertyName`.
+/// It iterates over the cases to find one named as the `propertyName` to build instances from it.
+public extension GenericCoreDataCodingKey where Self: RawRepresentable, RawValue == String, Self: CaseIterable {
     init?(stringValue: String) { self.init(rawValue: stringValue) }
     var stringValue: String { rawValue}
-    var propertyName: String { String(describing: self) }
     
-}
-
-public extension CoreDataCodingKey where Self: CaseIterable {
     init?(propertyName: String) {
         guard let key = Self.allCases.first(where: { propertyName == $0.propertyName }) else {
             return nil
         }
         self = key
     }
+    var propertyName: String { String(describing: self) }
+    
 }
 
-/// An implementation of `CoreDataCodingKey` where all the properties are taken in account
+
+/// An implementation of `GenericCoreDataCodingKey` where all the properties of the json are taken in account
 /// and they have exactly the same name as the json keys.
-public struct CoreDataDefaultCodingKeys: CoreDataCodingKey {
+public struct CoreDataDefaultCodingKeys: GenericCoreDataCodingKey {
     public let stringValue: String
     public init?(stringValue: String) {
         self.stringValue = stringValue
@@ -54,8 +58,8 @@ public struct CoreDataDefaultCodingKeys: CoreDataCodingKey {
 
 // MARK: - CoreDataCodingKeyWrapper
 
-/// A Wrapper to convert `CoreDataCodingKey` into regular `CodingKey`
-internal struct CoreDataCodingKeyWrapper<Key: CoreDataCodingKey>: CodingKey {
+/// A Wrapper to convert `GenericCoreDataCodingKey` into regular `CodingKey`
+internal struct CoreDataCodingKeyWrapper<Key: GenericCoreDataCodingKey>: CodingKey {
     let key: Key
     var stringValue: String { key.stringValue }
     
@@ -75,6 +79,6 @@ internal struct CoreDataCodingKeyWrapper<Key: CoreDataCodingKey>: CodingKey {
     init?(intValue: Int) { return nil }
 }
 
-extension CoreDataCodingKey {
+internal extension GenericCoreDataCodingKey {
     var standardCodingKey: CoreDataCodingKeyWrapper<Self> { CoreDataCodingKeyWrapper(self) }
 }

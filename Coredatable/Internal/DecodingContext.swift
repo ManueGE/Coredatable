@@ -15,7 +15,7 @@ import CoreData
     func decodedValue(forKey key: String) -> Any?
 }
 
-final class DecodingContext<Keys: CoreDataCodingKey>: NSObject, DecodingContextType {
+final class DecodingContext<Keys: GenericCoreDataCodingKey>: NSObject, DecodingContextType {
     private typealias BridgeCodingKeys = CoreDataCodingKeyWrapper<Keys>
     private let container: KeyedDecodingContainer<BridgeCodingKeys>
     @objc let managedObjectContext: NSManagedObjectContext

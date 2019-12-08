@@ -15,7 +15,7 @@ public typealias CoreDataCodable = CoreDataDecodable & CoreDataEncodable
 // MARK: - Decodable
 
 public protocol CoreDataDecodable: NSManagedObject, Decodable {
-    associatedtype CodingKeys: CoreDataCodingKey
+    associatedtype CodingKeys: GenericCoreDataCodingKey
 }
 
 public extension CoreDataDecodable {
@@ -23,16 +23,10 @@ public extension CoreDataDecodable {
         try self.init(from: decoder, codingKeys: CodingKeys.self)
     }
     
-    init<Keys: CoreDataCodingKey>(from decoder: Decoder, codingKeys: Keys.Type) throws {
+    init<Keys: GenericCoreDataCodingKey>(from decoder: Decoder, codingKeys: Keys.Type) throws {
         let context = try DecodingContext(decoder: decoder, codingKeys: Keys.self)
         try self.init(decodingContext: context)
     }
-}
-
-public protocol UsingDefaultKeys: NSManagedObject {}
-
-public extension UsingDefaultKeys {
-    typealias CodingKeys = CoreDataDefaultCodingKeys
 }
 
 public enum CoreDataCodableError: Error {
@@ -42,7 +36,7 @@ public enum CoreDataCodableError: Error {
 // MARK: - Encodable
 
 public protocol CoreDataEncodable: NSManagedObject, Encodable {
-    associatedtype CodingKeys: CoreDataCodingKey
+    associatedtype CodingKeys: GenericCoreDataCodingKey
 }
 
 extension CoreDataEncodable {
@@ -50,7 +44,7 @@ extension CoreDataEncodable {
         try encode(to: encoder, codingKeys: CodingKeys.self)
     }
     
-    public func encode<Keys: CoreDataCodingKey>(to encoder: Encoder, codingKeys: Keys.Type) throws {
+    public func encode<Keys: GenericCoreDataCodingKey>(to encoder: Encoder, codingKeys: Keys.Type) throws {
         var container = encoder.container(keyedBy: CoreDataCodingKeyWrapper<Keys>.self)
         try entity.attributesByName.forEach { item in
             

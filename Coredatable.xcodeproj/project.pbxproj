@@ -24,7 +24,7 @@
 		649E74B9239C5F7C00962EE1 /* personSnakeCase.json in Resources */ = {isa = PBXBuildFile; fileRef = 649E74B6239C5F7C00962EE1 /* personSnakeCase.json */; };
 		649E74BA239C5F7C00962EE1 /* personDifferentKey.json in Resources */ = {isa = PBXBuildFile; fileRef = 649E74B7239C5F7C00962EE1 /* personDifferentKey.json */; };
 		649E74BB239C5F7C00962EE1 /* person.json in Resources */ = {isa = PBXBuildFile; fileRef = 649E74B8239C5F7C00962EE1 /* person.json */; };
-		649E74BD239D49CF00962EE1 /* CoreDataCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E74BC239D49CF00962EE1 /* CoreDataCodingKey.swift */; };
+		649E74BD239D49CF00962EE1 /* GenericCoreDataCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E74BC239D49CF00962EE1 /* GenericCoreDataCodingKey.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +58,7 @@
 		649E74B6239C5F7C00962EE1 /* personSnakeCase.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = personSnakeCase.json; sourceTree = "<group>"; };
 		649E74B7239C5F7C00962EE1 /* personDifferentKey.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = personDifferentKey.json; sourceTree = "<group>"; };
 		649E74B8239C5F7C00962EE1 /* person.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = person.json; sourceTree = "<group>"; };
-		649E74BC239D49CF00962EE1 /* CoreDataCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataCodingKey.swift; sourceTree = "<group>"; };
+		649E74BC239D49CF00962EE1 /* GenericCoreDataCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericCoreDataCodingKey.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,7 +178,7 @@
 		649E74A9239C398400962EE1 /* Codable */ = {
 			isa = PBXGroup;
 			children = (
-				649E74BC239D49CF00962EE1 /* CoreDataCodingKey.swift */,
+				649E74BC239D49CF00962EE1 /* GenericCoreDataCodingKey.swift */,
 				649E74AA239C398400962EE1 /* Encodable+Extension.swift */,
 				649E74AB239C398400962EE1 /* Decodable+Extension.swift */,
 				649E74AD239C398400962EE1 /* Decodable+ManagedObjectContext.swift */,
@@ -303,7 +303,7 @@
 			files = (
 				649E74A4239C358B00962EE1 /* DecodingContext.swift in Sources */,
 				649E74A2239C344300962EE1 /* NSManagedObject+Coredatable.m in Sources */,
-				649E74BD239D49CF00962EE1 /* CoreDataCodingKey.swift in Sources */,
+				649E74BD239D49CF00962EE1 /* GenericCoreDataCodingKey.swift in Sources */,
 				649E74AE239C398400962EE1 /* Encodable+Extension.swift in Sources */,
 				649E7491239C30B100962EE1 /* CoreDataCodable.swift in Sources */,
 				649E74AF239C398400962EE1 /* Decodable+Extension.swift in Sources */,
