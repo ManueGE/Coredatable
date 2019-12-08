@@ -19,13 +19,13 @@ public protocol CoreDataDecodable: NSManagedObject, Decodable {
 }
 
 public extension CoreDataDecodable {
+    init(from decoder: Decoder) throws {
+        try self.init(from: decoder, codingKeys: CodingKeys.self)
+    }
+    
     init<Keys: CoreDataCodingKey>(from decoder: Decoder, codingKeys: Keys.Type) throws {
         let context = try DecodingContext(decoder: decoder, codingKeys: Keys.self)
         try self.init(decodingContext: context)
-    }
-    
-    init(from decoder: Decoder) throws {
-        try self.init(from: decoder, codingKeys: CodingKeys.self)
     }
 }
 
@@ -41,4 +41,24 @@ public enum CoreDataCodableError: Error {
 
 // MARK: - Encodable
 
-public protocol CoreDataEncodable: NSManagedObject, Decodable { }
+public protocol CoreDataEncodable: NSManagedObject, Encodable {
+    associatedtype CodingKeys: CoreDataCodingKey
+}
+
+extension CoreDataEncodable {
+    public func encode(to encoder: Encoder) throws {
+        try encode(to: encoder, codingKeys: CodingKeys.self)
+    }
+    
+    public func encode<Keys: CoreDataCodingKey>(to encoder: Encoder, codingKeys: Keys.Type) throws {
+        var container = encoder.container(keyedBy: CoreDataCodingKeyWrapper<Keys>.self)
+        try entity.attributesByName.forEach { item in
+            
+            guard let key = Keys(propertyName: item.key),
+                let value = self.value(forKey: item.key)
+                else { return }
+            
+            try container.encodeAny(value, forKey: key.standardCodingKey)
+        }
+    }
+}

@@ -15,6 +15,8 @@ import Foundation
 public protocol CoreDataCodingKey {
     init?(stringValue: String)
     var stringValue: String { get }
+    
+    init?(propertyName: String)
     var propertyName: String { get }
 }
 
@@ -27,12 +29,25 @@ public extension CoreDataCodingKey where Self: RawRepresentable, RawValue == Str
     
 }
 
+public extension CoreDataCodingKey where Self: CaseIterable {
+    init?(propertyName: String) {
+        guard let key = Self.allCases.first(where: { propertyName == $0.propertyName }) else {
+            return nil
+        }
+        self = key
+    }
+}
+
 /// An implementation of `CoreDataCodingKey` where all the properties are taken in account
 /// and they have exactly the same name as the json keys.
 public struct CoreDataDefaultCodingKeys: CoreDataCodingKey {
     public let stringValue: String
     public init?(stringValue: String) {
         self.stringValue = stringValue
+    }
+    
+    public init?(propertyName: String) {
+        self.stringValue = propertyName
     }
     public var propertyName: String { stringValue }
 }

@@ -21,7 +21,7 @@ final class PersonDiffKeys: NSManagedObject, CoreDataCodable {
     @NSManaged var personId: Int
     @NSManaged var fullName: String
     
-    enum CodingKeys: String, CoreDataCodingKey {
+    enum CodingKeys: String, CoreDataCodingKey, CaseIterable {
         case personId = "id"
         case fullName = "name"
     }

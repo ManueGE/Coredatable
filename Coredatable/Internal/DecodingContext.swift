@@ -19,7 +19,6 @@ final class DecodingContext<Keys: CoreDataCodingKey>: NSObject, DecodingContextT
     private typealias BridgeCodingKeys = CoreDataCodingKeyWrapper<Keys>
     private let container: KeyedDecodingContainer<BridgeCodingKeys>
     @objc let managedObjectContext: NSManagedObjectContext
-    private let codingKeysByPropertyNames: [String: BridgeCodingKeys]
     
     init(decoder: Decoder, codingKeys: Keys.Type) throws {
         guard let managedObjectContext = decoder.managedObjectContext else {
@@ -27,10 +26,6 @@ final class DecodingContext<Keys: CoreDataCodingKey>: NSObject, DecodingContextT
         }
         self.managedObjectContext = managedObjectContext
         self.container = try decoder.container(keyedBy: BridgeCodingKeys.self)
-        self.codingKeysByPropertyNames = self.container.allKeys.reduce(into: [:]) { (current, key) in
-            guard let coreDataKey = Keys(stringValue: key.stringValue) else { return }
-            current[coreDataKey.propertyName] = key
-        }
     }
     
     @objc func containsKey(_ key: String) -> Bool {
@@ -48,6 +43,6 @@ final class DecodingContext<Keys: CoreDataCodingKey>: NSObject, DecodingContextT
     }
     
     private func codingKey(for propertyName: String) -> Keys? {
-        codingKeysByPropertyNames[propertyName]?.key
+        Keys(propertyName: propertyName)
     }
 }

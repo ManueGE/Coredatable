@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		649E746C239C28D600962EE1 /* Coredatable.h in Headers */ = {isa = PBXBuildFile; fileRef = 649E746A239C28D600962EE1 /* Coredatable.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		649E747B239C2A0700962EE1 /* SerializeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E747A239C2A0700962EE1 /* SerializeTests.swift */; };
+		649E747B239C2A0700962EE1 /* CodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E747A239C2A0700962EE1 /* CodableTests.swift */; };
 		649E747D239C2A0700962EE1 /* Coredatable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 649E7467239C28D600962EE1 /* Coredatable.framework */; };
 		649E7486239C2A2800962EE1 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 649E7484239C2A2800962EE1 /* Model.xcdatamodeld */; };
 		649E7488239C2A7700962EE1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E7487239C2A7700962EE1 /* Model.swift */; };
@@ -42,7 +42,7 @@
 		649E746A239C28D600962EE1 /* Coredatable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Coredatable.h; sourceTree = "<group>"; };
 		649E746B239C28D600962EE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		649E7478239C2A0700962EE1 /* Coredatable-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Coredatable-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		649E747A239C2A0700962EE1 /* SerializeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerializeTests.swift; sourceTree = "<group>"; };
+		649E747A239C2A0700962EE1 /* CodableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableTests.swift; sourceTree = "<group>"; };
 		649E747C239C2A0700962EE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		649E7485239C2A2800962EE1 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		649E7487239C2A7700962EE1 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -134,7 +134,7 @@
 		649E7489239C2B1000962EE1 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				649E747A239C2A0700962EE1 /* SerializeTests.swift */,
+				649E747A239C2A0700962EE1 /* CodableTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -318,7 +318,7 @@
 			files = (
 				649E7488239C2A7700962EE1 /* Model.swift in Sources */,
 				649E748F239C2BCC00962EE1 /* Data+Extension.swift in Sources */,
-				649E747B239C2A0700962EE1 /* SerializeTests.swift in Sources */,
+				649E747B239C2A0700962EE1 /* CodableTests.swift in Sources */,
 				649E7486239C2A2800962EE1 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
