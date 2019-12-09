@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol CoreDataEncodable: NSManagedObject, Encodable {
-    associatedtype CodingKeys: GenericCoreDataCodingKey
+    associatedtype CodingKeys: AnyCoreDataCodingKey
 }
 
 extension CoreDataEncodable {
@@ -17,7 +17,7 @@ extension CoreDataEncodable {
         try encode(to: encoder, codingKeys: CodingKeys.self)
     }
     
-    public func encode<Keys: GenericCoreDataCodingKey>(to encoder: Encoder, codingKeys: Keys.Type) throws {
+    public func encode<Keys: AnyCoreDataCodingKey>(to encoder: Encoder, codingKeys: Keys.Type) throws {
         var container = encoder.container(keyedBy: CoreDataCodingKeyWrapper<Keys>.self)
         try entity.attributesByName.forEach { item in
             

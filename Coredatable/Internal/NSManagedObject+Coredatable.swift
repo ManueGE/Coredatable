@@ -24,17 +24,6 @@ internal extension NSManagedObject {
         
         fatalError("Could not locate the entity for \(className).")
     }
-    
-    func applyValuest<Keys: GenericCoreDataCodingKey>(container: KeyedDecodingContainer<CoreDataCodingKeyWrapper<Keys>>) throws {
-        entity.properties.forEach {
-            guard let codingKey = Keys(propertyName: $0.name),
-                container.contains(codingKey.standardCodingKey)
-                else { return }
-            
-            let value = container.decodeAny(forKey: codingKey.standardCodingKey)
-            setValue(value, forKey: codingKey.propertyName)
-        }
-    }
 }
 
 private extension NSManagedObjectContext {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct StringCodingKey: CodingKey {
+internal struct StringCodingKey: CodingKey {
 	let string: String
 	
 	init(_ string: String) {

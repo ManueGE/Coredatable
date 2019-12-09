@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		646E9853239F057800D3BC6A /* IdentityAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646E9852239F057800D3BC6A /* IdentityAttribute.swift */; };
 		649E746C239C28D600962EE1 /* Coredatable.h in Headers */ = {isa = PBXBuildFile; fileRef = 649E746A239C28D600962EE1 /* Coredatable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		649E747B239C2A0700962EE1 /* CodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E747A239C2A0700962EE1 /* CodableTests.swift */; };
 		649E747D239C2A0700962EE1 /* Coredatable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 649E7467239C28D600962EE1 /* Coredatable.framework */; };
@@ -23,10 +24,11 @@
 		649E74B9239C5F7C00962EE1 /* personSnakeCase.json in Resources */ = {isa = PBXBuildFile; fileRef = 649E74B6239C5F7C00962EE1 /* personSnakeCase.json */; };
 		649E74BA239C5F7C00962EE1 /* personDifferentKey.json in Resources */ = {isa = PBXBuildFile; fileRef = 649E74B7239C5F7C00962EE1 /* personDifferentKey.json */; };
 		649E74BB239C5F7C00962EE1 /* person.json in Resources */ = {isa = PBXBuildFile; fileRef = 649E74B8239C5F7C00962EE1 /* person.json */; };
-		649E74BD239D49CF00962EE1 /* GenericCoreDataCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E74BC239D49CF00962EE1 /* GenericCoreDataCodingKey.swift */; };
+		649E74BD239D49CF00962EE1 /* CoreDataCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E74BC239D49CF00962EE1 /* CoreDataCodingKey.swift */; };
 		649E74BF239ED0B900962EE1 /* NSManagedObject+Coredatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E74BE239ED0B900962EE1 /* NSManagedObject+Coredatable.swift */; };
 		649E74C1239EED7300962EE1 /* CoreDataDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E74C0239EED7300962EE1 /* CoreDataDecodable.swift */; };
 		649E74C3239EEF7000962EE1 /* CoreDataEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E74C2239EEF7000962EE1 /* CoreDataEncodable.swift */; };
+		649E74C5239F005900962EE1 /* CoreDataDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E74C4239F005900962EE1 /* CoreDataDecoder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		646E9852239F057800D3BC6A /* IdentityAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAttribute.swift; sourceTree = "<group>"; };
 		649E7467239C28D600962EE1 /* Coredatable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Coredatable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		649E746A239C28D600962EE1 /* Coredatable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Coredatable.h; sourceTree = "<group>"; };
 		649E746B239C28D600962EE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -59,10 +62,11 @@
 		649E74B6239C5F7C00962EE1 /* personSnakeCase.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = personSnakeCase.json; sourceTree = "<group>"; };
 		649E74B7239C5F7C00962EE1 /* personDifferentKey.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = personDifferentKey.json; sourceTree = "<group>"; };
 		649E74B8239C5F7C00962EE1 /* person.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = person.json; sourceTree = "<group>"; };
-		649E74BC239D49CF00962EE1 /* GenericCoreDataCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericCoreDataCodingKey.swift; sourceTree = "<group>"; };
+		649E74BC239D49CF00962EE1 /* CoreDataCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataCodingKey.swift; sourceTree = "<group>"; };
 		649E74BE239ED0B900962EE1 /* NSManagedObject+Coredatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Coredatable.swift"; sourceTree = "<group>"; };
 		649E74C0239EED7300962EE1 /* CoreDataDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataDecodable.swift; sourceTree = "<group>"; };
 		649E74C2239EEF7000962EE1 /* CoreDataEncodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataEncodable.swift; sourceTree = "<group>"; };
+		649E74C4239F005900962EE1 /* CoreDataDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataDecoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,7 +112,7 @@
 				649E746A239C28D600962EE1 /* Coredatable.h */,
 				649E746B239C28D600962EE1 /* Info.plist */,
 				649E7496239C31E700962EE1 /* Protocols */,
-				649E74A9239C398400962EE1 /* Codable */,
+				649E74C6239F03C600962EE1 /* Helpers */,
 				649E749A239C336E00962EE1 /* Internal */,
 			);
 			path = Coredatable;
@@ -174,23 +178,33 @@
 		649E749A239C336E00962EE1 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				649E74C4239F005900962EE1 /* CoreDataDecoder.swift */,
 				649E749F239C344300962EE1 /* NSManagedObject+Coredatable.h */,
 				649E74A0239C344300962EE1 /* NSManagedObject+Coredatable.m */,
 				649E74BE239ED0B900962EE1 /* NSManagedObject+Coredatable.swift */,
+				649E74A9239C398400962EE1 /* CodableExtensions */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
 		};
-		649E74A9239C398400962EE1 /* Codable */ = {
+		649E74A9239C398400962EE1 /* CodableExtensions */ = {
 			isa = PBXGroup;
 			children = (
-				649E74BC239D49CF00962EE1 /* GenericCoreDataCodingKey.swift */,
 				649E74AA239C398400962EE1 /* Encodable+Extension.swift */,
 				649E74AB239C398400962EE1 /* Decodable+Extension.swift */,
-				649E74AD239C398400962EE1 /* Decodable+ManagedObjectContext.swift */,
 				649E74AC239C398400962EE1 /* StringCodingKey.swift */,
 			);
-			path = Codable;
+			path = CodableExtensions;
+			sourceTree = "<group>";
+		};
+		649E74C6239F03C600962EE1 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				649E74BC239D49CF00962EE1 /* CoreDataCodingKey.swift */,
+				649E74AD239C398400962EE1 /* Decodable+ManagedObjectContext.swift */,
+				646E9852239F057800D3BC6A /* IdentityAttribute.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -308,12 +322,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				649E74A2239C344300962EE1 /* NSManagedObject+Coredatable.m in Sources */,
-				649E74BD239D49CF00962EE1 /* GenericCoreDataCodingKey.swift in Sources */,
+				649E74BD239D49CF00962EE1 /* CoreDataCodingKey.swift in Sources */,
+				649E74C5239F005900962EE1 /* CoreDataDecoder.swift in Sources */,
 				649E74AE239C398400962EE1 /* Encodable+Extension.swift in Sources */,
 				649E7491239C30B100962EE1 /* CoreDataCodable.swift in Sources */,
 				649E74C3239EEF7000962EE1 /* CoreDataEncodable.swift in Sources */,
 				649E74C1239EED7300962EE1 /* CoreDataDecodable.swift in Sources */,
 				649E74AF239C398400962EE1 /* Decodable+Extension.swift in Sources */,
+				646E9853239F057800D3BC6A /* IdentityAttribute.swift in Sources */,
 				649E74B1239C398400962EE1 /* Decodable+ManagedObjectContext.swift in Sources */,
 				649E74BF239ED0B900962EE1 /* NSManagedObject+Coredatable.swift in Sources */,
 				649E74B0239C398400962EE1 /* StringCodingKey.swift in Sources */,
