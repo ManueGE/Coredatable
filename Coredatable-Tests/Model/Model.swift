@@ -15,6 +15,8 @@ final class Person: NSManagedObject, CoreDataCodable {
     
     @NSManaged var personId: Int
     @NSManaged var fullName: String
+    
+    static let identityAttribute: IdentityAttribute = #keyPath(Person.personId)
 }
 
 final class PersonDiffKeys: NSManagedObject, CoreDataCodable {

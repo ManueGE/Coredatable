@@ -13,6 +13,7 @@ class CodableTests: XCTestCase {
 
     var container: NSPersistentContainer!
     var jsonDecoder: JSONDecoder!
+    var viewContext: NSManagedObjectContext { container.viewContext }
     
     override func setUp() {
         guard let modelURL = Bundle(for: type(of: self)).url(forResource: "Model", withExtension:"momd") else {
@@ -34,7 +35,7 @@ class CodableTests: XCTestCase {
         })
         
         jsonDecoder = JSONDecoder()
-        jsonDecoder.managedObjectContext = container.viewContext
+        jsonDecoder.managedObjectContext = viewContext
     }
 
     override func tearDown() {
@@ -73,11 +74,32 @@ class CodableTests: XCTestCase {
         let data = Data(resource: "personDifferentKey.json")!
         
         // when
-        let person = try! jsonDecoder.decode(PersonDiffKeys.self, from: data)
+        let person = try? jsonDecoder.decode(PersonDiffKeys.self, from: data)
         
         // then
+        XCTAssertEqual(person?.personId, 1)
+        XCTAssertEqual(person?.fullName, "Marco")
+    }
+    
+    func testDecodeUpdatingValueWithSingleUniqueIdentifier() {
+        // given
+        let existing = Person(context: viewContext)
+        existing.fullName = "Marcoto"
+        existing.personId = 1
+        let request: NSFetchRequest<Person> = NSFetchRequest(entityName: "Person")
+        XCTAssertEqual(try viewContext.count(for: request), 1)
+        
+        let data = Data(resource: "person.json")!
+        
+        // when
+        let person = try! jsonDecoder.decode(Person.self, from: data)
+        
+        // then
+        XCTAssertEqual(try viewContext.count(for: request), 1)
         XCTAssertEqual(person.personId, 1)
         XCTAssertEqual(person.fullName, "Marco")
+        XCTAssertEqual(person.objectID, existing.objectID)
+        
     }
     
     // MARK: - Encode

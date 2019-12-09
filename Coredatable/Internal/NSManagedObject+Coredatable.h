@@ -12,7 +12,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSManagedObject (Coredatable)
-- (nullable instancetype) initWithDecodingContext:(id<DecodingContextType>) decodingContext error:(NSError * __nullable * __nullable)error;
+/// This is just a little trick to be able to call this init from another swift init. It will just return the object passed
+- (instancetype) initWithAnotherManagedObject:(NSManagedObject *) managedObject;
 @end
 
 NS_ASSUME_NONNULL_END
