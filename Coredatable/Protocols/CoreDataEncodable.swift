@@ -18,7 +18,7 @@ extension CoreDataEncodable {
     }
     
     public func encode<Keys: AnyCoreDataCodingKey>(to encoder: Encoder, codingKeys: Keys.Type) throws {
-        var container = encoder.container(keyedBy: CoreDataCodingKeyWrapper<Keys>.self)
+        var container = encoder.container(keyedBy: Keys.CodingKey.self)
         try entity.attributesByName.forEach { item in
             
             guard let key = Keys(propertyName: item.key),

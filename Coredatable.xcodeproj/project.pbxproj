@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		646E9853239F057800D3BC6A /* IdentityAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646E9852239F057800D3BC6A /* IdentityAttribute.swift */; };
+		646E9855239F93F100D3BC6A /* personWithNil.json in Resources */ = {isa = PBXBuildFile; fileRef = 646E9854239F93F100D3BC6A /* personWithNil.json */; };
 		649E746C239C28D600962EE1 /* Coredatable.h in Headers */ = {isa = PBXBuildFile; fileRef = 649E746A239C28D600962EE1 /* Coredatable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		649E747B239C2A0700962EE1 /* CodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E747A239C2A0700962EE1 /* CodableTests.swift */; };
 		649E747D239C2A0700962EE1 /* Coredatable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 649E7467239C28D600962EE1 /* Coredatable.framework */; };
@@ -43,6 +44,7 @@
 
 /* Begin PBXFileReference section */
 		646E9852239F057800D3BC6A /* IdentityAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAttribute.swift; sourceTree = "<group>"; };
+		646E9854239F93F100D3BC6A /* personWithNil.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = personWithNil.json; sourceTree = "<group>"; };
 		649E7467239C28D600962EE1 /* Coredatable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Coredatable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		649E746A239C28D600962EE1 /* Coredatable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Coredatable.h; sourceTree = "<group>"; };
 		649E746B239C28D600962EE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				649E74B8239C5F7C00962EE1 /* person.json */,
+				646E9854239F93F100D3BC6A /* personWithNil.json */,
 				649E74B7239C5F7C00962EE1 /* personDifferentKey.json */,
 				649E74B6239C5F7C00962EE1 /* personSnakeCase.json */,
 			);
@@ -308,6 +311,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				646E9855239F93F100D3BC6A /* personWithNil.json in Resources */,
 				649E74BB239C5F7C00962EE1 /* person.json in Resources */,
 				649E74BA239C5F7C00962EE1 /* personDifferentKey.json in Resources */,
 				649E74B9239C5F7C00962EE1 /* personSnakeCase.json in Resources */,

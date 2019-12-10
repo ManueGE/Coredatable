@@ -10,7 +10,7 @@ import Foundation
 
 internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable, Keys: AnyCoreDataCodingKey> {
     private let context: NSManagedObjectContext
-    private let container: KeyedDecodingContainer<CoreDataCodingKeyWrapper<Keys>>
+    private let container: KeyedDecodingContainer<Keys.CodingKey>
     
     init(decoder: Decoder) throws {
         guard let context = decoder.managedObjectContext else {
@@ -18,7 +18,7 @@ internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable, Keys: AnyCoreD
         }
         
         self.context = context
-        self.container = try decoder.container(keyedBy: CoreDataCodingKeyWrapper<Keys>.self)
+        self.container = try decoder.container(keyedBy: Keys.CodingKey.self)
     }
     
     func decode() throws -> ManagedObject {
@@ -55,13 +55,36 @@ private extension CoreDataDecoder {
     }
     
     func applyValues(to object: ManagedObject) throws {
-        object.entity.properties.forEach {
-            guard let codingKey = Keys(propertyName: $0.name),
+        try object.entity.properties.forEach { property in
+            guard let codingKey = Keys(propertyName: property.name),
                 container.contains(codingKey.standardCodingKey)
                 else { return }
-            
-            let value = container.decodeAny(forKey: codingKey.standardCodingKey)
-            object.setValue(value, forKey: codingKey.propertyName)
+
+            if let attribute = property as? NSAttributeDescription {
+                try set(attribute, into: object, with: codingKey)
+            } else if let relationship =  property as? NSRelationshipDescription {
+                try set(relationship, into: object, with: codingKey)
+            }
         }
+    }
+    
+    func set(_ attribute: NSAttributeDescription, into object: ManagedObject, with codingKey: Keys) throws {
+        let value = container.decodeAny(forKey: codingKey.standardCodingKey)
+        try object.validateValue(value, forKey: codingKey)
+        object.setValue(value, forKey: codingKey.propertyName)
+    }
+    
+    func set(_ relationship: NSRelationshipDescription, into object: ManagedObject, with codingKey: Keys) throws {
+        /*
+        #warning("TODO rest of the cases")
+        if relationship.isToMany {
+            let data = try container.nestedUnkeyedContainer(forKey: standardKey)
+            #warning("Serialize contents")
+            let set = NSMutableSet()
+            array.forEach { set.add($0) }
+            object.setValue(set.copy(), forKey: codingKey.propertyName)
+        } else {
+            let data = try container.nestedContainer(keyedBy: CoreDataDefaultCodingKeys.CodingKey.self, forKey: standardKey)
+        }*/
     }
 }

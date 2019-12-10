@@ -24,6 +24,19 @@ internal extension NSManagedObject {
         
         fatalError("Could not locate the entity for \(className).")
     }
+    
+    func validateValue(_ value: Any?, forKey codingKey: AnyCoreDataCodingKey) throws {
+        var valuePointer: AutoreleasingUnsafeMutablePointer<AnyObject?>
+        if let value = value {
+            var anyObjectValue = value as AnyObject
+            valuePointer = AutoreleasingUnsafeMutablePointer(&anyObjectValue)
+        } else {
+            var null: NSObject? = nil
+            valuePointer = AutoreleasingUnsafeMutablePointer(&null)
+        }
+        
+        try validateValue(valuePointer, forKey: codingKey.propertyName)
+    }
 }
 
 private extension NSManagedObjectContext {

@@ -54,6 +54,34 @@ class CodableTests: XCTestCase {
         // then
         XCTAssertEqual(person.personId, 1)
         XCTAssertEqual(person.fullName, "Marco")
+        XCTAssertEqual(person.city, "Murcia")
+        /*
+        let attributes = person.attributes.sorted { $0.id < $1.id }
+        XCTAssertEqual(attributes.count, 2)
+        XCTAssertEqual(attributes[0].id, 1)
+        XCTAssertEqual(attributes[0].name, "clever")
+        XCTAssertEqual(attributes[1].id, 2)
+        XCTAssertEqual(attributes[1].name, "small")*/
+    }
+    
+    func testDecodeSimpleObjectWithNilValue() {
+        // given
+        let data = Data(resource: "personWithNil.json")!
+        
+        // when
+        let person = try! jsonDecoder.decode(Person.self, from: data)
+        
+        // then
+        XCTAssertEqual(person.personId, 1)
+        XCTAssertEqual(person.fullName, "Marco")
+        XCTAssertNil(person.city)
+        /*
+        let attributes = person.attributes.sorted { $0.id < $1.id }
+        XCTAssertEqual(attributes.count, 2)
+        XCTAssertEqual(attributes[0].id, 1)
+        XCTAssertEqual(attributes[0].name, "clever")
+        XCTAssertEqual(attributes[1].id, 2)
+        XCTAssertEqual(attributes[1].name, "small")*/
     }
     
     func testDecodeWithKeyStrategy() {
@@ -99,7 +127,50 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(person.personId, 1)
         XCTAssertEqual(person.fullName, "Marco")
         XCTAssertEqual(person.objectID, existing.objectID)
+    }
+    
+    func testDecodeUpdatingValueWithSingleUniqueIdentifierAndNilValue() {
+        // given
+        let existing = Person(context: viewContext)
+        existing.fullName = "Marcoto"
+        existing.personId = 1
+        existing.city = "Murcia"
+        let request: NSFetchRequest<Person> = NSFetchRequest(entityName: "Person")
+        XCTAssertEqual(try viewContext.count(for: request), 1)
         
+        let data = Data(resource: "personWithNil.json")!
+        
+        // when
+        let person = try! jsonDecoder.decode(Person.self, from: data)
+        
+        // then
+        XCTAssertEqual(try viewContext.count(for: request), 1)
+        XCTAssertEqual(person.personId, 1)
+        XCTAssertEqual(person.fullName, "Marco")
+        XCTAssertNil(person.city)
+        XCTAssertEqual(person.objectID, existing.objectID)
+    }
+    
+    func testDecodeUpdatingValueWithSingleUniqueIdentifierAndMissingKeys() {
+        // given
+        let existing = Person(context: viewContext)
+        existing.fullName = "Marcoto"
+        existing.personId = 1
+        existing.city = "Murcia"
+        let request: NSFetchRequest<Person> = NSFetchRequest(entityName: "Person")
+        XCTAssertEqual(try viewContext.count(for: request), 1)
+        
+        let data = Data.fromJson(["personId": 1, "fullName": "Marco"])!
+        
+        // when
+        let person = try! jsonDecoder.decode(Person.self, from: data)
+        
+        // then
+        XCTAssertEqual(try viewContext.count(for: request), 1)
+        XCTAssertEqual(person.personId, 1)
+        XCTAssertEqual(person.fullName, "Marco")
+        XCTAssertEqual(person.city, "Murcia")
+        XCTAssertEqual(person.objectID, existing.objectID)
     }
     
     // MARK: - Encode

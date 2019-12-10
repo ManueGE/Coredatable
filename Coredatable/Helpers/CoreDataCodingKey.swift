@@ -38,7 +38,6 @@ public extension AnyCoreDataCodingKey where Self: RawRepresentable, RawValue == 
         self = key
     }
     var propertyName: String { String(describing: self) }
-    
 }
 
 
@@ -58,7 +57,7 @@ public struct CoreDataDefaultCodingKeys: AnyCoreDataCodingKey {
 
 // MARK: - CoreDataCodingKeyWrapper
 
-/// A Wrapper to convert `AnyCoreDataCodingKey` into regular `CodingKey`
+/// A wrapper to convert `AnyCoreDataCodingKey` into standard `CodingKey`
 internal struct CoreDataCodingKeyWrapper<Key: AnyCoreDataCodingKey>: CodingKey {
     let key: Key
     var stringValue: String { key.stringValue }
@@ -80,5 +79,6 @@ internal struct CoreDataCodingKeyWrapper<Key: AnyCoreDataCodingKey>: CodingKey {
 }
 
 internal extension AnyCoreDataCodingKey {
-    var standardCodingKey: CoreDataCodingKeyWrapper<Self> { CoreDataCodingKeyWrapper(self) }
+    typealias CodingKey = CoreDataCodingKeyWrapper<Self>
+    var standardCodingKey: CodingKey { CodingKey(self) }
 }
