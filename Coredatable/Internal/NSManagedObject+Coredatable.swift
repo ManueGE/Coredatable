@@ -24,8 +24,22 @@ internal extension NSManagedObject {
         
         fatalError("Could not locate the entity for \(className).")
     }
+
+    func applyValues<Keys: AnyCoreDataCodingKey>(from container: KeyedDecodingContainer<Keys.CodingKey>) throws {
+        try entity.properties.forEach { property in
+            guard let codingKey = Keys(propertyName: property.name),
+                container.contains(codingKey.standardCodingKey)
+                else { return }
+
+            if let attribute = property as? NSAttributeDescription {
+                try set(attribute, from: container, with: codingKey)
+            } else if let relationship =  property as? NSRelationshipDescription {
+                 try set(relationship, from: container, with: codingKey)
+            }
+        }
+    }
     
-    func validateValue(_ value: Any?, forKey codingKey: AnyCoreDataCodingKey) throws {
+    private func validateValue(_ value: Any?, forKey codingKey: AnyCoreDataCodingKey) throws {
         var valuePointer: AutoreleasingUnsafeMutablePointer<AnyObject?>
         if let value = value {
             var anyObjectValue = value as AnyObject
@@ -36,6 +50,41 @@ internal extension NSManagedObject {
         }
         
         try validateValue(valuePointer, forKey: codingKey.propertyName)
+    }
+    
+    private func set<Keys: AnyCoreDataCodingKey>(_ attribute: NSAttributeDescription, from container: KeyedDecodingContainer<Keys.CodingKey>, with codingKey: Keys) throws {
+        let value = container.decodeAny(forKey: codingKey.standardCodingKey)
+        try validateValue(value, forKey: codingKey)
+        setValue(value, forKey: codingKey.propertyName)
+    }
+    
+    private func set<Keys: AnyCoreDataCodingKey>(_ relationship: NSRelationshipDescription, from container: KeyedDecodingContainer<Keys.CodingKey>, with codingKey: Keys) throws {
+        guard let className = relationship.destinationEntity?.managedObjectClassName,
+            let codableClass = NSClassFromString(className) as? AnyCoreDataDecodable.Type
+            else {
+                #warning("Throw error for relationship not being codable")
+                return
+        }
+        
+        let standardKey = codingKey.standardCodingKey
+        let childDecoder = try container.superDecoder(forKey: standardKey)
+        if relationship.isToMany {
+            let array = try codableClass.decodeArray(from: childDecoder)
+            let value = NSSet(array: array)
+            try validateValue(value, forKey: codingKey)
+            setValue(value, forKey: codingKey.propertyName)
+        } else {
+            let value = try codableClass.init(from: childDecoder)
+            try validateValue(value, forKey: codingKey)
+            setValue(value, forKey: codingKey.propertyName)
+        }
+    }
+}
+
+private extension Decodable {
+    static func decodeArray(with decoder: Decoder) throws -> [Any] {
+        #warning("Should be `Many` instead of Array to improve performance")
+        return try [Self].init(from: decoder)
     }
 }
 

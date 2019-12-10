@@ -27,4 +27,8 @@ extension Data {
     internal static func fromJson(_ dictionary: [AnyHashable: Any]) -> Data? {
         return try? JSONSerialization.data(withJSONObject: dictionary, options: [])
     }
+    
+    internal static func fromArray(_ array: [[AnyHashable: Any]]) -> Data? {
+        return try? JSONSerialization.data(withJSONObject: array, options: [])
+    }
 }

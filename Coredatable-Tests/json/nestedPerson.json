@@ -12,5 +12,15 @@
             "id": 1,
             "name": "Spain"
         }
-    }
+    },
+    "people": [
+        {
+            "personId": 2,
+            "fullName": "Ana"
+        },
+        {
+            "personId": 3,
+            "fullName": "Manuel"
+        },
+    ]
 }

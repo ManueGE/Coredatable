@@ -60,4 +60,5 @@ final class PersonDiffKeys: NSManagedObject, CoreDataCodable {
 final class NestedPerson: Codable {
     let token: String
     let person: Person
+    let people: Many<Person>
 }

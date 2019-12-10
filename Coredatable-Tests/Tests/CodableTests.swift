@@ -8,6 +8,7 @@
 
 import XCTest
 import CoreData
+import Coredatable
 
 class CodableTests: XCTestCase {
 
@@ -175,6 +176,40 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(person.objectID, existing.objectID)
     }
     
+    func testDecodeManyUpdatingExistingValues() {
+        // given
+        let existing1 = Person(context: viewContext)
+        existing1.fullName = "Marcoto"
+        existing1.personId = 1
+        existing1.city = "Murcia"
+        
+        let existing2 = Person(context: viewContext)
+        existing2.fullName = "Ana Ester"
+        existing2.personId = 2
+        existing2.city = "La Ñora"
+        
+        let request: NSFetchRequest<Person> = NSFetchRequest(entityName: "Person")
+        XCTAssertEqual(try viewContext.count(for: request), 2)
+        
+        let data = Data.fromArray([["personId": 1, "fullName": "Marco"], ["personId": 2, "fullName": "Ana"]])!
+        
+        // when
+        let people = try! jsonDecoder.decode(Many<Person>.self, from: data)
+        
+        // then
+        XCTAssertEqual(try viewContext.count(for: request), 2)
+        
+        XCTAssertEqual(people[0].personId, 1)
+        XCTAssertEqual(people[0].fullName, "Marco")
+        XCTAssertEqual(people[0].city, "Murcia")
+        XCTAssertEqual(people[0].objectID, existing1.objectID)
+        
+        XCTAssertEqual(people[1].personId, 2)
+        XCTAssertEqual(people[1].fullName, "Ana")
+        XCTAssertEqual(people[1].city, "La Ñora")
+        XCTAssertEqual(people[1].objectID, existing2.objectID)
+    }
+    
     func testDecodeObjectWithNestedCoreData() {
         // given
         let data = Data(resource: "nestedPerson.json")!
@@ -196,7 +231,6 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(attributes[0].name, "funny")
         XCTAssertEqual(attributes[1].id, 2)
         XCTAssertEqual(attributes[1].name, "small")
-        
     }
     // MARK: - Encode
     func testEncodeSimpleObject() {
