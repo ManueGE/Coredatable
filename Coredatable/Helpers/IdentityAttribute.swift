@@ -8,28 +8,40 @@
 
 import Foundation
 
-public enum IdentityAttribute {
-    case no
-    case composed(Set<String>)
-    static func single(_ string: String) -> IdentityAttribute {
-        composed([string])
+public struct IdentityAttribute {
+    enum Kind {
+        case no
+        case single(String)
+        case composite([String])
+    }
+    
+    private let propertyNames: [String]
+    fileprivate init(_ propertyNames: Set<String>) {
+        self.propertyNames = Array(propertyNames)
+    }
+    public static var no: IdentityAttribute { IdentityAttribute([]) }
+    
+    var kind: Kind {
+        if propertyNames.count == 0 {
+            return .no
+        } else if propertyNames.count == 1 {
+            return .single(propertyNames[0])
+        } else {
+            return .composite(propertyNames)
+        }
     }
 }
 
 extension IdentityAttribute: ExpressibleByStringLiteral {
     public typealias StringLiteralType = String
     public init(stringLiteral value: Self.StringLiteralType) {
-        self = .composed(Set([value]))
+        self = IdentityAttribute(Set([value]))
     }
 }
 
 extension IdentityAttribute: ExpressibleByArrayLiteral {
     public typealias ArrayLiteralElement = String
     public init(arrayLiteral elements: String...) {
-        if elements.count == 0 {
-            self = .no
-        } else {
-            self = .composed(Set(elements))
-        }
+        self = IdentityAttribute(Set(elements))
     }
 }

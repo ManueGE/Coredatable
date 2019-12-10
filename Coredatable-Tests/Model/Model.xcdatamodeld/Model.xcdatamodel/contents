@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15508" systemVersion="19B2106" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Country" representedClassName=".Country" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="people" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="country" inverseEntity="Person"/>
+    </entity>
     <entity name="Person" representedClassName=".Person" syncable="YES">
         <attribute name="city" optional="YES" attributeType="String"/>
         <attribute name="fullName" attributeType="String"/>
         <attribute name="personId" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="attributesSet" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PersonAttribute" inverseName="persons" inverseEntity="PersonAttribute"/>
+        <relationship name="attributesSet" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PersonAttribute" inverseName="people" inverseEntity="PersonAttribute"/>
+        <relationship name="country" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Country" inverseName="people" inverseEntity="Country"/>
     </entity>
-    <entity name="PersonAttribute" representedClassName="PersonAttribute" syncable="YES">
+    <entity name="PersonAttribute" representedClassName=".PersonAttribute" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="persons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="attributesSet" inverseEntity="Person"/>
+        <relationship name="people" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="attributesSet" inverseEntity="Person"/>
     </entity>
     <entity name="PersonDiffKeys" representedClassName=".PersonDiffKeys" syncable="YES">
         <attribute name="fullName" optional="YES" attributeType="String"/>
         <attribute name="personId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <elements>
-        <element name="Person" positionX="-63" positionY="-18" width="128" height="103"/>
+        <element name="Person" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="PersonAttribute" positionX="155.4453125" positionY="-91.3125" width="128" height="88"/>
         <element name="PersonDiffKeys" positionX="-150.41015625" positionY="121.7734375" width="128" height="73"/>
-        <element name="PersonAttribute" positionX="131.59765625" positionY="-57.8203125" width="128" height="88"/>
+        <element name="Country" positionX="150.07421875" positionY="128.3828125" width="128" height="88"/>
     </elements>
 </model>

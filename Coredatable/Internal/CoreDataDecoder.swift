@@ -9,6 +9,7 @@
 import Foundation
 
 internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable, Keys: AnyCoreDataCodingKey> {
+    private let decoder: Decoder
     private let context: NSManagedObjectContext
     private let container: KeyedDecodingContainer<Keys.CodingKey>
     
@@ -16,7 +17,7 @@ internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable, Keys: AnyCoreD
         guard let context = decoder.managedObjectContext else {
             throw CoreDataCodableError.missingContext(decoder: decoder)
         }
-        
+        self.decoder = decoder
         self.context = context
         self.container = try decoder.container(keyedBy: Keys.CodingKey.self)
     }
@@ -29,16 +30,13 @@ internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable, Keys: AnyCoreD
 }
 
 private extension CoreDataDecoder {
+    #warning("This picks elements one by one, need a method to pick all the elements at once if array")
     func existingObject() throws -> ManagedObject? {
-        switch ManagedObject.identityAttribute {
+        switch ManagedObject.identityAttribute.kind {
         case .no:
             return nil
-            
-        case let .composed(propertyNames) where propertyNames.count == 0:
-            return nil
-            
-        case let .composed(propertyNames) where propertyNames.count == 1:
-            let propertyName = propertyNames.first!
+                        
+        case let .single(propertyName):
             guard let codingKey = Keys(propertyName: propertyName),
                 let value = container.decodeAny(forKey: codingKey.standardCodingKey) else {
                     let receivedKeys = container.allKeys.map { $0.key.stringValue }
@@ -49,7 +47,8 @@ private extension CoreDataDecoder {
             request.predicate = NSPredicate(format: "\(propertyName) == \(value)")
             return try context.fetch(request).first
             
-        case let .composed(propertyNames):
+        case let .composite(propertyNames):
+            #warning("TODO multiple identity attribute")
             return nil
         }
     }
@@ -75,16 +74,33 @@ private extension CoreDataDecoder {
     }
     
     func set(_ relationship: NSRelationshipDescription, into object: ManagedObject, with codingKey: Keys) throws {
-        /*
-        #warning("TODO rest of the cases")
+        guard let className = relationship.destinationEntity?.managedObjectClassName,
+            let codableClass = NSClassFromString(className) as? Decodable.Type
+            else {
+                #warning("Throw error for relationship not being codable")
+                return
+        }
+        
+        let standardKey = codingKey.standardCodingKey
+        let childDecoder = try container.superDecoder(forKey: standardKey)
         if relationship.isToMany {
-            let data = try container.nestedUnkeyedContainer(forKey: standardKey)
-            #warning("Serialize contents")
-            let set = NSMutableSet()
-            array.forEach { set.add($0) }
-            object.setValue(set.copy(), forKey: codingKey.propertyName)
+            let array = try codableClass.decodeArray(with: childDecoder)
+            let value = NSSet(array: array)
+            try object.validateValue(value, forKey: codingKey)
+            object.setValue(value, forKey: codingKey.propertyName)
         } else {
-            let data = try container.nestedContainer(keyedBy: CoreDataDefaultCodingKeys.CodingKey.self, forKey: standardKey)
-        }*/
+            let value = try codableClass.init(from: childDecoder)
+            try object.validateValue(value, forKey: codingKey)
+            object.setValue(value, forKey: codingKey.propertyName)
+        }
     }
 }
+
+private extension Decodable {
+    static func decodeArray(with decoder: Decoder) throws -> [Any] {
+        #warning("Should be `Many` instead of Array to improve performance")
+        return try [Self].init(from: decoder)
+    }
+}
+
+#warning("Somehow we need to insert elements by its id too")

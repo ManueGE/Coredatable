@@ -16,6 +16,7 @@ final class Person: NSManagedObject, CoreDataCodable {
     @NSManaged var personId: Int
     @NSManaged var fullName: String
     @NSManaged var city: String?
+    @NSManaged var country: Country?
     @NSManaged var attributesSet: NSSet
     var attributes: Set<PersonAttribute> {
         return attributesSet.reduce(into: []) { (result, item) in
@@ -37,6 +38,15 @@ final class PersonAttribute: NSManagedObject, CoreDataCodable {
     static let identityAttribute: IdentityAttribute = #keyPath(PersonAttribute.id)
 }
 
+final class Country: NSManagedObject, CoreDataDecodable {
+    typealias CodingKeys = CoreDataDefaultCodingKeys
+    
+    @NSManaged private(set) var id: Int
+    @NSManaged private(set) var name: String
+    
+    static let identityAttribute: IdentityAttribute = #keyPath(Country.id)
+}
+
 final class PersonDiffKeys: NSManagedObject, CoreDataCodable {
     @NSManaged var personId: Int
     @NSManaged var fullName: String
@@ -45,4 +55,9 @@ final class PersonDiffKeys: NSManagedObject, CoreDataCodable {
         case personId = "id"
         case fullName = "name"
     }
+}
+
+final class NestedPerson: Codable {
+    let token: String
+    let person: Person
 }

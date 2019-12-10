@@ -5,5 +5,9 @@
     "attributesSet": [
         {"id": 1, "name": "funny"},
         {"id": 2, "name": "small"}
-    ]
+    ],
+    "country": {
+        "id": 1,
+        "name": "Spain"
+    }
 }

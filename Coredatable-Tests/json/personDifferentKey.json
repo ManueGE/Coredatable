@@ -5,6 +5,10 @@
     "features": [
         {"id": 1, "name": "funny"},
         {"id": 2, "name": "small"}
-    ]
+    ],
+    "from": {
+        "id": 1,
+        "name": "Spain"
+    }
 }
 

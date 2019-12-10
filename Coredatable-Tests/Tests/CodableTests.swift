@@ -55,13 +55,14 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(person.personId, 1)
         XCTAssertEqual(person.fullName, "Marco")
         XCTAssertEqual(person.city, "Murcia")
-        /*
+        XCTAssertEqual(person.country?.id, 1)
+        XCTAssertEqual(person.country?.name, "Spain")
         let attributes = person.attributes.sorted { $0.id < $1.id }
         XCTAssertEqual(attributes.count, 2)
         XCTAssertEqual(attributes[0].id, 1)
-        XCTAssertEqual(attributes[0].name, "clever")
+        XCTAssertEqual(attributes[0].name, "funny")
         XCTAssertEqual(attributes[1].id, 2)
-        XCTAssertEqual(attributes[1].name, "small")*/
+        XCTAssertEqual(attributes[1].name, "small")
     }
     
     func testDecodeSimpleObjectWithNilValue() {
@@ -74,14 +75,15 @@ class CodableTests: XCTestCase {
         // then
         XCTAssertEqual(person.personId, 1)
         XCTAssertEqual(person.fullName, "Marco")
+        XCTAssertEqual(person.country?.id, 1)
+        XCTAssertEqual(person.country?.name, "Spain")
         XCTAssertNil(person.city)
-        /*
         let attributes = person.attributes.sorted { $0.id < $1.id }
         XCTAssertEqual(attributes.count, 2)
         XCTAssertEqual(attributes[0].id, 1)
-        XCTAssertEqual(attributes[0].name, "clever")
+        XCTAssertEqual(attributes[0].name, "funny")
         XCTAssertEqual(attributes[1].id, 2)
-        XCTAssertEqual(attributes[1].name, "small")*/
+        XCTAssertEqual(attributes[1].name, "small")
     }
     
     func testDecodeWithKeyStrategy() {
@@ -173,6 +175,29 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(person.objectID, existing.objectID)
     }
     
+    func testDecodeObjectWithNestedCoreData() {
+        // given
+        let data = Data(resource: "nestedPerson.json")!
+        
+        // when
+        let object = try! jsonDecoder.decode(NestedPerson.self, from: data)
+        
+        // then
+        XCTAssertEqual(object.token, "abcdefg")
+        let person = object.person
+        XCTAssertEqual(person.personId, 1)
+        XCTAssertEqual(person.fullName, "Marco")
+        XCTAssertEqual(person.city, "Murcia")
+        XCTAssertEqual(person.country?.id, 1)
+        XCTAssertEqual(person.country?.name, "Spain")
+        let attributes = person.attributes.sorted { $0.id < $1.id }
+        XCTAssertEqual(attributes.count, 2)
+        XCTAssertEqual(attributes[0].id, 1)
+        XCTAssertEqual(attributes[0].name, "funny")
+        XCTAssertEqual(attributes[1].id, 2)
+        XCTAssertEqual(attributes[1].name, "small")
+        
+    }
     // MARK: - Encode
     func testEncodeSimpleObject() {
         // given
