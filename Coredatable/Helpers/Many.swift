@@ -23,8 +23,8 @@ public struct Many<Element: NSManagedObject> {
 
 extension Many: Decodable where Element: CoreDataDecodable {
 	public init(from decoder: Decoder) throws {
-        let decoder = try CoreDataMultiDecoder<Element>(decoder: decoder)
-        self.init(try decoder.decode())
+        let decoder = try CoreDataDecoder<Element>(decoder: decoder)
+        self.init(try decoder.decodeArray())
     }
 }
 

@@ -88,9 +88,9 @@ private extension Decodable {
     }
 }
 
-private extension NSManagedObjectContext {
+extension NSManagedObjectContext {
     
-    var managedObjectModel: NSManagedObjectModel? {
+    fileprivate var managedObjectModel: NSManagedObjectModel? {
         if let persistentStoreCoordinator = persistentStoreCoordinator {
             return persistentStoreCoordinator.managedObjectModel
         }
@@ -100,6 +100,21 @@ private extension NSManagedObjectContext {
         }
         
         return nil
+    }
+    
+    internal func tryPerformAndWait<T>(_ block: () throws -> T) throws -> T {
+        var result: T? = nil
+        var exception: Error? = nil
+        performAndWait {
+            do {
+                result = try block()
+            } catch {
+                exception = error
+            }
+        }
+        
+        try exception.map { throw $0 }
+        return result!
     }
 }
 

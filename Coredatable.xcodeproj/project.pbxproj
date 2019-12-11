@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6455D7BB23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6455D7BA23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift */; };
+		6455D7BD23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6455D7BC23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift */; };
+		6455D7BF23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6455D7BE23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift */; };
 		646E9853239F057800D3BC6A /* IdentityAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646E9852239F057800D3BC6A /* IdentityAttribute.swift */; };
 		646E9855239F93F100D3BC6A /* personWithNil.json in Resources */ = {isa = PBXBuildFile; fileRef = 646E9854239F93F100D3BC6A /* personWithNil.json */; };
 		646E9857239FF96000D3BC6A /* nestedPerson.json in Resources */ = {isa = PBXBuildFile; fileRef = 646E9856239FF96000D3BC6A /* nestedPerson.json */; };
 		646E9859239FFA5B00D3BC6A /* Many.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646E9858239FFA5B00D3BC6A /* Many.swift */; };
-		646E985B23A0347200D3BC6A /* CoreDataMultiDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646E985A23A0347200D3BC6A /* CoreDataMultiDecoder.swift */; };
 		649E746C239C28D600962EE1 /* Coredatable.h in Headers */ = {isa = PBXBuildFile; fileRef = 649E746A239C28D600962EE1 /* Coredatable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		649E747B239C2A0700962EE1 /* CodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E747A239C2A0700962EE1 /* CodableTests.swift */; };
 		649E747D239C2A0700962EE1 /* Coredatable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 649E7467239C28D600962EE1 /* Coredatable.framework */; };
@@ -46,11 +48,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6455D7BA23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoIdentityAttributesStrategy.swift; sourceTree = "<group>"; };
+		6455D7BC23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleIdentityAttributeStrategy.swift; sourceTree = "<group>"; };
+		6455D7BE23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositeIdentityAttributeStrategy.swift; sourceTree = "<group>"; };
 		646E9852239F057800D3BC6A /* IdentityAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAttribute.swift; sourceTree = "<group>"; };
 		646E9854239F93F100D3BC6A /* personWithNil.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = personWithNil.json; sourceTree = "<group>"; };
 		646E9856239FF96000D3BC6A /* nestedPerson.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nestedPerson.json; sourceTree = "<group>"; };
 		646E9858239FFA5B00D3BC6A /* Many.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Many.swift; sourceTree = "<group>"; };
-		646E985A23A0347200D3BC6A /* CoreDataMultiDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataMultiDecoder.swift; sourceTree = "<group>"; };
 		649E7467239C28D600962EE1 /* Coredatable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Coredatable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		649E746A239C28D600962EE1 /* Coredatable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Coredatable.h; sourceTree = "<group>"; };
 		649E746B239C28D600962EE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -189,7 +193,9 @@
 			isa = PBXGroup;
 			children = (
 				649E74C4239F005900962EE1 /* CoreDataDecoder.swift */,
-				646E985A23A0347200D3BC6A /* CoreDataMultiDecoder.swift */,
+				6455D7BA23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift */,
+				6455D7BC23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift */,
+				6455D7BE23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift */,
 				649E74BE239ED0B900962EE1 /* NSManagedObject+Coredatable.swift */,
 				649E749F239C344300962EE1 /* NSManagedObject+Coredatable.h */,
 				649E74A0239C344300962EE1 /* NSManagedObject+Coredatable.m */,
@@ -338,10 +344,12 @@
 				649E74A2239C344300962EE1 /* NSManagedObject+Coredatable.m in Sources */,
 				649E74BD239D49CF00962EE1 /* CoreDataCodingKey.swift in Sources */,
 				649E74C5239F005900962EE1 /* CoreDataDecoder.swift in Sources */,
-				646E985B23A0347200D3BC6A /* CoreDataMultiDecoder.swift in Sources */,
+				6455D7BD23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift in Sources */,
 				649E74AE239C398400962EE1 /* Encodable+Extension.swift in Sources */,
 				649E7491239C30B100962EE1 /* CoreDataCodable.swift in Sources */,
+				6455D7BB23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift in Sources */,
 				649E74C3239EEF7000962EE1 /* CoreDataEncodable.swift in Sources */,
+				6455D7BF23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift in Sources */,
 				649E74C1239EED7300962EE1 /* CoreDataDecodable.swift in Sources */,
 				649E74AF239C398400962EE1 /* Decodable+Extension.swift in Sources */,
 				646E9853239F057800D3BC6A /* IdentityAttribute.swift in Sources */,

@@ -15,19 +15,15 @@ public protocol CoreDataDecodable: NSManagedObject, AnyCoreDataDecodable {
 
 public extension CoreDataDecodable {
     init(from decoder: Decoder) throws {
-        try self.init(from: decoder, codingKeys: CodingKeys.self)
-    }
-    
-    #warning("maybe not needed. Check after all the work is done, including custom decode init")
-    init<Keys: AnyCoreDataCodingKey>(from decoder: Decoder, codingKeys: Keys.Type) throws {
-        let coreDataDecoder = try CoreDataDecoder<Self, Keys>(decoder: decoder)
+        let coreDataDecoder = try CoreDataDecoder<Self>(decoder: decoder)
         self.init(anotherManagedObject: try coreDataDecoder.decode())
     }
-    
+
     static var identityAttribute: IdentityAttribute { .no }
     
     static func decodeArray(from decoder: Decoder) throws -> [Any] {
-        return try CoreDataMultiDecoder<Self>(decoder: decoder).decode()
+        let coreDataDecoder = try CoreDataDecoder<Self>(decoder: decoder)
+        return try coreDataDecoder.decodeArray()
     }
 }
 
@@ -42,5 +38,5 @@ public protocol AnyCoreDataDecodable: Decodable {
 
 public enum CoreDataCodableError: Error {
     case missingContext(decoder: Decoder)
-    case missingIdentityAttribute(class: AnyClass, identityAttributes: [String], receivedKeys: [String])
+    case missingOrInvalidIdentityAttribute(class: AnyClass, identityAttributes: [String], receivedKeys: [String])
 }

@@ -22,9 +22,9 @@
         <attribute name="personId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <elements>
+        <element name="Country" positionX="150.07421875" positionY="128.3828125" width="128" height="88"/>
         <element name="Person" positionX="-63" positionY="-18" width="128" height="118"/>
         <element name="PersonAttribute" positionX="155.4453125" positionY="-91.3125" width="128" height="88"/>
         <element name="PersonDiffKeys" positionX="-150.41015625" positionY="121.7734375" width="128" height="73"/>
-        <element name="Country" positionX="150.07421875" positionY="128.3828125" width="128" height="88"/>
     </elements>
 </model>

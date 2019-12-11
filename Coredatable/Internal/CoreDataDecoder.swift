@@ -8,10 +8,9 @@
 
 import Foundation
 
-internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable, Keys: AnyCoreDataCodingKey> {
+internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable> {
     private let decoder: Decoder
     private let context: NSManagedObjectContext
-    private let container: KeyedDecodingContainer<Keys.CodingKey>
     
     init(decoder: Decoder) throws {
         guard let context = decoder.managedObjectContext else {
@@ -19,36 +18,21 @@ internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable, Keys: AnyCoreD
         }
         self.decoder = decoder
         self.context = context
-        self.container = try decoder.container(keyedBy: Keys.CodingKey.self)
     }
     
     func decode() throws -> ManagedObject {
-        let object = try existingObject() ?? ManagedObject.init(context: context)
-        try object.applyValues(from: container)
-        return object
+        let container = try decoder.container(keyedBy: ManagedObject.CodingKeys.CodingKey.self)
+        return try context.tryPerformAndWait {
+            let object = try ManagedObject.identityAttribute.strategy.existingObject(context: context, container: container) ?? ManagedObject.init(context: context)
+            try object.applyValues(from: container)
+            return object
+        }
     }
-}
-
-private extension CoreDataDecoder {
-    func existingObject() throws -> ManagedObject? {
-        switch ManagedObject.identityAttribute.kind {
-        case .no:
-            return nil
-                        
-        case let .single(propertyName):
-            guard let codingKey = Keys(propertyName: propertyName),
-                let value = container.decodeAny(forKey: codingKey.standardCodingKey) else {
-                    let receivedKeys = container.allKeys.map { $0.key.stringValue }
-                    throw CoreDataCodableError.missingIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: receivedKeys)
-            }
-            
-            let request = NSFetchRequest<ManagedObject>(entityName: ManagedObject.entity(inManagedObjectContext: context).name!)
-            request.predicate = NSPredicate(format: "\(propertyName) IN %@", [value])
-            return try context.fetch(request).first
-            
-        case let .composite(propertyNames):
-            #warning("TODO multiple identity attribute")
-            return nil
+    
+    func decodeArray() throws -> [ManagedObject] {
+        let container = try decoder.unkeyedContainer()
+        return try context.tryPerformAndWait {
+            return try ManagedObject.identityAttribute.strategy.decodeArray(context: context, container: container)
         }
     }
 }

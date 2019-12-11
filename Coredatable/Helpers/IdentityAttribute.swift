@@ -9,25 +9,19 @@
 import Foundation
 
 public struct IdentityAttribute {
-    enum Kind {
-        case no
-        case single(String)
-        case composite([String])
-    }
-    
     private let propertyNames: [String]
     fileprivate init(_ propertyNames: Set<String>) {
         self.propertyNames = Array(propertyNames)
     }
     public static var no: IdentityAttribute { IdentityAttribute([]) }
     
-    var kind: Kind {
+    internal var strategy: IdentityAttributeStrategy {
         if propertyNames.count == 0 {
-            return .no
+            return NoIdentityAttributesStrategy()
         } else if propertyNames.count == 1 {
-            return .single(propertyNames[0])
+            return SingleIdentityAttributeStrategy(propertyName: propertyNames[0])
         } else {
-            return .composite(propertyNames)
+            return CompositeIdentityAttributeStrategy(propertyNames: propertyNames)
         }
     }
 }
@@ -44,4 +38,9 @@ extension IdentityAttribute: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: String...) {
         self = IdentityAttribute(Set(elements))
     }
+}
+
+internal protocol IdentityAttributeStrategy {
+    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: KeyedDecodingContainer<ManagedObject.CodingKeys.CodingKey>) throws -> ManagedObject?
+    func decodeArray<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: UnkeyedDecodingContainer) throws -> [ManagedObject]
 }
