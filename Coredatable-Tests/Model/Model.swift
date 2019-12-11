@@ -14,7 +14,7 @@ final class Person: NSManagedObject, CoreDataCodable {
     typealias CodingKeys = CoreDataDefaultCodingKeys
     
     @NSManaged var personId: Int
-    @NSManaged var fullName: String
+    @NSManaged var fullName: String?
     @NSManaged var city: String?
     @NSManaged var country: Country?
     @NSManaged var attributesSet: NSSet

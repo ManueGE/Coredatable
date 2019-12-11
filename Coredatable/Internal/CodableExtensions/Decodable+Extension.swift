@@ -102,3 +102,19 @@ extension UnkeyedDecodingContainer {
 		return (0..<count).compactMap { _ in container.decodeAny() }
 	}
 }
+
+extension SingleValueDecodingContainer {
+    
+    mutating func decodeAny() -> Any? {
+        if let boolValue = try? decode(Bool.self) {
+            return boolValue
+        } else if let stringValue = try? decode(String.self) {
+            return stringValue
+        } else if let intValue = try? decode(Int.self) {
+            return intValue
+        } else if let doubleValue = try? decode(Double.self) {
+            return doubleValue
+        }
+        return nil
+    }
+}

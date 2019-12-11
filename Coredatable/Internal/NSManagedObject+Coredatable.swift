@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal extension NSManagedObject {
+internal extension CoreDataDecodable {
     static func entity(inManagedObjectContext context: NSManagedObjectContext) -> NSEntityDescription {
         guard let model = context.managedObjectModel else {
             fatalError("Could not find managed object model for the provided context.")
@@ -39,6 +39,11 @@ internal extension NSManagedObject {
         }
     }
     
+    func setValue<Keys: AnyCoreDataCodingKey>(_ value: Any?, forKey codingKey: Keys) throws {
+        try validateValue(value, forKey: codingKey)
+        setValue(value, forKey: codingKey.propertyName)
+    }
+    
     private func validateValue(_ value: Any?, forKey codingKey: AnyCoreDataCodingKey) throws {
         var valuePointer: AutoreleasingUnsafeMutablePointer<AnyObject?>
         if let value = value {
@@ -54,8 +59,7 @@ internal extension NSManagedObject {
     
     private func set<Keys: AnyCoreDataCodingKey>(_ attribute: NSAttributeDescription, from container: KeyedDecodingContainer<Keys.CodingKey>, with codingKey: Keys) throws {
         let value = container.decodeAny(forKey: codingKey.standardCodingKey)
-        try validateValue(value, forKey: codingKey)
-        setValue(value, forKey: codingKey.propertyName)
+        try setValue(value, forKey: codingKey)
     }
     
     private func set<Keys: AnyCoreDataCodingKey>(_ relationship: NSRelationshipDescription, from container: KeyedDecodingContainer<Keys.CodingKey>, with codingKey: Keys) throws {

@@ -21,11 +21,15 @@ internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable> {
     }
     
     func decode() throws -> ManagedObject {
-        let container = try decoder.container(keyedBy: ManagedObject.CodingKeys.CodingKey.self)
-        return try context.tryPerformAndWait {
-            let object = try ManagedObject.identityAttribute.strategy.existingObject(context: context, container: container) ?? ManagedObject.init(context: context)
-            try object.applyValues(from: container)
-            return object
+        do {
+            let container = try decoder.container(keyedBy: ManagedObject.CodingKeys.CodingKey.self)
+            return try context.tryPerformAndWait {
+                let object = try ManagedObject.identityAttribute.strategy.existingObject(context: context, container: container) ?? ManagedObject.init(context: context)
+                try object.applyValues(from: container)
+                return object
+            }
+        } catch {
+            return try decodeFromId(previousError: error)
         }
     }
     
@@ -35,8 +39,19 @@ internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable> {
             return try ManagedObject.identityAttribute.strategy.decodeArray(context: context, container: container)
         }
     }
+    
+    private func decodeFromId(previousError: Error) throws -> ManagedObject {
+        guard let strategy = ManagedObject.identityAttribute.strategy as? SingleIdentityAttributeStrategy else {
+            throw previousError
+        }
+        do {
+            let container = try decoder.singleValueContainer()
+            return try strategy.decodeObject(context: context, container: container)
+        } catch {
+            throw previousError
+        }
+    }
 }
 
-#warning("Somehow we need to insert elements by its id too")
 #warning("Check groot details: contexts run on their own blocks, remove objects if fails...")
 #warning("Include buitl in keypath coding keys")

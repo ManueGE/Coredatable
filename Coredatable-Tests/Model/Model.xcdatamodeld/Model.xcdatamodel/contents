@@ -7,7 +7,7 @@
     </entity>
     <entity name="Person" representedClassName=".Person" syncable="YES">
         <attribute name="city" optional="YES" attributeType="String"/>
-        <attribute name="fullName" attributeType="String"/>
+        <attribute name="fullName" optional="YES" attributeType="String"/>
         <attribute name="personId" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="attributesSet" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PersonAttribute" inverseName="people" inverseEntity="PersonAttribute"/>
         <relationship name="country" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Country" inverseName="people" inverseEntity="Country"/>

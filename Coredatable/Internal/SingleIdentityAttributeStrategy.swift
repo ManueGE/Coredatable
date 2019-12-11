@@ -23,10 +23,18 @@ internal struct SingleIdentityAttributeStrategy: IdentityAttributeStrategy {
         // find the id for any object in the container
         var idsContainer = container
         while !idsContainer.isAtEnd {
-            let objectContainer = try idsContainer.nestedContainer(keyedBy: ManagedObject.CodingKeys.CodingKey.self)
-            let identifier = try findIdentifier(for: ManagedObject.self, in: objectContainer) as AnyHashable
-            identifiers.append(identifier)
-            objectContainersById[identifier] = objectContainer
+            do {
+                let objectContainer = try idsContainer.nestedContainer(keyedBy: ManagedObject.CodingKeys.CodingKey.self)
+                let identifier = try findIdentifier(for: ManagedObject.self, in: objectContainer) as AnyHashable
+                identifiers.append(identifier)
+                objectContainersById[identifier] = objectContainer
+            } catch {
+                if let identifier = idsContainer.decodeAny() as? AnyHashable {
+                    identifiers.append(identifier)
+                } else {
+                    throw error
+                }
+            }
         }
         
         // find the existing objects with those ids
@@ -39,17 +47,34 @@ internal struct SingleIdentityAttributeStrategy: IdentityAttributeStrategy {
         
         // Create or update objects
         return try identifiers.compactMap { identifier in
-            guard let objectContainer = objectContainersById[identifier] else { return nil }
             let rootObject: ManagedObject
             if let existingObject = existingObjectsById[identifier] {
                 rootObject = existingObject
             } else {
+                guard let key = ManagedObject.CodingKeys(propertyName: propertyName) else {
+                    throw CoreDataCodableError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: [])
+                }
                 rootObject = ManagedObject(context: context)
-                rootObject.setValue(identifier, forKey: propertyName)
+                try rootObject.setValue(identifier, forKey: key)
             }
-            try rootObject.applyValues(from: objectContainer)
+            
+            if let objectContainer = objectContainersById[identifier] {
+                try rootObject.applyValues(from: objectContainer)
+            }
+            
             return rootObject
         }
+    }
+    
+    func decodeObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: SingleValueDecodingContainer) throws -> ManagedObject {
+        var container = container
+        guard let codingKey = ManagedObject.CodingKeys(propertyName: propertyName),
+            let identifier = container.decodeAny() else {
+            throw CoreDataCodableError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: [])
+        }
+        let object = try existingObjects(context: context, ids: [identifier]).first ?? ManagedObject(context: context)
+        try object.setValue(identifier, forKey: codingKey)
+        return object
     }
     
     // MARK: - Helpers

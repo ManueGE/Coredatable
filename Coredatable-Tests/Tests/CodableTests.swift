@@ -50,20 +50,20 @@ class CodableTests: XCTestCase {
         let data = Data(resource: "person.json")!
         
         // when
-        let person = try! jsonDecoder.decode(Person.self, from: data)
+        let person = try? jsonDecoder.decode(Person.self, from: data)
         
         // then
-        XCTAssertEqual(person.personId, 1)
-        XCTAssertEqual(person.fullName, "Marco")
-        XCTAssertEqual(person.city, "Murcia")
-        XCTAssertEqual(person.country?.id, 1)
-        XCTAssertEqual(person.country?.name, "Spain")
-        let attributes = person.attributes.sorted { $0.id < $1.id }
-        XCTAssertEqual(attributes.count, 2)
-        XCTAssertEqual(attributes[0].id, 1)
-        XCTAssertEqual(attributes[0].name, "funny")
-        XCTAssertEqual(attributes[1].id, 2)
-        XCTAssertEqual(attributes[1].name, "small")
+        XCTAssertEqual(person?.personId, 1)
+        XCTAssertEqual(person?.fullName, "Marco")
+        XCTAssertEqual(person?.city, "Murcia")
+        XCTAssertEqual(person?.country?.id, 1)
+        XCTAssertEqual(person?.country?.name, "Spain")
+        let attributes = person?.attributes.sorted { $0.id < $1.id }
+        XCTAssertEqual(attributes?.count, 2)
+        XCTAssertEqual(attributes?[0].id, 1)
+        XCTAssertEqual(attributes?[0].name, "funny")
+        XCTAssertEqual(attributes?[1].id, 2)
+        XCTAssertEqual(attributes?[1].name, "small")
     }
     
     func testDecodeSimpleObjectWithNilValue() {
@@ -71,20 +71,20 @@ class CodableTests: XCTestCase {
         let data = Data(resource: "personWithNil.json")!
         
         // when
-        let person = try! jsonDecoder.decode(Person.self, from: data)
+        let person = try? jsonDecoder.decode(Person.self, from: data)
         
         // then
-        XCTAssertEqual(person.personId, 1)
-        XCTAssertEqual(person.fullName, "Marco")
-        XCTAssertEqual(person.country?.id, 1)
-        XCTAssertEqual(person.country?.name, "Spain")
-        XCTAssertNil(person.city)
-        let attributes = person.attributes.sorted { $0.id < $1.id }
-        XCTAssertEqual(attributes.count, 2)
-        XCTAssertEqual(attributes[0].id, 1)
-        XCTAssertEqual(attributes[0].name, "funny")
-        XCTAssertEqual(attributes[1].id, 2)
-        XCTAssertEqual(attributes[1].name, "small")
+        XCTAssertEqual(person?.personId, 1)
+        XCTAssertEqual(person?.fullName, "Marco")
+        XCTAssertEqual(person?.country?.id, 1)
+        XCTAssertEqual(person?.country?.name, "Spain")
+        XCTAssertNil(person?.city)
+        let attributes = person?.attributes.sorted { $0.id < $1.id }
+        XCTAssertEqual(attributes?.count, 2)
+        XCTAssertEqual(attributes?[0].id, 1)
+        XCTAssertEqual(attributes?[0].name, "funny")
+        XCTAssertEqual(attributes?[1].id, 2)
+        XCTAssertEqual(attributes?[1].name, "small")
     }
     
     func testDecodeWithKeyStrategy() {
@@ -93,11 +93,11 @@ class CodableTests: XCTestCase {
         let data = Data(resource: "personSnakeCase.json")!
         
         // when
-        let person = try! jsonDecoder.decode(Person.self, from: data)
+        let person = try? jsonDecoder.decode(Person.self, from: data)
         
         // then
-        XCTAssertEqual(person.personId, 1)
-        XCTAssertEqual(person.fullName, "Marco")
+        XCTAssertEqual(person?.personId, 1)
+        XCTAssertEqual(person?.fullName, "Marco")
     }
     
     func testDecodeWithCustomKeys() {
@@ -123,13 +123,13 @@ class CodableTests: XCTestCase {
         let data = Data(resource: "person.json")!
         
         // when
-        let person = try! jsonDecoder.decode(Person.self, from: data)
+        let person = try? jsonDecoder.decode(Person.self, from: data)
         
         // then
         XCTAssertEqual(try viewContext.count(for: request), 1)
-        XCTAssertEqual(person.personId, 1)
-        XCTAssertEqual(person.fullName, "Marco")
-        XCTAssertEqual(person.objectID, existing.objectID)
+        XCTAssertEqual(person?.personId, 1)
+        XCTAssertEqual(person?.fullName, "Marco")
+        XCTAssertEqual(person?.objectID, existing.objectID)
     }
     
     func testDecodeUpdatingValueWithSingleUniqueIdentifierAndNilValue() {
@@ -144,14 +144,14 @@ class CodableTests: XCTestCase {
         let data = Data(resource: "personWithNil.json")!
         
         // when
-        let person = try! jsonDecoder.decode(Person.self, from: data)
+        let person = try? jsonDecoder.decode(Person.self, from: data)
         
         // then
         XCTAssertEqual(try viewContext.count(for: request), 1)
-        XCTAssertEqual(person.personId, 1)
-        XCTAssertEqual(person.fullName, "Marco")
-        XCTAssertNil(person.city)
-        XCTAssertEqual(person.objectID, existing.objectID)
+        XCTAssertEqual(person?.personId, 1)
+        XCTAssertEqual(person?.fullName, "Marco")
+        XCTAssertNil(person?.city)
+        XCTAssertEqual(person?.objectID, existing.objectID)
     }
     
     func testDecodeUpdatingValueWithSingleUniqueIdentifierAndMissingKeys() {
@@ -166,14 +166,14 @@ class CodableTests: XCTestCase {
         let data = Data.fromJson(["personId": 1, "fullName": "Marco"])!
         
         // when
-        let person = try! jsonDecoder.decode(Person.self, from: data)
+        let person = try? jsonDecoder.decode(Person.self, from: data)
         
         // then
-        XCTAssertEqual(try viewContext.count(for: request), 1)
-        XCTAssertEqual(person.personId, 1)
-        XCTAssertEqual(person.fullName, "Marco")
-        XCTAssertEqual(person.city, "Murcia")
-        XCTAssertEqual(person.objectID, existing.objectID)
+        XCTAssertEqual(try? viewContext.count(for: request), 1)
+        XCTAssertEqual(person?.personId, 1)
+        XCTAssertEqual(person?.fullName, "Marco")
+        XCTAssertEqual(person?.city, "Murcia")
+        XCTAssertEqual(person?.objectID, existing.objectID)
     }
     
     func testDecodeManyUpdatingExistingValues() {
@@ -194,44 +194,139 @@ class CodableTests: XCTestCase {
         let data = Data.fromArray([["personId": 1, "fullName": "Marco"], ["personId": 2, "fullName": "Ana"]])!
         
         // when
-        let people = try! jsonDecoder.decode(Many<Person>.self, from: data)
+        let people = try? jsonDecoder.decode(Many<Person>.self, from: data)
         
         // then
         XCTAssertEqual(try viewContext.count(for: request), 2)
         
-        XCTAssertEqual(people[0].personId, 1)
-        XCTAssertEqual(people[0].fullName, "Marco")
-        XCTAssertEqual(people[0].city, "Murcia")
-        XCTAssertEqual(people[0].objectID, existing1.objectID)
+        XCTAssertEqual(people?[0].personId, 1)
+        XCTAssertEqual(people?[0].fullName, "Marco")
+        XCTAssertEqual(people?[0].city, "Murcia")
+        XCTAssertEqual(people?[0].objectID, existing1.objectID)
         
-        XCTAssertEqual(people[1].personId, 2)
-        XCTAssertEqual(people[1].fullName, "Ana")
-        XCTAssertEqual(people[1].city, "La Ñora")
-        XCTAssertEqual(people[1].objectID, existing2.objectID)
+        XCTAssertEqual(people?[1].personId, 2)
+        XCTAssertEqual(people?[1].fullName, "Ana")
+        XCTAssertEqual(people?[1].city, "La Ñora")
+        XCTAssertEqual(people?[1].objectID, existing2.objectID)
     }
     
-    func testDecodeObjectWithNestedCoreData() {
+    func testDecodeObjectWithNestedManagedObject() {
         // given
         let data = Data(resource: "nestedPerson.json")!
         
         // when
-        let object = try! jsonDecoder.decode(NestedPerson.self, from: data)
+        let object = try? jsonDecoder.decode(NestedPerson.self, from: data)
         
         // then
-        XCTAssertEqual(object.token, "abcdefg")
-        let person = object.person
-        XCTAssertEqual(person.personId, 1)
-        XCTAssertEqual(person.fullName, "Marco")
-        XCTAssertEqual(person.city, "Murcia")
-        XCTAssertEqual(person.country?.id, 1)
-        XCTAssertEqual(person.country?.name, "Spain")
-        let attributes = person.attributes.sorted { $0.id < $1.id }
-        XCTAssertEqual(attributes.count, 2)
-        XCTAssertEqual(attributes[0].id, 1)
-        XCTAssertEqual(attributes[0].name, "funny")
-        XCTAssertEqual(attributes[1].id, 2)
-        XCTAssertEqual(attributes[1].name, "small")
+        XCTAssertEqual(object?.token, "abcdefg")
+        let person = object?.person
+        XCTAssertEqual(person?.personId, 1)
+        XCTAssertEqual(person?.fullName, "Marco")
+        XCTAssertEqual(person?.city, "Murcia")
+        XCTAssertEqual(person?.country?.id, 1)
+        XCTAssertEqual(person?.country?.name, "Spain")
+        let attributes = person?.attributes.sorted { $0.id < $1.id }
+        XCTAssertEqual(attributes?.count, 2)
+        XCTAssertEqual(attributes?[0].id, 1)
+        XCTAssertEqual(attributes?[0].name, "funny")
+        XCTAssertEqual(attributes?[1].id, 2)
+        XCTAssertEqual(attributes?[1].name, "small")
     }
+
+    func testDecodeObjectFromIdentityAttributes() {
+        // given
+        struct Wrapper: Decodable {
+            let person: Person
+        }
+        let data = Data.fromJson(["person": 1])!
+        
+        // when
+        let wrapper = try? jsonDecoder.decode(Wrapper.self, from: data)
+        
+        // then
+        let request: NSFetchRequest<Person> = NSFetchRequest(entityName: "Person")
+        XCTAssertEqual(try viewContext.count(for: request), 1)
+        
+        XCTAssertEqual(wrapper?.person.personId, 1)
+        XCTAssertNil(wrapper?.person.fullName)
+        XCTAssertNil(wrapper?.person.city)
+    }
+    
+    func testDecodeUpdateObjectFromIdentityAttributes() {
+        // given
+        struct Wrapper: Decodable {
+            let person: Person
+        }
+        let data = Data.fromJson(["person": 1])!
+        let existing1 = Person(context: viewContext)
+         existing1.fullName = "Marco"
+         existing1.personId = 1
+         existing1.city = "Murcia"
+        
+        // when
+        let wrapper = try? jsonDecoder.decode(Wrapper.self, from: data)
+        
+        // then
+        let request: NSFetchRequest<Person> = NSFetchRequest(entityName: "Person")
+        XCTAssertEqual(try viewContext.count(for: request), 1)
+        
+        XCTAssertEqual(wrapper?.person.personId, 1)
+        XCTAssertEqual(wrapper?.person.fullName, "Marco")
+        XCTAssertEqual(wrapper?.person.city, "Murcia")
+        XCTAssertEqual(wrapper?.person.objectID, existing1.objectID)
+    }
+    
+    func testDecodeArrayFromIdentityAttributes() {
+        // given
+        let data = Data.fromArray([1, 2])!
+        
+        // when
+        let people = try? jsonDecoder.decode(Many<Person>.self, from: data)
+        
+        // then
+        let request: NSFetchRequest<Person> = NSFetchRequest(entityName: "Person")
+        XCTAssertEqual(try viewContext.count(for: request), 2)
+        
+        XCTAssertEqual(people?[0].personId, 1)
+        XCTAssertNil(people?[0].fullName)
+        XCTAssertNil(people?[0].city)
+        
+        XCTAssertEqual(people?[1].personId, 2)
+        XCTAssertNil(people?[1].fullName)
+        XCTAssertNil(people?[1].city)
+    }
+    
+    func testDecodeArrayUpdateFromIdentityAttributes() {
+        // given
+        let existing1 = Person(context: viewContext)
+        existing1.fullName = "Marco"
+        existing1.personId = 1
+        existing1.city = "Murcia"
+        
+        let existing2 = Person(context: viewContext)
+        existing2.fullName = "Ana"
+        existing2.personId = 2
+        existing2.city = "La Ñora"
+        let data = Data.fromArray([1, 2])!
+        
+        // when
+        let people = try? jsonDecoder.decode(Many<Person>.self, from: data)
+        
+        // then
+        let request: NSFetchRequest<Person> = NSFetchRequest(entityName: "Person")
+        XCTAssertEqual(try viewContext.count(for: request), 2)
+        
+        XCTAssertEqual(people?[0].personId, 1)
+        XCTAssertEqual(people?[0].fullName, "Marco")
+        XCTAssertEqual(people?[0].city, "Murcia")
+        XCTAssertEqual(people?[0].objectID, existing1.objectID)
+        
+        XCTAssertEqual(people?[1].personId, 2)
+        XCTAssertEqual(people?[1].fullName, "Ana")
+        XCTAssertEqual(people?[1].city, "La Ñora")
+        XCTAssertEqual(people?[1].objectID, existing2.objectID)
+    }
+    
     // MARK: - Encode
     func testEncodeSimpleObject() {
         // given
@@ -241,12 +336,12 @@ class CodableTests: XCTestCase {
         
         // when
         let data = try! JSONEncoder().encode(marco)
-        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+        let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
         
         // then
-        XCTAssertEqual(json.count, 2)
-        XCTAssertEqual(json["personId"] as! Int, 1)
-        XCTAssertEqual(json["fullName"] as! String, "Marco")
+        XCTAssertEqual(json?.count, 2)
+        XCTAssertEqual(json?["personId"] as! Int, 1)
+        XCTAssertEqual(json?["fullName"] as! String, "Marco")
     }
     
     func testEncodeWithKeyStrategy() {
@@ -259,12 +354,12 @@ class CodableTests: XCTestCase {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         let data = try! encoder.encode(marco)
-        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+        let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
         
         // then
-        XCTAssertEqual(json.count, 2)
-        XCTAssertEqual(json["person_id"] as! Int, 1)
-        XCTAssertEqual(json["full_name"] as! String, "Marco")
+        XCTAssertEqual(json?.count, 2)
+        XCTAssertEqual(json?["person_id"] as! Int, 1)
+        XCTAssertEqual(json?["full_name"] as! String, "Marco")
     }
     
     func testEncodeWithCustomKeys() {
@@ -277,11 +372,11 @@ class CodableTests: XCTestCase {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         let data = try! encoder.encode(marco)
-        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+        let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
         
         // then
-        XCTAssertEqual(json.count, 2)
-        XCTAssertEqual(json["id"] as? Int, 1)
-        XCTAssertEqual(json["name"] as? String, "Marco")
+        XCTAssertEqual(json?.count, 2)
+        XCTAssertEqual(json?["id"] as? Int, 1)
+        XCTAssertEqual(json?["name"] as? String, "Marco")
     }
 }
