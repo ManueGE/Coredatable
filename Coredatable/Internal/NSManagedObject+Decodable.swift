@@ -9,26 +9,10 @@
 import Foundation
 
 internal extension CoreDataDecodable {
-    static func entity(inManagedObjectContext context: NSManagedObjectContext) -> NSEntityDescription {
-        guard let model = context.managedObjectModel else {
-            fatalError("Could not find managed object model for the provided context.")
-        }
-        
-        let className = String(reflecting: self)
-        
-        for entity in model.entities {
-            if entity.managedObjectClassName == className {
-                return entity
-            }
-        }
-        
-        fatalError("Could not locate the entity for \(className).")
-    }
-
-    func applyValues<Keys: AnyCoreDataCodingKey>(from container: KeyedDecodingContainer<Keys.CodingKey>) throws {
+    func applyValues<Keys: AnyCoreDataCodingKey>(from container: KeyedDecodingContainer<Keys.Standard>) throws {
         try entity.properties.forEach { property in
             guard let codingKey = Keys(propertyName: property.name),
-                container.contains(codingKey.standardCodingKey)
+                container.contains(codingKey.standarized)
                 else { return }
 
             if let attribute = property as? NSAttributeDescription {
@@ -57,15 +41,15 @@ internal extension CoreDataDecodable {
         try validateValue(valuePointer, forKey: codingKey.propertyName)
     }
     
-    private func set<Keys: AnyCoreDataCodingKey>(_ attribute: NSAttributeDescription, from container: KeyedDecodingContainer<Keys.CodingKey>, with codingKey: Keys) throws {
-        let value = container.decodeAny(forKey: codingKey.standardCodingKey)
+    private func set<Keys: AnyCoreDataCodingKey>(_ attribute: NSAttributeDescription, from container: KeyedDecodingContainer<Keys.Standard>, with codingKey: Keys) throws {
+        let value = container.decodeAny(forKey: codingKey.standarized)
         try setValue(value, forKey: codingKey)
     }
     
-    private func set<Keys: AnyCoreDataCodingKey>(_ relationship: NSRelationshipDescription, from container: KeyedDecodingContainer<Keys.CodingKey>, with codingKey: Keys) throws {
+    private func set<Keys: AnyCoreDataCodingKey>(_ relationship: NSRelationshipDescription, from container: KeyedDecodingContainer<Keys.Standard>, with codingKey: Keys) throws {
         let className = relationship.destinationEntity?.managedObjectClassName ?? ""
         let theClass: AnyClass? = NSClassFromString(className)
-        let standardKey = codingKey.standardCodingKey
+        let standardKey = codingKey.standarized
         let childDecoder = try container.superDecoder(forKey: standardKey)
         
         if relationship.isToMany {
@@ -94,41 +78,3 @@ internal extension CoreDataDecodable {
         }
     }
 }
-
-private extension Decodable {
-    static func decodeArray(with decoder: Decoder) throws -> [Any] {
-        #warning("Should be `Many` instead of Array to improve performance")
-        return try [Self].init(from: decoder)
-    }
-}
-
-extension NSManagedObjectContext {
-    
-    fileprivate var managedObjectModel: NSManagedObjectModel? {
-        if let persistentStoreCoordinator = persistentStoreCoordinator {
-            return persistentStoreCoordinator.managedObjectModel
-        }
-        
-        if let parent = parent {
-            return parent.managedObjectModel
-        }
-        
-        return nil
-    }
-    
-    internal func tryPerformAndWait<T>(_ block: () throws -> T) throws -> T {
-        var result: T? = nil
-        var exception: Error? = nil
-        performAndWait {
-            do {
-                result = try block()
-            } catch {
-                exception = error
-            }
-        }
-        
-        try exception.map { throw $0 }
-        return result!
-    }
-}
-

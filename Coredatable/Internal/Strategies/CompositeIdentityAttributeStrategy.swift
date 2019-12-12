@@ -11,7 +11,7 @@ import Foundation
 #warning("TODO multiple identity attribute")
 internal struct CompositeIdentityAttributeStrategy: IdentityAttributeStrategy {
     let propertyNames: [String]
-    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: KeyedDecodingContainer<ManagedObject.CodingKeys.CodingKey>) throws -> ManagedObject? {
+    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: KeyedDecodingContainer<ManagedObject.CodingKeys.Standard>) throws -> ManagedObject? {
         return nil
     }
     

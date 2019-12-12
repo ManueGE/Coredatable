@@ -36,7 +36,7 @@ public protocol AnyCoreDataEncodable: NSManagedObject, Encodable {
     func encode(to encoder: Encoder, skipping: Set<NSRelationshipDescription>) throws
 }
 
-extension Encodable {
+internal extension Encodable {
     static func encode(_ array: [Any], to encoder: Encoder) throws {
         let castArray = array.compactMap { $0 as? Self }
         try castArray.encode(to: encoder)

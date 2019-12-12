@@ -8,27 +8,9 @@
 
 import CoreData
 
-#warning("Maybe removable")
-// MARK: - Convert to array / dictionary
-/*
-extension Decoder {
-	func asDictionary() throws -> [AnyHashable: Any] {
-		let container = try self.container(keyedBy: StringCodingKey.self)
-		return container.allKeys.reduce([:]) { (current, key) -> [AnyHashable: Any] in
-			var current = current
-			current[key.stringValue] = container.decodeAny(forKey: key)
-			return current
-		}
-	}
-	
-	func asArray() throws -> [Any] {
-		var container = try self.unkeyedContainer()
-		let count = container.count ?? 0
-		return (0..<count).compactMap { _ in container.decodeAny() }
-	}
-}
-*/
-extension KeyedDecodingContainer {
+
+// MARK: - Keyed Container
+internal extension KeyedDecodingContainer {
 	
 	func decodeAny(forKey key: Key) -> Any? {
 		if let boolValue = try? decode(Bool.self, forKey: key) {
@@ -49,7 +31,7 @@ extension KeyedDecodingContainer {
 		return nil
 	}
 	
-	func decode(_ type: [AnyHashable: Any].Type, forKey key: K) throws -> [AnyHashable: Any] {
+	private func decode(_ type: [AnyHashable: Any].Type, forKey key: K) throws -> [AnyHashable: Any] {
 		let container = try self.nestedContainer(keyedBy: StringCodingKey.self, forKey: key)
 		return container.allKeys.reduce([:]) { (current, key) -> [AnyHashable: Any] in
 			var current = current
@@ -58,15 +40,15 @@ extension KeyedDecodingContainer {
 		}
 	}
 	
-	func decode(_ type: [Any].Type, forKey key: K) throws -> [Any] {
+	private func decode(_ type: [Any].Type, forKey key: K) throws -> [Any] {
 		var container = try self.nestedUnkeyedContainer(forKey: key)
 		let count = container.count ?? 0
 		return (0..<count).compactMap { _ in container.decodeAny() }
 	}
 }
 
-
-extension UnkeyedDecodingContainer {
+// MARK: - Unkeyed Container
+internal extension UnkeyedDecodingContainer {
 	
 	mutating func decodeAny() -> Any? {
 		if let boolValue = try? decode(Bool.self) {
@@ -87,7 +69,7 @@ extension UnkeyedDecodingContainer {
 		return nil
 	}
 	
-	mutating func decode(_ type: [AnyHashable: Any].Type) throws -> [AnyHashable: Any] {
+	private mutating func decode(_ type: [AnyHashable: Any].Type) throws -> [AnyHashable: Any] {
 		let container = try self.nestedContainer(keyedBy: StringCodingKey.self)
 		return container.allKeys.reduce([:]) { (current, key) -> [AnyHashable: Any] in
 			var current = current
@@ -96,14 +78,16 @@ extension UnkeyedDecodingContainer {
 		}
 	}
 	
-	mutating func decode(_ type: [Any].Type) throws -> [Any] {
+	private mutating func decode(_ type: [Any].Type) throws -> [Any] {
 		var container = try nestedUnkeyedContainer()
 		let count = container.count ?? 0
 		return (0..<count).compactMap { _ in container.decodeAny() }
 	}
 }
 
-extension SingleValueDecodingContainer {
+// MARK: - Single Value Container
+
+internal extension SingleValueDecodingContainer {
     
     mutating func decodeAny() -> Any? {
         if let boolValue = try? decode(Bool.self) {

@@ -1,5 +1,5 @@
 //
-//  Decodable+ManagedObjectContext.swift
+//  Decoder+ManagedObjectContext.swift
 //  Coredatable
 //
 //  Created by Manuel García-Estañ on 12/07/2019.

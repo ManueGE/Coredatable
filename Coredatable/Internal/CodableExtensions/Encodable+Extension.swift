@@ -8,23 +8,9 @@
 
 import Foundation
 
-#warning("Maybe removable")
-/*
-extension Encoder {
-	func encode(_ dictionary: [String: Any]) throws {
-		var container = self.container(keyedBy: StringCodingKey.self)
-		try dictionary.forEach { (key, value) in
-			try container.encodeAny(value, forKey: StringCodingKey(key))
-		}
-	}
-	
-	func encode(_ array: [Any]) throws {
-		var container = unkeyedContainer()
-		try array.forEach {  try container.encodeAny($0) }
-	}
-}
-*/
-extension KeyedEncodingContainer {
+// MARK: - Keyed Container
+
+internal extension KeyedEncodingContainer {
 	mutating func encodeAny(_ value: Any, forKey key: Key) throws {
 		if let value = value as? Bool {
 			try encode(value, forKey: key)
@@ -54,7 +40,9 @@ extension KeyedEncodingContainer {
 	}
 }
 
-extension UnkeyedEncodingContainer {
+// MARK: - Unkeyed Container
+
+internal extension UnkeyedEncodingContainer {
 	mutating func encodeAny(_ value: Any) throws {
 		if let value = value as? Bool {
 			try encode(value)
@@ -71,14 +59,14 @@ extension UnkeyedEncodingContainer {
 		}
 	}
 	
-	mutating func encode(_ dictionary: [String: Any]) throws {
+	private mutating func encode(_ dictionary: [String: Any]) throws {
 		var container = nestedContainer(keyedBy: StringCodingKey.self)
 		try dictionary.forEach { (key, value) in
 			try container.encodeAny(value, forKey: StringCodingKey(key))
 		}
 	}
 	
-	mutating func encode(_ array: [Any]) throws {
+	private mutating func encode(_ array: [Any]) throws {
 		var container = nestedUnkeyedContainer()
 		try array.forEach { try container.encodeAny($0) }
 	}

@@ -10,7 +10,7 @@ import Foundation
 
 internal final class CoreDataEncoder<ManagedObject: CoreDataEncodable> {
     private typealias Keys = ManagedObject.CodingKeys
-    private typealias KeyedContainer = KeyedEncodingContainer<Keys.CodingKey>
+    private typealias KeyedContainer = KeyedEncodingContainer<Keys.Standard>
     
     let encoder: Encoder
     private var skippableRelationships: Set<NSRelationshipDescription>
@@ -21,7 +21,7 @@ internal final class CoreDataEncoder<ManagedObject: CoreDataEncodable> {
     }
     
     func encode(_ object: ManagedObject) throws {
-        let container = encoder.container(keyedBy: ManagedObject.CodingKeys.CodingKey.self)
+        let container = encoder.container(keyedBy: ManagedObject.CodingKeys.Standard.self)
         try encode(object, with: container)
     }
     
@@ -41,7 +41,7 @@ internal final class CoreDataEncoder<ManagedObject: CoreDataEncodable> {
     func encode(_ array: [ManagedObject]) throws {
         var container = encoder.unkeyedContainer()
         try array.forEach {
-            let childContainer = container.nestedContainer(keyedBy: Keys.CodingKey.self)
+            let childContainer = container.nestedContainer(keyedBy: Keys.Standard.self)
             try encode($0, with: childContainer)
         }
     }
@@ -49,9 +49,9 @@ internal final class CoreDataEncoder<ManagedObject: CoreDataEncodable> {
     private func encode(_ attribute: NSAttributeDescription, object: ManagedObject, key: Keys, container: KeyedContainer) throws {
         var container = container
         if let value = object.value(forKey: key.propertyName) {
-            try container.encodeAny(value, forKey: key.standardCodingKey)
+            try container.encodeAny(value, forKey: key.standarized)
         } else {
-            try container.encodeNil(forKey: key.standardCodingKey)
+            try container.encodeNil(forKey: key.standarized)
         }
     }
     
@@ -63,9 +63,9 @@ internal final class CoreDataEncoder<ManagedObject: CoreDataEncodable> {
         _ = relationship.inverseRelationship.map { skippableRelationships.insert($0) }
         
         var container = container
-        let standardKey = key.standardCodingKey
+        let standardKey = key.standarized
         guard let value = object.value(forKey: key.propertyName) else {
-            try container.encodeNil(forKey: key.standardCodingKey)
+            try container.encodeNil(forKey: key.standarized)
             return
         }
 
@@ -102,7 +102,7 @@ internal final class CoreDataEncoder<ManagedObject: CoreDataEncodable> {
             }
         }
         
-        try container.encodeNil(forKey: key.standardCodingKey)
+        try container.encodeNil(forKey: key.standarized)
     }
 }
 

@@ -55,10 +55,10 @@ public struct CoreDataDefaultCodingKeys: AnyCoreDataCodingKey {
     public var propertyName: String { stringValue }
 }
 
-// MARK: - CoreDataCodingKeyWrapper
+// MARK: - CoreDataCodingKeyStandarizer
 
 /// A wrapper to convert `AnyCoreDataCodingKey` into standard `CodingKey`
-internal struct CoreDataCodingKeyWrapper<Key: AnyCoreDataCodingKey>: CodingKey {
+internal struct CoreDataCodingKeyStandarizer<Key: AnyCoreDataCodingKey>: CodingKey {
     let key: Key
     var stringValue: String { key.stringValue }
     
@@ -79,6 +79,6 @@ internal struct CoreDataCodingKeyWrapper<Key: AnyCoreDataCodingKey>: CodingKey {
 }
 
 internal extension AnyCoreDataCodingKey {
-    typealias CodingKey = CoreDataCodingKeyWrapper<Self>
-    var standardCodingKey: CodingKey { CodingKey(self) }
+    typealias Standard = CoreDataCodingKeyStandarizer<Self>
+    var standarized: Standard { Standard(self) }
 }
