@@ -38,7 +38,7 @@ final class PersonAttribute: NSManagedObject, CoreDataCodable {
     static let identityAttribute: IdentityAttribute = #keyPath(PersonAttribute.id)
 }
 
-final class Country: NSManagedObject, CoreDataDecodable {
+final class Country: NSManagedObject, CoreDataCodable {
     typealias CodingKeys = CoreDataDefaultCodingKeys
     
     @NSManaged private(set) var id: Int

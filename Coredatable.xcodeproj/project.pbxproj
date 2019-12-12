@@ -10,6 +10,7 @@
 		6455D7BB23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6455D7BA23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift */; };
 		6455D7BD23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6455D7BC23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift */; };
 		6455D7BF23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6455D7BE23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift */; };
+		6455D7C223A28016000E4F4C /* CoreDataEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6455D7C123A28016000E4F4C /* CoreDataEncoder.swift */; };
 		646E9853239F057800D3BC6A /* IdentityAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646E9852239F057800D3BC6A /* IdentityAttribute.swift */; };
 		646E9855239F93F100D3BC6A /* personWithNil.json in Resources */ = {isa = PBXBuildFile; fileRef = 646E9854239F93F100D3BC6A /* personWithNil.json */; };
 		646E9857239FF96000D3BC6A /* nestedPerson.json in Resources */ = {isa = PBXBuildFile; fileRef = 646E9856239FF96000D3BC6A /* nestedPerson.json */; };
@@ -51,6 +52,7 @@
 		6455D7BA23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoIdentityAttributesStrategy.swift; sourceTree = "<group>"; };
 		6455D7BC23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleIdentityAttributeStrategy.swift; sourceTree = "<group>"; };
 		6455D7BE23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositeIdentityAttributeStrategy.swift; sourceTree = "<group>"; };
+		6455D7C123A28016000E4F4C /* CoreDataEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataEncoder.swift; sourceTree = "<group>"; };
 		646E9852239F057800D3BC6A /* IdentityAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAttribute.swift; sourceTree = "<group>"; };
 		646E9854239F93F100D3BC6A /* personWithNil.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = personWithNil.json; sourceTree = "<group>"; };
 		646E9856239FF96000D3BC6A /* nestedPerson.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nestedPerson.json; sourceTree = "<group>"; };
@@ -100,6 +102,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6455D7C023A27D73000E4F4C /* Strategies */ = {
+			isa = PBXGroup;
+			children = (
+				6455D7BA23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift */,
+				6455D7BC23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift */,
+				6455D7BE23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift */,
+			);
+			path = Strategies;
+			sourceTree = "<group>";
+		};
 		649E745D239C28D600962EE1 = {
 			isa = PBXGroup;
 			children = (
@@ -193,12 +205,11 @@
 			isa = PBXGroup;
 			children = (
 				649E74C4239F005900962EE1 /* CoreDataDecoder.swift */,
-				6455D7BA23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift */,
-				6455D7BC23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift */,
-				6455D7BE23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift */,
+				6455D7C123A28016000E4F4C /* CoreDataEncoder.swift */,
 				649E74BE239ED0B900962EE1 /* NSManagedObject+Coredatable.swift */,
 				649E749F239C344300962EE1 /* NSManagedObject+Coredatable.h */,
 				649E74A0239C344300962EE1 /* NSManagedObject+Coredatable.m */,
+				6455D7C023A27D73000E4F4C /* Strategies */,
 				649E74A9239C398400962EE1 /* CodableExtensions */,
 			);
 			path = Internal;
@@ -354,6 +365,7 @@
 				649E74AF239C398400962EE1 /* Decodable+Extension.swift in Sources */,
 				646E9853239F057800D3BC6A /* IdentityAttribute.swift in Sources */,
 				649E74B1239C398400962EE1 /* Decodable+ManagedObjectContext.swift in Sources */,
+				6455D7C223A28016000E4F4C /* CoreDataEncoder.swift in Sources */,
 				649E74BF239ED0B900962EE1 /* NSManagedObject+Coredatable.swift in Sources */,
 				646E9859239FFA5B00D3BC6A /* Many.swift in Sources */,
 				649E74B0239C398400962EE1 /* StringCodingKey.swift in Sources */,

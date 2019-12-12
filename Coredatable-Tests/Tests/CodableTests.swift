@@ -38,10 +38,6 @@ class CodableTests: XCTestCase {
         jsonDecoder = JSONDecoder()
         jsonDecoder.managedObjectContext = viewContext
     }
-
-    override func tearDown() {
-        
-    }
     
     // MARK: - Decode
     
@@ -330,18 +326,40 @@ class CodableTests: XCTestCase {
     // MARK: - Encode
     func testEncodeSimpleObject() {
         // given
-        let marco = Person(context: container.viewContext)
-        marco.personId = 1
-        marco.fullName = "Marco"
-        
+        // given
+        let data1 = Data(resource: "person.json")!
+        guard let person = try? jsonDecoder.decode(Person.self, from: data1) else {
+            XCTFail()
+            return
+        }
+                
         // when
-        let data = try! JSONEncoder().encode(marco)
-        let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-        
+        let data = try! JSONEncoder().encode(person)
+        let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+
         // then
-        XCTAssertEqual(json?.count, 2)
+        XCTAssertEqual(json?.count, 5)
         XCTAssertEqual(json?["personId"] as! Int, 1)
         XCTAssertEqual(json?["fullName"] as! String, "Marco")
+        XCTAssertEqual(json?["city"] as! String, "Murcia")
+        
+        var attributes = json?["attributesSet"] as? [[String: Any]]
+        attributes?.sort(by: { (a, b) -> Bool in
+            guard let aId = a["id"] as? Int,
+                let bId = b["id"] as? Int
+                else { return false }
+            return aId < bId
+        })
+        XCTAssertEqual(attributes?.count, 2)
+        XCTAssertEqual(attributes?[0]["id"] as? Int, 1)
+        XCTAssertEqual(attributes?[0]["name"] as? String, "funny")
+        XCTAssertEqual(attributes?[1]["id"] as? Int, 2)
+        XCTAssertEqual(attributes?[1]["name"] as? String, "small")
+        
+        let country = json?["country"] as? [String: Any]
+        XCTAssertEqual(country?.count, 2)
+        XCTAssertEqual(country?["id"] as? Int, 1)
+        XCTAssertEqual(country?["name"] as? String, "Spain")
     }
     
     func testEncodeWithKeyStrategy() {
@@ -357,7 +375,7 @@ class CodableTests: XCTestCase {
         let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
         
         // then
-        XCTAssertEqual(json?.count, 2)
+        XCTAssertEqual(json?.count, 5)
         XCTAssertEqual(json?["person_id"] as! Int, 1)
         XCTAssertEqual(json?["full_name"] as! String, "Marco")
     }
@@ -372,7 +390,7 @@ class CodableTests: XCTestCase {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         let data = try! encoder.encode(marco)
-        let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+        let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
         
         // then
         XCTAssertEqual(json?.count, 2)
