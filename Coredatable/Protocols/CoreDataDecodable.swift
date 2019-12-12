@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol CoreDataDecodable: NSManagedObject, AnyCoreDataDecodable {
+public protocol CoreDataDecodable: AnyCoreDataDecodable {
     associatedtype CodingKeys: AnyCoreDataCodingKey
     static var identityAttribute: IdentityAttribute { get }
 }
@@ -29,10 +29,15 @@ public extension CoreDataDecodable {
 
 /// A type erased protocol that is used internally to make the whole framework work.
 /// You shouldn't conform this protocol manually ever, use `CoreDataDecodable` instead
-public protocol AnyCoreDataDecodable: Decodable {
+public protocol AnyCoreDataDecodable: NSManagedObject, Decodable {
     static func decodeArray(from decoder: Decoder) throws -> [Any]
 }
 
+internal extension Decodable {
+    static func decodeArray(from decoder: Decoder) throws -> [Any] {
+        return try [Self].init(from: decoder)
+    }
+}
 
 // MARK: - Error
 

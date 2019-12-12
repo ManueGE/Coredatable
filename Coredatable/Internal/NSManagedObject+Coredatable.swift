@@ -63,21 +63,31 @@ internal extension CoreDataDecodable {
     }
     
     private func set<Keys: AnyCoreDataCodingKey>(_ relationship: NSRelationshipDescription, from container: KeyedDecodingContainer<Keys.CodingKey>, with codingKey: Keys) throws {
-        guard let className = relationship.destinationEntity?.managedObjectClassName,
-            let codableClass = NSClassFromString(className) as? AnyCoreDataDecodable.Type
-            else {
-                #warning("Throw error for relationship not being codable")
-                return
-        }
-        
+        let className = relationship.destinationEntity?.managedObjectClassName ?? ""
+        let theClass: AnyClass? = NSClassFromString(className)
         let standardKey = codingKey.standardCodingKey
         let childDecoder = try container.superDecoder(forKey: standardKey)
+        
         if relationship.isToMany {
-            let array = try codableClass.decodeArray(from: childDecoder)
+            let array: [Any]
+            // We need the `if` because the two `decodeArray` methods are different because they belong to different protocol extensions
+            if let codableClass = theClass as? AnyCoreDataDecodable.Type {
+                array = try codableClass.decodeArray(from: childDecoder)
+            } else if let codableClass = theClass as? Decodable.Type {
+                array = try codableClass.decodeArray(from: childDecoder)
+            } else {
+                #warning("Throw error for relationship not being codable")
+                return
+            }
             let value = NSSet(array: array)
             try validateValue(value, forKey: codingKey)
             setValue(value, forKey: codingKey.propertyName)
         } else {
+            guard let codableClass = theClass as? Decodable.Type else {
+                #warning("Throw error for relationship not being codable")
+                return
+            }
+            #warning("TODO: Write a test with regular codable NSManagedObject")
             let value = try codableClass.init(from: childDecoder)
             try validateValue(value, forKey: codingKey)
             setValue(value, forKey: codingKey.propertyName)
