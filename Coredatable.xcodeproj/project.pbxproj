@@ -104,14 +104,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6455D7C023A27D73000E4F4C /* Strategies */ = {
+		6455D7C023A27D73000E4F4C /* IdentityAttribute */ = {
 			isa = PBXGroup;
 			children = (
+				646E9852239F057800D3BC6A /* IdentityAttribute.swift */,
 				6455D7BA23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift */,
 				6455D7BC23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift */,
 				6455D7BE23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift */,
 			);
-			path = Strategies;
+			path = IdentityAttribute;
+			sourceTree = "<group>";
+		};
+		64611C7423A44BE600F407CE /* Decode */ = {
+			isa = PBXGroup;
+			children = (
+				649E74C0239EED7300962EE1 /* CoreDataDecodable.swift */,
+				649E74C4239F005900962EE1 /* CoreDataDecoder.swift */,
+				649E74BE239ED0B900962EE1 /* NSManagedObject+Decodable.swift */,
+				649E74AB239C398400962EE1 /* Decodable+Extension.swift */,
+				649E74AD239C398400962EE1 /* Decoder+ManagedObjectContext.swift */,
+				6455D7C023A27D73000E4F4C /* IdentityAttribute */,
+				64611C7523A44CAC00F407CE /* Objc-C */,
+			);
+			path = Decode;
+			sourceTree = "<group>";
+		};
+		64611C7523A44CAC00F407CE /* Objc-C */ = {
+			isa = PBXGroup;
+			children = (
+				649E749F239C344300962EE1 /* NSManagedObject+Coredatable.h */,
+				649E74A0239C344300962EE1 /* NSManagedObject+Coredatable.m */,
+			);
+			path = "Objc-C";
 			sourceTree = "<group>";
 		};
 		649E745D239C28D600962EE1 = {
@@ -137,9 +161,10 @@
 			children = (
 				649E746A239C28D600962EE1 /* Coredatable.h */,
 				649E746B239C28D600962EE1 /* Info.plist */,
-				649E7496239C31E700962EE1 /* Protocols */,
+				649E7490239C30B100962EE1 /* CoreDataCodable.swift */,
 				649E74C6239F03C600962EE1 /* Helpers */,
-				649E749A239C336E00962EE1 /* Internal */,
+				649E749A239C336E00962EE1 /* Encode */,
+				64611C7423A44BE600F407CE /* Decode */,
 			);
 			path = Coredatable;
 			sourceTree = "<group>";
@@ -193,48 +218,23 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		649E7496239C31E700962EE1 /* Protocols */ = {
+		649E749A239C336E00962EE1 /* Encode */ = {
 			isa = PBXGroup;
 			children = (
-				649E7490239C30B100962EE1 /* CoreDataCodable.swift */,
-				649E74C0239EED7300962EE1 /* CoreDataDecodable.swift */,
 				649E74C2239EEF7000962EE1 /* CoreDataEncodable.swift */,
-			);
-			path = Protocols;
-			sourceTree = "<group>";
-		};
-		649E749A239C336E00962EE1 /* Internal */ = {
-			isa = PBXGroup;
-			children = (
-				649E74C4239F005900962EE1 /* CoreDataDecoder.swift */,
 				6455D7C123A28016000E4F4C /* CoreDataEncoder.swift */,
-				649E74BE239ED0B900962EE1 /* NSManagedObject+Decodable.swift */,
-				64611C7023A2E5CD00F407CE /* NSManagedObject+Helpers.swift */,
-				649E749F239C344300962EE1 /* NSManagedObject+Coredatable.h */,
-				649E74A0239C344300962EE1 /* NSManagedObject+Coredatable.m */,
-				6455D7C023A27D73000E4F4C /* Strategies */,
-				649E74A9239C398400962EE1 /* CodableExtensions */,
-			);
-			path = Internal;
-			sourceTree = "<group>";
-		};
-		649E74A9239C398400962EE1 /* CodableExtensions */ = {
-			isa = PBXGroup;
-			children = (
 				649E74AA239C398400962EE1 /* Encodable+Extension.swift */,
-				649E74AB239C398400962EE1 /* Decodable+Extension.swift */,
-				649E74AC239C398400962EE1 /* StringCodingKey.swift */,
 			);
-			path = CodableExtensions;
+			path = Encode;
 			sourceTree = "<group>";
 		};
 		649E74C6239F03C600962EE1 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				649E74BC239D49CF00962EE1 /* CoreDataCodingKey.swift */,
-				649E74AD239C398400962EE1 /* Decoder+ManagedObjectContext.swift */,
-				646E9852239F057800D3BC6A /* IdentityAttribute.swift */,
 				646E9858239FFA5B00D3BC6A /* Many.swift */,
+				649E74AC239C398400962EE1 /* StringCodingKey.swift */,
+				64611C7023A2E5CD00F407CE /* NSManagedObject+Helpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
