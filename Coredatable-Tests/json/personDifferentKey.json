@@ -2,13 +2,11 @@
     "id": 1,
     "name": "Marco",
     "origin": "Murcia",
-    "features": [
-        {"id": 1, "name": "funny"},
-        {"id": 2, "name": "small"}
-    ],
-    "from": {
-        "id": 1,
-        "name": "Spain"
+    "object": {
+        "one": "keypath1",
+        "nested": {
+            "two": "keypath2"
+        }
     }
 }
 

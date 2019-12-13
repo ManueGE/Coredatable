@@ -47,6 +47,19 @@ internal extension KeyedDecodingContainer {
 	}
 }
 
+internal extension KeyedDecodingContainer where Key: CoreDataStandardCodingKey {
+    
+    typealias CoreDataKey = Key.CoreDataKey
+    
+    func nestedContainer(forCoreDataKey key: CoreDataKey) -> Self? {
+        var components = key.keyPathComponents
+        _ = components.removeLast()
+        return try? components.reduce(self) { (current, key) -> KeyedDecodingContainer<K> in
+            return try current.nestedContainer(keyedBy: K.self, forKey: K(key))
+        }
+    }
+}
+
 // MARK: - Unkeyed Container
 internal extension UnkeyedDecodingContainer {
 	

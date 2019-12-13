@@ -82,7 +82,7 @@ internal struct SingleIdentityAttributeStrategy: IdentityAttributeStrategy {
         guard let codingKey = ManagedObject.CodingKeys(propertyName: propertyName),
             let value = container.decodeAny(forKey: codingKey.standarized) as? AnyHashable
             else {
-                let receivedKeys = container.allKeys.map { $0.key.stringValue }
+                let receivedKeys = container.allKeys.map { $0.stringValue }
                 throw CoreDataCodableError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: receivedKeys)
         }
         return value

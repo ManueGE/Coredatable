@@ -50,10 +50,14 @@ final class Country: NSManagedObject, CoreDataCodable {
 final class PersonDiffKeys: NSManagedObject, CoreDataCodable {
     @NSManaged var personId: Int
     @NSManaged var fullName: String
+    @NSManaged var keyPath1: String?
+    @NSManaged var keyPath2: String?
     
     enum CodingKeys: String, CoreDataCodingKey {
         case personId = "id"
         case fullName = "name"
+        case keyPath1 = "object.one"
+        case keyPath2 = "object.nested.two"
     }
 }
 

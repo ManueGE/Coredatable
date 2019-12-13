@@ -12,13 +12,14 @@ internal extension CoreDataDecodable {
     func applyValues<Keys: AnyCoreDataCodingKey>(from container: KeyedDecodingContainer<Keys.Standard>) throws {
         try entity.properties.forEach { property in
             guard let codingKey = Keys(propertyName: property.name),
-                container.contains(codingKey.standarized)
+                let nestedContainer = container.nestedContainer(forCoreDataKey: codingKey),
+                nestedContainer.contains(codingKey.standarized)
                 else { return }
 
             if let attribute = property as? NSAttributeDescription {
-                try set(attribute, from: container, with: codingKey)
+                try set(attribute, from: nestedContainer, with: codingKey)
             } else if let relationship =  property as? NSRelationshipDescription {
-                 try set(relationship, from: container, with: codingKey)
+                 try set(relationship, from: nestedContainer, with: codingKey)
             }
         }
     }

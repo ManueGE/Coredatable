@@ -18,11 +18,17 @@ public protocol AnyCoreDataCodingKey {
     
     init?(propertyName: String)
     var propertyName: String { get }
+    
+    var keyPathDelimiter: String { get }
+}
+
+public extension AnyCoreDataCodingKey {
+    var keyPathDelimiter: String { "." }
+    var keyPathComponents: [String] { stringValue.components(separatedBy: keyPathDelimiter)}
 }
 
 /// Use this alias in string typed enums to make them conform `AnyCoreDataCodingKey` automatically
 public typealias CoreDataCodingKey = AnyCoreDataCodingKey & CaseIterable
-
 
 /// Extension which automatically implements `AnyCoreDataCodingKey` in string typed enums which are `CaseIterable` too.
 /// It uses the raw nome of the enum case as `propertyName`.
@@ -57,20 +63,25 @@ public struct CoreDataDefaultCodingKeys: AnyCoreDataCodingKey {
 
 // MARK: - CoreDataCodingKeyStandarizer
 
+internal protocol CoreDataStandardCodingKey: CodingKey {
+    associatedtype CoreDataKey: AnyCoreDataCodingKey
+    init(_ stringValue: String)
+}
+
 /// A wrapper to convert `AnyCoreDataCodingKey` into standard `CodingKey`
-internal struct CoreDataCodingKeyStandarizer<Key: AnyCoreDataCodingKey>: CodingKey {
-    let key: Key
-    var stringValue: String { key.stringValue }
+internal struct CoreDataCodingKeyStandarizer<CoreDataKey: AnyCoreDataCodingKey>: CoreDataStandardCodingKey {
+    private(set) var stringValue: String
     
-    fileprivate init(_ key: Key) {
-        self.key = key
+    init(_ stringValue: String) {
+        self.stringValue = stringValue
+    }
+    
+    fileprivate init(_ key: CoreDataKey) {
+        self.stringValue = key.keyPathComponents.last ?? key.stringValue
     }
     
     init?(stringValue: String) {
-        guard let key = Key(stringValue: stringValue) else {
-            return nil
-        }
-        self.init(key)
+        self.stringValue = stringValue
     }
     
     let intValue: Int? = nil

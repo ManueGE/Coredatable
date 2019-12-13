@@ -46,7 +46,13 @@ class CodableTests: XCTestCase {
         let data = Data(resource: "person.json")!
         
         // when
-        let person = try? jsonDecoder.decode(Person.self, from: data)
+        let person: Person?
+        do {
+           person = try jsonDecoder.decode(Person.self, from: data)
+        } catch {
+            XCTFail()
+            return
+        }
         
         // then
         XCTAssertEqual(person?.personId, 1)
@@ -106,6 +112,8 @@ class CodableTests: XCTestCase {
         // then
         XCTAssertEqual(person?.personId, 1)
         XCTAssertEqual(person?.fullName, "Marco")
+        XCTAssertEqual(person?.keyPath1, "keypath1")
+        XCTAssertEqual(person?.keyPath2, "keypath2")
     }
     
     func testDecodeUpdatingValueWithSingleUniqueIdentifier() {
@@ -393,8 +401,9 @@ class CodableTests: XCTestCase {
         let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
         
         // then
-        XCTAssertEqual(json?.count, 2)
+        XCTAssertEqual(json?.count, 4)
         XCTAssertEqual(json?["id"] as? Int, 1)
         XCTAssertEqual(json?["name"] as? String, "Marco")
+        #warning("Add nested keypath tests")
     }
 }
