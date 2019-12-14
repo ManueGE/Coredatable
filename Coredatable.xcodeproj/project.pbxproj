@@ -163,8 +163,8 @@
 				649E746B239C28D600962EE1 /* Info.plist */,
 				649E7490239C30B100962EE1 /* CoreDataCodable.swift */,
 				649E74C6239F03C600962EE1 /* Helpers */,
-				649E749A239C336E00962EE1 /* Encode */,
 				64611C7423A44BE600F407CE /* Decode */,
+				649E749A239C336E00962EE1 /* Encode */,
 			);
 			path = Coredatable;
 			sourceTree = "<group>";

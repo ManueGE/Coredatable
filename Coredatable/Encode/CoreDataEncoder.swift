@@ -26,12 +26,14 @@ internal final class CoreDataEncoder<ManagedObject: CoreDataEncodable> {
     }
     
     private func encode(_ object: ManagedObject, with container: KeyedContainer) throws {
+        var container = container
         try object.entity.propertiesByName.forEach { property in
-            guard let key = ManagedObject.CodingKeys(propertyName: property.key)
+            guard let key = ManagedObject.CodingKeys(propertyName: property.key),
+                let nestedContainer = container.nestedContainer(forCoreDataKey: key)
                 else { return }
             
             if let attribute = property.value as? NSAttributeDescription {
-                try encode(attribute, object: object, key: key, container: container)
+                try encode(attribute, object: object, key: key, container: nestedContainer)
             } else if let property = property.value as? NSRelationshipDescription {
                 try encode(property, object: object, key: key, container: container)
             }

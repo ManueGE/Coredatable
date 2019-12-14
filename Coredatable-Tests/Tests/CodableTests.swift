@@ -393,17 +393,27 @@ class CodableTests: XCTestCase {
         let marco = PersonDiffKeys(context: container.viewContext)
         marco.personId = 1
         marco.fullName = "Marco"
+        marco.keyPath1 = "keypath1"
+        marco.keyPath2 = "keypath2"
         
         // when
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         let data = try! encoder.encode(marco)
         let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-        
+        print(String(data: data, encoding: .utf8)!)
         // then
         XCTAssertEqual(json?.count, 4)
         XCTAssertEqual(json?["id"] as? Int, 1)
         XCTAssertEqual(json?["name"] as? String, "Marco")
-        #warning("Add nested keypath tests")
+        XCTAssertEqual(json?["city"] as? NSNull, NSNull())
+        
+        let objectDict = json?["object"] as? [String: Any]
+        XCTAssertEqual(objectDict?.count, 2)
+        XCTAssertEqual(objectDict?["one"] as? String, "keypath1")
+        
+        let nestedDict = objectDict?["nested"] as? [String: Any]
+        XCTAssertEqual(nestedDict?.count, 1)
+        XCTAssertEqual(nestedDict?["two"] as? String, "keypath2")
     }
 }

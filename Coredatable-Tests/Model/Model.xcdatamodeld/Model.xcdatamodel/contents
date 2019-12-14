@@ -18,6 +18,7 @@
         <relationship name="people" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="attributesSet" inverseEntity="Person"/>
     </entity>
     <entity name="PersonDiffKeys" representedClassName=".PersonDiffKeys" syncable="YES">
+        <attribute name="city" optional="YES" attributeType="String"/>
         <attribute name="fullName" optional="YES" attributeType="String"/>
         <attribute name="keyPath1" optional="YES" attributeType="String"/>
         <attribute name="keyPath2" optional="YES" attributeType="String"/>
@@ -27,6 +28,6 @@
         <element name="Country" positionX="150.07421875" positionY="128.3828125" width="128" height="88"/>
         <element name="Person" positionX="-63" positionY="-18" width="128" height="118"/>
         <element name="PersonAttribute" positionX="136.96484375" positionY="-124.16796875" width="128" height="88"/>
-        <element name="PersonDiffKeys" positionX="-150.41015625" positionY="121.7734375" width="128" height="103"/>
+        <element name="PersonDiffKeys" positionX="-150.41015625" positionY="121.7734375" width="128" height="118"/>
     </elements>
 </model>
