@@ -70,9 +70,50 @@ internal extension Decodable {
 
 // MARK: - CoreDataDecodingContainer
 #warning("Need to add decoding, contains, allkeys...")
+#warning("Need to test all this method with a custom entity")
+#warning("Probanly keypath keys doesn't work. Add the cganges to support it.")
+#warning("Custom serialization can be tested: a) compounding 2 keys, b) changing received type")
+#warning("Should include tests for unexpected id types (expecting an int and coming a string, maybe)")
 public struct CoreDataDecodingContainer<CodingKeys: AnyCoreDataCodingKey> {
     let container: KeyedDecodingContainer<CodingKeys.Standard>
+    
+    public var codingPath: [CodingKeys] { container.codingPath.compactMap { CodingKeys(stringValue: $0.stringValue) } }
+    
+    public var allKeys: [CodingKeys] { container.allKeys.compactMap { CodingKeys(stringValue: $0.stringValue) } }
+    
+    public func contains(_ key: CodingKeys) -> Bool {
+        container.contains(coreDataKey: key)
+    }
+    
+    public func decodeNil(forKey key: CodingKeys) throws -> Bool {
+        let c = container.nestedContainer(forCoreDataKey: key) ?? container
+        return try c.decodeNil(forKey: key.standarized)
+    }
+    
+    public func decode<T>(_ type: T.Type, forKey key: CodingKeys) throws -> T where T : Decodable {
+        let c = container.nestedContainer(forCoreDataKey: key) ?? container
+        return try c.decode(T.self, forKey: key.standarized)
+    }
+    
+    public func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: CodingKeys) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
+        let c = container.nestedContainer(forCoreDataKey: key) ?? container
+        return try c.nestedContainer(keyedBy: NestedKey.self, forKey: key.standarized)
+    }
+    
+    public func nestedUnkeyedContainer(forKey key: CodingKeys) throws -> UnkeyedDecodingContainer {
+        let c = container.nestedContainer(forCoreDataKey: key) ?? container
+        return try c.nestedUnkeyedContainer(forKey: key.standarized)
+    }
+    
+    public func superDecoder() throws -> Decoder {
+        try container.superDecoder()
+    }
+    
+    public func superDecoder(forKey key: CodingKeys) throws -> Decoder {
+        try container.superDecoder(forKey: key.standarized)
+    }
 }
+
 
 // MARK: - Error
 

@@ -55,6 +55,15 @@ internal extension KeyedDecodingContainer where Key: CoreDataStandardCodingKey {
             return try current.nestedContainer(keyedBy: K.self, forKey: K(key))
         }
     }
+    
+    func contains(coreDataKey key: Key.CoreDataKey) -> Bool {
+        if contains(Key(key.stringValue)) {
+            return true
+        } else if let nested = nestedContainer(forCoreDataKey: key), let last = key.keyPathComponents.last {
+            return nested.contains(Key(last))
+        }
+        return false
+    }
 }
 
 // MARK: - Unkeyed Container

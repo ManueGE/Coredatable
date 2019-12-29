@@ -75,3 +75,29 @@ final class NestedPerson: Codable {
     let person: Person
     let people: Many<Person>
 }
+
+final class Custom: NSManagedObject, CoreDataDecodable {
+    @NSManaged var id: Int
+    @NSManaged var compound: String
+    @NSManaged var integer: Int
+    
+    enum CodingKeys: String, CoreDataCodingKey {
+        case id
+        case first
+        case second
+        case integer
+    }
+    
+    static var identityAttribute: IdentityAttribute = #keyPath(Custom.id)
+    
+    func initialize(from container: CoreDataDecodingContainer<Custom.CodingKeys>) throws {
+        try defaultInitialization(from: container, with: [.id])
+        
+        let first = try container.decode(String.self, forKey: .first)
+        let second = try container.decode(String.self, forKey: .second)
+        compound = [first, second].joined(separator: " ")
+        
+        let string = try container.decode(String.self, forKey: .integer)
+        integer = Int(string) ?? 0
+    }
+}

@@ -13,7 +13,7 @@ import CoreData
 /// An `Array` replacement which can just contains `NSManagedObject` instances.
 /// It implements `Decodable` so it can be used to insert-serialize array responses using Alamofire.
 /// It can be used in the same way that `Array`. Anyway, if you need to access the raw `Array` version of this class, you can use the `array` property.
-public struct Many<Element: CoreDataCodable> {
+public struct Many<Element: NSManagedObject> {
     /// The array representation of the receiver
     public fileprivate(set) var array: [Element]
     fileprivate init(_ array: [Element]) {
@@ -21,14 +21,14 @@ public struct Many<Element: CoreDataCodable> {
     }
 }
 
-extension Many: Decodable {
+extension Many: Decodable where Element: CoreDataDecodable {
 	public init(from decoder: Decoder) throws {
         let decoder = try CoreDataDecoder<Element>(decoder: decoder)
         self.init(try decoder.decodeArray())
     }
 }
 
-extension Many: Encodable {
+extension Many: Encodable where Element: CoreDataEncodable {
 	public func encode(to encoder: Encoder) throws {
         try array.encode(to: encoder)
 	}

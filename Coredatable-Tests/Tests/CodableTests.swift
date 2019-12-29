@@ -347,6 +347,66 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(people?[1].objectID, existing2.objectID)
     }
     
+    func testCustomSerialization() {
+        // given
+        let data = Data.fromJson(["id": 1, "first": "FIRST", "second": "SECOND", "integer": "20"])!
+        
+        // when
+        let custom = try? jsonDecoder.decode(Custom.self, from: data)
+        
+        // then
+        XCTAssertNotNil(custom)
+        XCTAssertEqual(custom?.id, 1)
+        XCTAssertEqual(custom?.compound, "FIRST SECOND")
+        XCTAssertEqual(custom?.integer, 20)
+    }
+    
+    func testCustomSerializationArray() {
+        // given
+        let data = Data.fromArray([
+            ["id": 1, "first": "FIRST", "second": "SECOND", "integer": "20"],
+            ["id": 2, "first": "UNO", "second": "DOS", "integer": "30"]
+        ])!
+        
+        // when
+        let customs = try? jsonDecoder.decode([Custom].self, from: data)
+        
+        // then
+        XCTAssertNotNil(customs)
+        XCTAssertEqual(customs?.count, 2)
+        
+        XCTAssertEqual(customs?.first?.id, 1)
+        XCTAssertEqual(customs?.first?.compound, "FIRST SECOND")
+        XCTAssertEqual(customs?.first?.integer, 20)
+        
+        XCTAssertEqual(customs?.last?.id, 2)
+        XCTAssertEqual(customs?.last?.compound, "UNO DOS")
+        XCTAssertEqual(customs?.last?.integer, 30)
+    }
+    
+    func testCustomSerializationMany() {
+        // given
+        let data = Data.fromArray([
+            ["id": 1, "first": "FIRST", "second": "SECOND", "integer": "20"],
+            ["id": 2, "first": "UNO", "second": "DOS", "integer": "30"]
+        ])!
+        
+        // when
+        let customs = try? jsonDecoder.decode(Many<Custom>.self, from: data)
+        
+        // then
+        XCTAssertNotNil(customs)
+        XCTAssertEqual(customs?.count, 2)
+        
+        XCTAssertEqual(customs?.first?.id, 1)
+        XCTAssertEqual(customs?.first?.compound, "FIRST SECOND")
+        XCTAssertEqual(customs?.first?.integer, 20)
+        
+        XCTAssertEqual(customs?.last?.id, 2)
+        XCTAssertEqual(customs?.last?.compound, "UNO DOS")
+        XCTAssertEqual(customs?.last?.integer, 30)
+    }
+    
     // MARK: - Encode
     func testEncodeSimpleObject() {
         // given
