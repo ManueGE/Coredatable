@@ -13,12 +13,12 @@ internal struct NoIdentityAttributesStrategy: IdentityAttributeStrategy {
         return nil
     }
     
-    func decodeArray<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: UnkeyedDecodingContainer) throws -> [ManagedObject] {
+    func decodeArray<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: UnkeyedDecodingContainer, decoder: Decoder) throws -> [ManagedObject] {
         var container = container
         return try (0 ..< (container.count ?? 0)).map { _ in
             let objectContainer = try container.nestedContainer(keyedBy: ManagedObject.CodingKeys.Standard.self)
             let object = ManagedObject(context: context)
-            try object.applyValues(from: objectContainer)
+            try object.initialize(from: objectContainer)
             return object
         }
     }

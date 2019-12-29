@@ -9,9 +9,10 @@
 import Foundation
 
 internal extension CoreDataDecodable {
-    func applyValues<Keys: AnyCoreDataCodingKey>(from container: KeyedDecodingContainer<Keys.Standard>) throws {
+    func applyValues<Keys: AnyCoreDataCodingKey>(from container: KeyedDecodingContainer<Keys.Standard>, policy: (Keys) -> Bool) throws {
         try entity.properties.forEach { property in
             guard let codingKey = Keys(propertyName: property.name),
+                policy(codingKey),
                 let nestedContainer = container.nestedContainer(forCoreDataKey: codingKey),
                 nestedContainer.contains(codingKey.standarized)
                 else { return }

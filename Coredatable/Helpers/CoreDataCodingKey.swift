@@ -61,6 +61,12 @@ public struct CoreDataDefaultCodingKeys: AnyCoreDataCodingKey {
     public var propertyName: String { stringValue }
 }
 
+extension CoreDataDefaultCodingKeys: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        self.stringValue = value
+    }
+}
+
 // MARK: - CoreDataCodingKeyStandarizer
 
 internal protocol CoreDataStandardCodingKey: CodingKey {

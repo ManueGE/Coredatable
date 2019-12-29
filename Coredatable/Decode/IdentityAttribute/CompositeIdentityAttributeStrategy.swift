@@ -15,7 +15,7 @@ internal struct CompositeIdentityAttributeStrategy: IdentityAttributeStrategy {
         return nil
     }
     
-    func decodeArray<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: UnkeyedDecodingContainer) throws -> [ManagedObject] {
+    func decodeArray<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: UnkeyedDecodingContainer, decoder: Decoder) throws -> [ManagedObject] {
         return []
     }
 }

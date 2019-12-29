@@ -18,6 +18,8 @@ final class Person: NSManagedObject, CoreDataCodable {
     @NSManaged var city: String?
     @NSManaged var country: Country?
     @NSManaged var attributesSet: NSSet
+    var customValue = ""
+    
     var attributes: Set<PersonAttribute> {
         return attributesSet.reduce(into: []) { (result, item) in
             if let i = item as? PersonAttribute {
@@ -27,6 +29,11 @@ final class Person: NSManagedObject, CoreDataCodable {
     }
     
     static let identityAttribute: IdentityAttribute = #keyPath(Person.personId)
+    
+    func initialize(from container: CoreDataDecodingContainer<CoreDataDefaultCodingKeys>) throws {
+        try defaultInitialization(from: container)
+        customValue = "custom"
+    }
 }
 
 final class PersonAttribute: NSManagedObject, CoreDataCodable {

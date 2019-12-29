@@ -60,6 +60,7 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(person?.city, "Murcia")
         XCTAssertEqual(person?.country?.id, 1)
         XCTAssertEqual(person?.country?.name, "Spain")
+        XCTAssertEqual(person?.customValue, "custom")
         let attributes = person?.attributes.sorted { $0.id < $1.id }
         XCTAssertEqual(attributes?.count, 2)
         XCTAssertEqual(attributes?[0].id, 1)
@@ -80,6 +81,7 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(person?.fullName, "Marco")
         XCTAssertEqual(person?.country?.id, 1)
         XCTAssertEqual(person?.country?.name, "Spain")
+        XCTAssertEqual(person?.customValue, "custom")
         XCTAssertNil(person?.city)
         let attributes = person?.attributes.sorted { $0.id < $1.id }
         XCTAssertEqual(attributes?.count, 2)
@@ -133,6 +135,7 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(try viewContext.count(for: request), 1)
         XCTAssertEqual(person?.personId, 1)
         XCTAssertEqual(person?.fullName, "Marco")
+        XCTAssertEqual(person?.customValue, "custom")
         XCTAssertEqual(person?.objectID, existing.objectID)
     }
     
@@ -155,6 +158,7 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(person?.personId, 1)
         XCTAssertEqual(person?.fullName, "Marco")
         XCTAssertNil(person?.city)
+        XCTAssertEqual(person?.customValue, "custom")
         XCTAssertEqual(person?.objectID, existing.objectID)
     }
     
@@ -177,6 +181,7 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(person?.personId, 1)
         XCTAssertEqual(person?.fullName, "Marco")
         XCTAssertEqual(person?.city, "Murcia")
+        XCTAssertEqual(person?.customValue, "custom")
         XCTAssertEqual(person?.objectID, existing.objectID)
     }
     
@@ -206,11 +211,13 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(people?[0].personId, 1)
         XCTAssertEqual(people?[0].fullName, "Marco")
         XCTAssertEqual(people?[0].city, "Murcia")
+        XCTAssertEqual(people?[0].customValue, "custom")
         XCTAssertEqual(people?[0].objectID, existing1.objectID)
         
         XCTAssertEqual(people?[1].personId, 2)
         XCTAssertEqual(people?[1].fullName, "Ana")
         XCTAssertEqual(people?[1].city, "La Ñora")
+        XCTAssertEqual(people?[1].customValue, "custom")
         XCTAssertEqual(people?[1].objectID, existing2.objectID)
     }
     
@@ -229,6 +236,8 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(person?.city, "Murcia")
         XCTAssertEqual(person?.country?.id, 1)
         XCTAssertEqual(person?.country?.name, "Spain")
+        XCTAssertEqual(person?.customValue, "custom")
+        
         let attributes = person?.attributes.sorted { $0.id < $1.id }
         XCTAssertEqual(attributes?.count, 2)
         XCTAssertEqual(attributes?[0].id, 1)
@@ -254,6 +263,7 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(wrapper?.person.personId, 1)
         XCTAssertNil(wrapper?.person.fullName)
         XCTAssertNil(wrapper?.person.city)
+        XCTAssertEqual(wrapper?.person.customValue, "custom")
     }
     
     func testDecodeUpdateObjectFromIdentityAttributes() {
@@ -277,6 +287,7 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(wrapper?.person.personId, 1)
         XCTAssertEqual(wrapper?.person.fullName, "Marco")
         XCTAssertEqual(wrapper?.person.city, "Murcia")
+        XCTAssertEqual(wrapper?.person.customValue, "custom")
         XCTAssertEqual(wrapper?.person.objectID, existing1.objectID)
     }
     
@@ -294,10 +305,12 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(people?[0].personId, 1)
         XCTAssertNil(people?[0].fullName)
         XCTAssertNil(people?[0].city)
+        XCTAssertEqual(people?[0].customValue, "custom")
         
         XCTAssertEqual(people?[1].personId, 2)
         XCTAssertNil(people?[1].fullName)
         XCTAssertNil(people?[1].city)
+        XCTAssertEqual(people?[1].customValue, "custom")
     }
     
     func testDecodeArrayUpdateFromIdentityAttributes() {
@@ -311,6 +324,7 @@ class CodableTests: XCTestCase {
         existing2.fullName = "Ana"
         existing2.personId = 2
         existing2.city = "La Ñora"
+        
         let data = Data.fromArray([1, 2])!
         
         // when
@@ -323,11 +337,13 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(people?[0].personId, 1)
         XCTAssertEqual(people?[0].fullName, "Marco")
         XCTAssertEqual(people?[0].city, "Murcia")
+        XCTAssertEqual(people?[0].customValue, "custom")
         XCTAssertEqual(people?[0].objectID, existing1.objectID)
         
         XCTAssertEqual(people?[1].personId, 2)
         XCTAssertEqual(people?[1].fullName, "Ana")
         XCTAssertEqual(people?[1].city, "La Ñora")
+        XCTAssertEqual(people?[1].customValue, "custom")
         XCTAssertEqual(people?[1].objectID, existing2.objectID)
     }
     
@@ -347,9 +363,9 @@ class CodableTests: XCTestCase {
 
         // then
         XCTAssertEqual(json?.count, 5)
-        XCTAssertEqual(json?["personId"] as! Int, 1)
-        XCTAssertEqual(json?["fullName"] as! String, "Marco")
-        XCTAssertEqual(json?["city"] as! String, "Murcia")
+        XCTAssertEqual(json?["personId"] as? Int, 1)
+        XCTAssertEqual(json?["fullName"] as? String, "Marco")
+        XCTAssertEqual(json?["city"] as? String, "Murcia")
         
         var attributes = json?["attributesSet"] as? [[String: Any]]
         attributes?.sort(by: { (a, b) -> Bool in
