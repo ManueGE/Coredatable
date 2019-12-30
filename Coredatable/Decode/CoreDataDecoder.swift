@@ -14,7 +14,7 @@ internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable> {
     
     init(decoder: Decoder) throws {
         guard let context = decoder.managedObjectContext else {
-            throw CoreDataCodableError.missingContext(decoder: decoder)
+            throw CoreDataDecodingError.missingContext(decoder: decoder)
         }
         self.decoder = decoder
         self.context = context

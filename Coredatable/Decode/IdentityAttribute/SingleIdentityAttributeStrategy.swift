@@ -49,7 +49,7 @@ internal struct SingleIdentityAttributeStrategy: IdentityAttributeStrategy {
         // Create or update objects
         return try identifiers.compactMap { identifier in
             guard let key = ManagedObject.CodingKeys(propertyName: propertyName) else {
-                throw CoreDataCodableError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: [])
+                throw CoreDataDecodingError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: [])
             }
             
             let rootObject = existingObjectsById[identifier] ?? ManagedObject(context: context)
@@ -69,7 +69,7 @@ internal struct SingleIdentityAttributeStrategy: IdentityAttributeStrategy {
         var container = container
         guard let codingKey = ManagedObject.CodingKeys(propertyName: propertyName),
             let identifier = container.decodeAny() else {
-            throw CoreDataCodableError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: [])
+            throw CoreDataDecodingError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: [])
         }
         let object = try existingObjects(context: context, ids: [identifier]).first ?? ManagedObject(context: context)
         let singleValueContainer = SingleValueKeyedDecodingContainer<ManagedObject>(singleValueContainer: container, codingKey: codingKey, decoder: decoder)
@@ -83,7 +83,7 @@ internal struct SingleIdentityAttributeStrategy: IdentityAttributeStrategy {
             let value = container.decodeAny(forKey: codingKey) as? AnyHashable
             else {
                 let receivedKeys = container.allKeys.map { $0.stringValue }
-                throw CoreDataCodableError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: receivedKeys)
+                throw CoreDataDecodingError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: receivedKeys)
         }
         return value
     }

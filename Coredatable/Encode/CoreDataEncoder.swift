@@ -92,7 +92,7 @@ internal final class CoreDataEncoder<ManagedObject: CoreDataEncodable> {
                 #warning("Test this")
                 try encodableClass.encode(array, to: childEncoder)
             } else {
-                #warning("NO encodable error")
+                throw CoreDataEncodingError.relationshipNotEncodable(class: ManagedObject.self, relationship: relationship)
             }
         } else {
             if let encodable = value as? AnyCoreDataEncodable {
@@ -100,7 +100,7 @@ internal final class CoreDataEncoder<ManagedObject: CoreDataEncodable> {
             } else if let encodable = value as? Encodable {
                 try encodable.encode(to: childEncoder)
             } else {
-                #warning("NO encodable error")
+                throw CoreDataEncodingError.relationshipNotEncodable(class: ManagedObject.self, relationship: relationship)
             }
         }
         

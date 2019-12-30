@@ -38,7 +38,7 @@ internal struct CompositeIdentityAttributeStrategy: IdentityAttributeStrategy {
                 let identifier = container.decodeAny(forKey: codingKey) as? AnyHashable
                 else {
                     let receivedKeys = container.allKeys.map { $0.stringValue }
-                    throw CoreDataCodableError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: receivedKeys)
+                    throw CoreDataDecodingError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: receivedKeys)
             }
             
             return NSComparisonPredicate(leftExpression: NSExpression(forKeyPath: propertyName),

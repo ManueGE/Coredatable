@@ -42,3 +42,9 @@ internal extension Encodable {
         try castArray.encode(to: encoder)
     }
 }
+
+// MARK: - Error
+
+public enum CoreDataEncodingError: Error {
+    case relationshipNotEncodable(class: NSManagedObject.Type, relationship: NSRelationshipDescription)
+}

@@ -46,7 +46,6 @@ public extension CoreDataDecodable {
         try initialize(from: .from(container))
     }
     
-    #warning("excluding and including keys is not tested")
     func defaultInitialization(from container: CoreDataKeyedDecodingContainer<Self>) throws {
         try defaultInitialization(from: container) { _ in true }
     }
@@ -76,7 +75,8 @@ internal extension Decodable {
 
 // MARK: - Error
 
-public enum CoreDataCodableError: Error {
+public enum CoreDataDecodingError: Error {
     case missingContext(decoder: Decoder)
     case missingOrInvalidIdentityAttribute(class: AnyClass, identityAttributes: [String], receivedKeys: [String])
+    case relationshipNotDecodable(class: NSManagedObject.Type, relationship: NSRelationshipDescription)
 }

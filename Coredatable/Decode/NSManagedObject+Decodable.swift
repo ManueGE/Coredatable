@@ -60,16 +60,14 @@ internal extension CoreDataDecodable {
             } else if let codableClass = theClass as? Decodable.Type {
                 array = try codableClass.decodeArray(from: childDecoder)
             } else {
-                #warning("Throw error for relationship not being codable")
-                return
+                throw CoreDataDecodingError.relationshipNotDecodable(class: Self.self, relationship: relationship)
             }
             let value = NSSet(array: array)
             try validateValue(value, forKey: codingKey)
             setValue(value, forKey: codingKey.propertyName)
         } else {
             guard let codableClass = theClass as? Decodable.Type else {
-                #warning("Throw error for relationship not being codable")
-                return
+                throw CoreDataDecodingError.relationshipNotDecodable(class: Self.self, relationship: relationship)
             }
             #warning("TODO: Write a test with regular codable NSManagedObject")
             let value = try codableClass.init(from: childDecoder)
