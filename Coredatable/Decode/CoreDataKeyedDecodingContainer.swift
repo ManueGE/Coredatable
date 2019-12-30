@@ -11,20 +11,29 @@ import Foundation
 /// A replacement for `KeyedDecodingContainer` where the Keys are `AnyCoreDataKey`.
 /// It is used in the `initialize` methods of a `CoreDataDecodable`.
 /// It can be used in the same way as the regular `KeyedDecodingContainer`
-public struct CoreDataKeyedDecodingContainer<Key: AnyCoreDataCodingKey> {
+public struct CoreDataKeyedDecodingContainer<ManagedObject: CoreDataDecodable> {
+    public typealias Key = ManagedObject.CodingKeys
     private let container: KeyedDecodingContainer<Key.Standard>
     private var manualValues: [String: Any?] = [:]
     
     public var codingPath: [Key] { container.codingPath.compactMap { Key(stringValue: $0.stringValue) } }
     public var allKeys: [Key] { container.allKeys.compactMap { Key(stringValue: $0.stringValue) } }
     
-    init(container: KeyedDecodingContainer<Key.Standard>) {
+    static func from(_ container: KeyedDecodingContainer<Key.Standard>) throws -> Self {
+        let container = Self(container: container)
+        return try ManagedObject.prepare(container)
+    }
+    
+    private init(container: KeyedDecodingContainer<Key.Standard>) {
         self.container = container
     }
     
     /// MARK: Decodable methods
     public func contains(_ key: Key) -> Bool {
-        container.contains(coreDataKey: key)
+        if manualValues.keys.contains(key.stringValue) {
+            return true
+        }
+        return container.contains(coreDataKey: key)
     }
     
     public func decodeNil(forKey key: Key) throws -> Bool {

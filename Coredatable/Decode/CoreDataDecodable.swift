@@ -17,7 +17,8 @@ public protocol AnyCoreDataDecodable: NSManagedObject, Decodable {
 public protocol CoreDataDecodable: AnyCoreDataDecodable {
     associatedtype CodingKeys: AnyCoreDataCodingKey
     static var identityAttribute: IdentityAttribute { get }
-    func initialize(from container: CoreDataKeyedDecodingContainer<CodingKeys>) throws
+    static func prepare(_ container: CoreDataKeyedDecodingContainer<Self>) throws -> CoreDataKeyedDecodingContainer<Self>
+    func initialize(from container: CoreDataKeyedDecodingContainer<Self>) throws
 }
 
 public extension CoreDataDecodable {
@@ -33,32 +34,36 @@ public extension CoreDataDecodable {
         return try coreDataDecoder.decodeArray()
     }
     
-    func initialize(from container: CoreDataKeyedDecodingContainer<CodingKeys>) throws {
+    static func prepare(_ container: CoreDataKeyedDecodingContainer<Self>) throws -> CoreDataKeyedDecodingContainer<Self> {
+        return container
+    }
+    
+    func initialize(from container: CoreDataKeyedDecodingContainer<Self>) throws {
         try defaultInitialization(from: container)
     }
         
     internal func initialize(from container: KeyedDecodingContainer<CodingKeys.Standard>) throws {
-        try initialize(from: CoreDataKeyedDecodingContainer(container: container))
+        try initialize(from: .from(container))
     }
     
     #warning("excluding and including keys is not tested")
-    func defaultInitialization(from container: CoreDataKeyedDecodingContainer<CodingKeys>) throws {
+    func defaultInitialization(from container: CoreDataKeyedDecodingContainer<Self>) throws {
         try defaultInitialization(from: container) { _ in true }
     }
     
-    func defaultInitialization(from container: CoreDataKeyedDecodingContainer<CodingKeys>, with keys: [CodingKeys]) throws {
+    func defaultInitialization(from container: CoreDataKeyedDecodingContainer<Self>, with keys: [CodingKeys]) throws {
         try defaultInitialization(from: container) { key in
             keys.contains { $0.stringValue == key.stringValue }
         }
     }
     
-    func defaultInitialization(from container: CoreDataKeyedDecodingContainer<CodingKeys>, skipping skippedKeys: [CodingKeys]) throws {
+    func defaultInitialization(from container: CoreDataKeyedDecodingContainer<Self>, skipping skippedKeys: [CodingKeys]) throws {
         try defaultInitialization(from: container) { key in
             !skippedKeys.contains { $0.stringValue == key.stringValue }
         }
     }
     
-    func defaultInitialization(from container: CoreDataKeyedDecodingContainer<CodingKeys>, including where: @escaping (CodingKeys) -> Bool) throws {
+    func defaultInitialization(from container: CoreDataKeyedDecodingContainer<Self>, including where: @escaping (CodingKeys) -> Bool) throws {
         try applyValues(from: container, policy: `where`)
     }
 }

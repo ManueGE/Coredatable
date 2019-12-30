@@ -41,13 +41,13 @@ extension IdentityAttribute: ExpressibleByArrayLiteral {
 }
 
 internal protocol IdentityAttributeStrategy {
-    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: CoreDataKeyedDecodingContainer<ManagedObject.CodingKeys>) throws -> ManagedObject?
+    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: CoreDataKeyedDecodingContainer<ManagedObject>) throws -> ManagedObject?
     func decodeArray<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: UnkeyedDecodingContainer, decoder: Decoder) throws -> [ManagedObject]
 }
 
 extension IdentityAttributeStrategy {
     func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, standardContainer: KeyedDecodingContainer<ManagedObject.CodingKeys.Standard>) throws -> ManagedObject? {
-        let container = CoreDataKeyedDecodingContainer(container: standardContainer)
+        let container = try CoreDataKeyedDecodingContainer<ManagedObject>.from(standardContainer)
         return try existingObject(context: context, container: container)
     }
 }

@@ -30,7 +30,7 @@ final class Person: NSManagedObject, CoreDataCodable {
     
     static let identityAttribute: IdentityAttribute = #keyPath(Person.personId)
     
-    func initialize(from container: CoreDataKeyedDecodingContainer<CoreDataDefaultCodingKeys>) throws {
+    func initialize(from container: CoreDataKeyedDecodingContainer<Person>) throws {
         try defaultInitialization(from: container)
         customValue = "custom"
     }
@@ -90,7 +90,7 @@ final class Custom: NSManagedObject, CoreDataDecodable {
     
     static var identityAttribute: IdentityAttribute = #keyPath(Custom.id)
     
-    func initialize(from container: CoreDataKeyedDecodingContainer<Custom.CodingKeys>) throws {
+    func initialize(from container: CoreDataKeyedDecodingContainer<Custom>) throws {
         var container = container
         container[.id] = Int(try container.decode(String.self, forKey: .id)) ?? 0
         
@@ -102,6 +102,32 @@ final class Custom: NSManagedObject, CoreDataDecodable {
         
         let string = try container.decode(String.self, forKey: .integer)
         integer = Int(string) ?? 0
+    }
+}
+
+final class CustomDoubleId: NSManagedObject, CoreDataDecodable {
+    @NSManaged var id: String
+    @NSManaged var value: String
+    
+    enum CodingKeys: String, CoreDataCodingKey {
+        case id
+        case first
+        case last
+        case value
+    }
+    
+    func initialize(from container: CoreDataKeyedDecodingContainer<CustomDoubleId>) throws {
+        try defaultInitialization(from: container)
+    }
+    
+    static var identityAttribute: IdentityAttribute = #keyPath(CustomDoubleId.id)
+    
+    static func prepare(_ container: CoreDataKeyedDecodingContainer<CustomDoubleId>) throws -> CoreDataKeyedDecodingContainer<CustomDoubleId> {
+        var container = container
+        let first = try container.decode(String.self, forKey: .first)
+        let last = try container.decode(String.self, forKey: .last)
+        container[.id] = first + last
+        return container
     }
 }
 

@@ -9,7 +9,7 @@
 import Foundation
 
 internal extension CoreDataDecodable {
-    func applyValues(from container: CoreDataKeyedDecodingContainer<CodingKeys>, policy: (CodingKeys) -> Bool) throws {
+    func applyValues(from container: CoreDataKeyedDecodingContainer<Self>, policy: (CodingKeys) -> Bool) throws {
         try entity.properties.forEach { property in
             guard let codingKey = CodingKeys(propertyName: property.name),
                 policy(codingKey),
@@ -42,12 +42,12 @@ internal extension CoreDataDecodable {
         try validateValue(valuePointer, forKey: codingKey.propertyName)
     }
     
-    private func set(_ attribute: NSAttributeDescription, from container: CoreDataKeyedDecodingContainer<CodingKeys>, with codingKey: CodingKeys) throws {
+    private func set(_ attribute: NSAttributeDescription, from container: CoreDataKeyedDecodingContainer<Self>, with codingKey: CodingKeys) throws {
         let value = container.decodeAny(forKey: codingKey)
         try setValue(value, forKey: codingKey)
     }
     
-    private func set(_ relationship: NSRelationshipDescription, from container: CoreDataKeyedDecodingContainer<CodingKeys>, with codingKey: CodingKeys) throws {
+    private func set(_ relationship: NSRelationshipDescription, from container: CoreDataKeyedDecodingContainer<Self>, with codingKey: CodingKeys) throws {
         let className = relationship.destinationEntity?.managedObjectClassName ?? ""
         let theClass: AnyClass? = NSClassFromString(className)
         let childDecoder = try container.superDecoder(forKey: codingKey)

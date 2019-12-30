@@ -30,7 +30,6 @@
 		649E74A2239C344300962EE1 /* NSManagedObject+Coredatable.m in Sources */ = {isa = PBXBuildFile; fileRef = 649E74A0239C344300962EE1 /* NSManagedObject+Coredatable.m */; };
 		649E74AE239C398400962EE1 /* Encodable+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E74AA239C398400962EE1 /* Encodable+Extension.swift */; };
 		649E74AF239C398400962EE1 /* Decodable+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E74AB239C398400962EE1 /* Decodable+Extension.swift */; };
-		649E74B0239C398400962EE1 /* StringCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E74AC239C398400962EE1 /* StringCodingKey.swift */; };
 		649E74B1239C398400962EE1 /* Decoder+ManagedObjectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E74AD239C398400962EE1 /* Decoder+ManagedObjectContext.swift */; };
 		649E74B9239C5F7C00962EE1 /* personSnakeCase.json in Resources */ = {isa = PBXBuildFile; fileRef = 649E74B6239C5F7C00962EE1 /* personSnakeCase.json */; };
 		649E74BA239C5F7C00962EE1 /* personDifferentKey.json in Resources */ = {isa = PBXBuildFile; fileRef = 649E74B7239C5F7C00962EE1 /* personDifferentKey.json */; };
@@ -79,7 +78,6 @@
 		649E74A0239C344300962EE1 /* NSManagedObject+Coredatable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+Coredatable.m"; sourceTree = "<group>"; };
 		649E74AA239C398400962EE1 /* Encodable+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Encodable+Extension.swift"; sourceTree = "<group>"; };
 		649E74AB239C398400962EE1 /* Decodable+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Decodable+Extension.swift"; sourceTree = "<group>"; };
-		649E74AC239C398400962EE1 /* StringCodingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringCodingKey.swift; sourceTree = "<group>"; };
 		649E74AD239C398400962EE1 /* Decoder+ManagedObjectContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Decoder+ManagedObjectContext.swift"; sourceTree = "<group>"; };
 		649E74B6239C5F7C00962EE1 /* personSnakeCase.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = personSnakeCase.json; sourceTree = "<group>"; };
 		649E74B7239C5F7C00962EE1 /* personDifferentKey.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = personDifferentKey.json; sourceTree = "<group>"; };
@@ -242,7 +240,6 @@
 			children = (
 				649E74BC239D49CF00962EE1 /* CoreDataCodingKey.swift */,
 				646E9858239FFA5B00D3BC6A /* Many.swift */,
-				649E74AC239C398400962EE1 /* StringCodingKey.swift */,
 				64611C7023A2E5CD00F407CE /* NSManagedObject+Helpers.swift */,
 			);
 			path = Helpers;
@@ -384,7 +381,6 @@
 				6455D7C223A28016000E4F4C /* CoreDataEncoder.swift in Sources */,
 				649E74BF239ED0B900962EE1 /* NSManagedObject+Decodable.swift in Sources */,
 				646E9859239FFA5B00D3BC6A /* Many.swift in Sources */,
-				649E74B0239C398400962EE1 /* StringCodingKey.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

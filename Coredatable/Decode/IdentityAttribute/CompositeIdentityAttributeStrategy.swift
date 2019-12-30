@@ -10,7 +10,7 @@ import Foundation
 
 internal struct CompositeIdentityAttributeStrategy: IdentityAttributeStrategy {
     let propertyNames: [String]
-    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: CoreDataKeyedDecodingContainer<ManagedObject.CodingKeys>) throws -> ManagedObject? {
+    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: CoreDataKeyedDecodingContainer<ManagedObject>) throws -> ManagedObject? {
         
         let request = NSFetchRequest<ManagedObject>(entityName: ManagedObject.entity(inManagedObjectContext: context).name!)
         request.predicate = try predicate(for: ManagedObject.self, in: container)
@@ -31,7 +31,7 @@ internal struct CompositeIdentityAttributeStrategy: IdentityAttributeStrategy {
     }
     
     // MARK: - Helpers
-    private func predicate<ManagedObject: CoreDataDecodable>(for _: ManagedObject.Type, in container: CoreDataKeyedDecodingContainer<ManagedObject.CodingKeys>) throws -> NSPredicate {
+    private func predicate<ManagedObject: CoreDataDecodable>(for _: ManagedObject.Type, in container: CoreDataKeyedDecodingContainer<ManagedObject>) throws -> NSPredicate {
         
         let predicates = try ManagedObject.identityAttribute.propertyNames.map { (propertyName) -> NSPredicate in
             guard let codingKey = ManagedObject.CodingKeys(propertyName: propertyName),

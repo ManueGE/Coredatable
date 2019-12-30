@@ -9,7 +9,7 @@
 import Foundation
 
 internal struct NoIdentityAttributesStrategy: IdentityAttributeStrategy {
-    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: CoreDataKeyedDecodingContainer<ManagedObject.CodingKeys>) throws -> ManagedObject? {
+    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: CoreDataKeyedDecodingContainer<ManagedObject>) throws -> ManagedObject? {
         return nil
     }
     

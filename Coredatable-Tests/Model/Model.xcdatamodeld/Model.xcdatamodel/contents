@@ -15,6 +15,10 @@
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="integer" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
+    <entity name="CustomDoubleId" representedClassName=".CustomDoubleId" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="value" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="Person" representedClassName=".Person" syncable="YES">
         <attribute name="city" optional="YES" attributeType="String"/>
         <attribute name="fullName" optional="YES" attributeType="String"/>
@@ -40,6 +44,7 @@
         <element name="Person" positionX="-63" positionY="-18" width="128" height="118"/>
         <element name="PersonAttribute" positionX="136.96484375" positionY="-124.16796875" width="128" height="88"/>
         <element name="PersonDiffKeys" positionX="-150.41015625" positionY="121.7734375" width="128" height="118"/>
+        <element name="CustomDoubleId" positionX="27" positionY="54" width="128" height="73"/>
         <element name="Card" positionX="18" positionY="45" width="128" height="88"/>
     </elements>
 </model>

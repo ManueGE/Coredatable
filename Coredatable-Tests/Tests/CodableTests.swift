@@ -407,6 +407,67 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(customs?.last?.integer, 30)
     }
     
+    func testCustomCompondId() {
+        // given
+        let data = Data.fromJson(["first": "0", "last": "1", "value": "one"])!
+        
+        // when
+        let custom = try? jsonDecoder.decode(CustomDoubleId.self, from: data)
+        
+        // then
+        XCTAssertNotNil(custom)
+        XCTAssertEqual(custom?.id, "01")
+        XCTAssertEqual(custom?.value, "one")
+    }
+    
+    func testCustomCompondIdFromArray() {
+        // given
+        let data = Data.fromArray([["first": "0", "last": "1", "value": "one"]])!
+        
+        // when
+        let custom = try? jsonDecoder.decode([CustomDoubleId].self, from: data).first
+        
+        // then
+        XCTAssertNotNil(custom)
+        XCTAssertEqual(custom?.id, "01")
+        XCTAssertEqual(custom?.value, "one")
+    }
+    
+    func testCustomCompondIdFromMany() {
+        // given
+        let data = Data.fromArray([["first": "0", "last": "1", "value": "one"]])!
+        
+        // when
+        let custom = try? jsonDecoder.decode(Many<CustomDoubleId>.self, from: data).first
+        
+        // then
+        XCTAssertNotNil(custom)
+        XCTAssertEqual(custom?.id, "01")
+        XCTAssertEqual(custom?.value, "one")
+    }
+    
+    func testCustomCompondIdUpdate() {
+        // given
+        let existing = CustomDoubleId(context: container.viewContext)
+        existing.id = "01"
+        existing.value = "zero"
+        
+        let data = Data.fromJson(["first": "0", "last": "1", "value": "one"])!
+        
+        // when
+        let custom = try? jsonDecoder.decode(CustomDoubleId.self, from: data)
+        
+        // then
+        XCTAssertNotNil(custom)
+        XCTAssertEqual(custom?.id, "01")
+        XCTAssertEqual(custom?.value, "one")
+        XCTAssertEqual(existing.value, "one")
+        
+        let fetchRequest = NSFetchRequest<CustomDoubleId>(entityName: "CustomDoubleId")
+        let all = try? container.viewContext.fetch(fetchRequest)
+        XCTAssertEqual(1, all?.count)
+    }
+    
     func testSerializationWithCompositeKey() {
         guard let data = Data(resource: "cards.json"),
             let updatedData = Data(resource: "cards_update.json") else {
