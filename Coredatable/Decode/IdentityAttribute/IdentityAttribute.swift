@@ -16,11 +16,12 @@ public struct IdentityAttribute {
     public static var no: IdentityAttribute { IdentityAttribute([]) }
     
     internal var strategy: IdentityAttributeStrategy {
-        if propertyNames.count == 0 {
+        switch propertyNames.count {
+        case 0:
             return NoIdentityAttributesStrategy()
-        } else if propertyNames.count == 1 {
+        case 1:
             return SingleIdentityAttributeStrategy(propertyName: propertyNames[0])
-        } else {
+        default:
             return CompositeIdentityAttributeStrategy(propertyNames: propertyNames)
         }
     }

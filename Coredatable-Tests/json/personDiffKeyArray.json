@@ -1,0 +1,13 @@
+[
+    {
+        "id": 1,
+        "name": "Marco",
+        "origin": "Murcia",
+        "object": {
+            "one": "keypath1",
+            "nested": {
+                "two": "keypath2"
+            }
+        }
+    }
+]

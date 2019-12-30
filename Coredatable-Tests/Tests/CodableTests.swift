@@ -118,6 +118,34 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(person?.keyPath2, "keypath2")
     }
     
+    func testDecodeArrayWithCustomKeys() {
+        // given
+        let data = Data(resource: "personDiffKeyArray.json")!
+        
+        // when
+        let person = try? jsonDecoder.decode([PersonDiffKeys].self, from: data).first
+        
+        // then
+        XCTAssertEqual(person?.personId, 1)
+        XCTAssertEqual(person?.fullName, "Marco")
+        XCTAssertEqual(person?.keyPath1, "keypath1")
+        XCTAssertEqual(person?.keyPath2, "keypath2")
+    }
+    
+    func testDecodeManyWithCustomKeys() {
+        // given
+        let data = Data(resource: "personDiffKeyArray.json")!
+        
+        // when
+        let person = try? jsonDecoder.decode(Many<PersonDiffKeys>.self, from: data).first
+        
+        // then
+        XCTAssertEqual(person?.personId, 1)
+        XCTAssertEqual(person?.fullName, "Marco")
+        XCTAssertEqual(person?.keyPath1, "keypath1")
+        XCTAssertEqual(person?.keyPath2, "keypath2")
+    }
+    
     func testDecodeUpdatingValueWithSingleUniqueIdentifier() {
         // given
         let existing = Person(context: viewContext)

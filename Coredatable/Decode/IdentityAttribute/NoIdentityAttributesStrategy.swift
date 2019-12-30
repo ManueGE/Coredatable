@@ -15,11 +15,13 @@ internal struct NoIdentityAttributesStrategy: IdentityAttributeStrategy {
     
     func decodeArray<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: UnkeyedDecodingContainer, decoder: Decoder) throws -> [ManagedObject] {
         var container = container
-        return try (0 ..< (container.count ?? 0)).map { _ in
+        var objects: [ManagedObject] = []
+        while !container.isAtEnd {
             let objectContainer = try container.nestedContainer(keyedBy: ManagedObject.CodingKeys.Standard.self)
             let object = ManagedObject(context: context)
             try object.initialize(from: objectContainer)
-            return object
+            objects.append(object)
         }
+        return objects
     }
 }
