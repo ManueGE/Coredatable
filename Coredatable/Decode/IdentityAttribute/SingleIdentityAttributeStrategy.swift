@@ -11,23 +11,24 @@ import Foundation
 internal struct SingleIdentityAttributeStrategy: IdentityAttributeStrategy {
     let propertyName: String
     
-    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: KeyedDecodingContainer<ManagedObject.CodingKeys.Standard>) throws -> ManagedObject? {
+    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: CoreDataKeyedDecodingContainer<ManagedObject.CodingKeys>) throws -> ManagedObject? {
         let identifier = try findIdentifier(for: ManagedObject.self, in: container)
         return try existingObjects(context: context, ids: [identifier]).first
     }
     
     func decodeArray<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: UnkeyedDecodingContainer, decoder: Decoder) throws -> [ManagedObject] {
         var identifiers: [AnyHashable] = []
-        var objectContainersById: [AnyHashable: KeyedDecodingContainer<ManagedObject.CodingKeys.Standard>] = [:]
+        var objectContainersById: [AnyHashable: CoreDataKeyedDecodingContainer<ManagedObject.CodingKeys>] = [:]
         
         // find the id for any object in the container
         var idsContainer = container
         while !idsContainer.isAtEnd {
             do {
                 let objectContainer = try idsContainer.nestedContainer(keyedBy: ManagedObject.CodingKeys.Standard.self)
-                let identifier = try findIdentifier(for: ManagedObject.self, in: objectContainer) as AnyHashable
+                let coreDataObjectContainer = CoreDataKeyedDecodingContainer(container: objectContainer)
+                let identifier = try findIdentifier(for: ManagedObject.self, in: coreDataObjectContainer) as AnyHashable
                 identifiers.append(identifier)
-                objectContainersById[identifier] = objectContainer
+                objectContainersById[identifier] = coreDataObjectContainer
             } catch {
                 if let identifier = idsContainer.decodeAny() as? AnyHashable {
                     identifiers.append(identifier)
@@ -77,9 +78,9 @@ internal struct SingleIdentityAttributeStrategy: IdentityAttributeStrategy {
     }
     
     // MARK: - Helpers
-    private func findIdentifier<ManagedObject: CoreDataDecodable>(for _: ManagedObject.Type, in container: KeyedDecodingContainer<ManagedObject.CodingKeys.Standard>) throws -> AnyHashable {
+    private func findIdentifier<ManagedObject: CoreDataDecodable>(for _: ManagedObject.Type, in container: CoreDataKeyedDecodingContainer<ManagedObject.CodingKeys>) throws -> AnyHashable {
         guard let codingKey = ManagedObject.CodingKeys(propertyName: propertyName),
-            let value = container.decodeAny(forKey: codingKey.standarized) as? AnyHashable
+            let value = container.decodeAny(forKey: codingKey) as? AnyHashable
             else {
                 let receivedKeys = container.allKeys.map { $0.stringValue }
                 throw CoreDataCodableError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: receivedKeys)

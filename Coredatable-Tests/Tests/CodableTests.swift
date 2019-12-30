@@ -407,6 +407,86 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(customs?.last?.integer, 30)
     }
     
+    func testSerializationWithCompositeKey() {
+        guard let data = Data(resource: "cards.json"),
+            let updatedData = Data(resource: "cards_update.json") else {
+                XCTFail()
+                return
+        }
+
+        do {
+            let context = container.viewContext
+            let cards: [Card] = try jsonDecoder.decode([Card].self, from: data)
+
+            XCTAssertEqual(2, cards.count)
+
+            let threeOfDiamonds = cards[0]
+            XCTAssertEqual(2, threeOfDiamonds.numberOfTimesPlayed)
+            XCTAssertEqual("Diamonds", threeOfDiamonds.suit)
+            XCTAssertEqual("Three", threeOfDiamonds.value)
+
+            let jackOfHearts = cards[1]
+            XCTAssertEqual(3, jackOfHearts.numberOfTimesPlayed)
+            XCTAssertEqual("Hearts", jackOfHearts.suit)
+            XCTAssertEqual("Jack", jackOfHearts.value)
+
+            let updatedCards = try jsonDecoder.decode([Card].self, from: updatedData)
+
+            XCTAssertEqual(4, jackOfHearts.numberOfTimesPlayed)
+
+            let threeOfClubs = updatedCards[1];
+            XCTAssertEqual(1, threeOfClubs.numberOfTimesPlayed)
+            XCTAssertEqual("Clubs", threeOfClubs.suit)
+            XCTAssertEqual("Three", threeOfClubs.value)
+
+            let fetchRequest = NSFetchRequest<Card>(entityName: "Card")
+            let allCards = try context.fetch(fetchRequest)
+            XCTAssertEqual(3, allCards.count)
+        } catch {
+            XCTFail("error: \(error)")
+        }
+    }
+    
+    func testManySerializationWithCompositeKey() {
+        guard let data = Data(resource: "cards.json"),
+            let updatedData = Data(resource: "cards_update.json") else {
+                XCTFail()
+                return
+        }
+
+        do {
+            let context = container.viewContext
+            let cards = try jsonDecoder.decode(Many<Card>.self, from: data)
+
+            XCTAssertEqual(2, cards.count)
+
+            let threeOfDiamonds = cards[0]
+            XCTAssertEqual(2, threeOfDiamonds.numberOfTimesPlayed)
+            XCTAssertEqual("Diamonds", threeOfDiamonds.suit)
+            XCTAssertEqual("Three", threeOfDiamonds.value)
+
+            let jackOfHearts = cards[1]
+            XCTAssertEqual(3, jackOfHearts.numberOfTimesPlayed)
+            XCTAssertEqual("Hearts", jackOfHearts.suit)
+            XCTAssertEqual("Jack", jackOfHearts.value)
+
+            let updatedCards: [Card] = try jsonDecoder.decode([Card].self, from: updatedData)
+
+            XCTAssertEqual(4, jackOfHearts.numberOfTimesPlayed)
+
+            let threeOfClubs = updatedCards[1];
+            XCTAssertEqual(1, threeOfClubs.numberOfTimesPlayed)
+            XCTAssertEqual("Clubs", threeOfClubs.suit)
+            XCTAssertEqual("Three", threeOfClubs.value)
+
+            let fetchRequest = NSFetchRequest<Card>(entityName: "Card")
+            let allCards = try context.fetch(fetchRequest)
+            XCTAssertEqual(3, allCards.count)
+        } catch {
+            XCTFail("error: \(error)")
+        }
+    }
+    
     // MARK: - Encode
     func testEncodeSimpleObject() {
         // given

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15508" systemVersion="19C57" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Card" representedClassName=".Card" syncable="YES">
+        <attribute name="numberOfTimesPlayed" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="suit" optional="YES" attributeType="String"/>
+        <attribute name="value" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="Country" representedClassName=".Country" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -31,9 +36,10 @@
     </entity>
     <elements>
         <element name="Country" positionX="150.07421875" positionY="128.3828125" width="128" height="88"/>
+        <element name="Custom" positionX="9" positionY="36" width="128" height="88"/>
         <element name="Person" positionX="-63" positionY="-18" width="128" height="118"/>
         <element name="PersonAttribute" positionX="136.96484375" positionY="-124.16796875" width="128" height="88"/>
         <element name="PersonDiffKeys" positionX="-150.41015625" positionY="121.7734375" width="128" height="118"/>
-        <element name="Custom" positionX="9" positionY="36" width="128" height="88"/>
+        <element name="Card" positionX="18" positionY="45" width="128" height="88"/>
     </elements>
 </model>

@@ -24,7 +24,7 @@ internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable> {
         do {
             let container = try decoder.container(keyedBy: ManagedObject.CodingKeys.Standard.self)
             return try context.tryPerformAndWait {
-                let object = try ManagedObject.identityAttribute.strategy.existingObject(context: context, container: container) ?? ManagedObject(context: context)
+                let object = try ManagedObject.identityAttribute.strategy.existingObject(context: context, standardContainer: container) ?? ManagedObject(context: context)
                 try object.initialize(from: container)
                 return object
             }

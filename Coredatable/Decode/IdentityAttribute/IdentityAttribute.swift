@@ -32,15 +32,22 @@ extension IdentityAttribute: ExpressibleByStringLiteral {
         self = IdentityAttribute(Set([value]))
     }
 }
-/*
+
 extension IdentityAttribute: ExpressibleByArrayLiteral {
     public typealias ArrayLiteralElement = String
     public init(arrayLiteral elements: String...) {
         self = IdentityAttribute(Set(elements))
     }
-}*/
+}
 
 internal protocol IdentityAttributeStrategy {
-    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: KeyedDecodingContainer<ManagedObject.CodingKeys.Standard>) throws -> ManagedObject?
+    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: CoreDataKeyedDecodingContainer<ManagedObject.CodingKeys>) throws -> ManagedObject?
     func decodeArray<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: UnkeyedDecodingContainer, decoder: Decoder) throws -> [ManagedObject]
+}
+
+extension IdentityAttributeStrategy {
+    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, standardContainer: KeyedDecodingContainer<ManagedObject.CodingKeys.Standard>) throws -> ManagedObject? {
+        let container = CoreDataKeyedDecodingContainer(container: standardContainer)
+        return try existingObject(context: context, container: container)
+    }
 }

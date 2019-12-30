@@ -104,3 +104,17 @@ final class Custom: NSManagedObject, CoreDataDecodable {
         integer = Int(string) ?? 0
     }
 }
+
+final class Card: NSManagedObject, CoreDataDecodable {
+
+    @NSManaged var suit: String
+    @NSManaged var value: String
+    @NSManaged var numberOfTimesPlayed: Int
+    
+    enum CodingKeys: String, CoreDataCodingKey {
+        case suit, value
+        case numberOfTimesPlayed = "played"
+    }
+    
+    static var identityAttribute: IdentityAttribute = [#keyPath(Card.suit), #keyPath(Card.value)]
+}
