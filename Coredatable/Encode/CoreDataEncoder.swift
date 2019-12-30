@@ -77,23 +77,25 @@ internal final class CoreDataEncoder<ManagedObject: CoreDataEncodable> {
         let childEncoder = container.superEncoder(forKey: standardKey)
         
         if relationship.isToMany {
-            let array: [AnyCoreDataEncodable]
+            let array: [Any]
             if let set = value as? NSOrderedSet {
-                array = set.array.compactMap { $0 as? AnyCoreDataEncodable }
+                array = set.array
             } else if let set = value as? NSSet {
-                array = set.allObjects.compactMap { $0 as? AnyCoreDataEncodable }
+                array = set.allObjects
             } else {
                 array = []
             }
-        
+            
             if let encodableClass = theClass as? AnyCoreDataEncodable.Type {
                 try encodableClass.encode(array, to: childEncoder, skipping: skippableRelationships)
+                
             } else if let encodableClass = theClass as? Encodable.Type {
-                #warning("Test this")
                 try encodableClass.encode(array, to: childEncoder)
+                
             } else {
                 throw CoreDataEncodingError.relationshipNotEncodable(class: ManagedObject.self, relationship: relationship)
             }
+            
         } else {
             if let encodable = value as? AnyCoreDataEncodable {
                 try encodable.encode(to: childEncoder, skipping: skippableRelationships)

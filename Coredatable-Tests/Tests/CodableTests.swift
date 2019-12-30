@@ -576,6 +576,61 @@ class CodableTests: XCTestCase {
         }
     }
     
+    func testDecodeDefaultCodableObjects() {
+        // given
+        let json: [String: Any] = [
+            "codable": ["id": 1, "value": "one"],
+            "codableMany": [
+                ["id": 2, "value": "two"],
+                ["id": 3, "value": "three"],
+            ],
+            "coreData": ["id": 4, "value": "four"],
+            "coreDataMany": [
+                ["id": 5, "value": "five"],
+                ["id": 6, "value": "six"],
+            ],
+        ]
+        
+        let data = Data.fromJson(json)!
+        
+        // when
+        let container = try? jsonDecoder.decode(CodableContainer.self, from: data)
+        
+        // then
+        XCTAssertNotNil(container)
+        
+        let codable = container?.codable
+        XCTAssertNotNil(codable)
+        XCTAssertEqual(codable?.id, 1)
+        XCTAssertEqual(codable?.value, "one")
+        
+        let codableMany = container?.codableMany.compactMap { i -> RelationshipCodable? in
+            i as? RelationshipCodable
+        }.sorted { $0.id < $1.id }
+        
+        XCTAssertEqual(codableMany?.count, 2)
+        XCTAssertEqual(codableMany?.first?.id, 2)
+        XCTAssertEqual(codableMany?.first?.value, "two")
+        XCTAssertEqual(codableMany?.last?.id, 3)
+        XCTAssertEqual(codableMany?.last?.value, "three")
+        
+        let coreData = container?.coreData
+        XCTAssertNotNil(coreData)
+        XCTAssertEqual(coreData?.id, 4)
+        XCTAssertEqual(coreData?.value, "four")
+        
+        let coreDataMany = container?.coreDataMany.compactMap { i -> RelationshipCoreDataCodable? in
+            i as? RelationshipCoreDataCodable
+        }.sorted { $0.id < $1.id }
+        
+        XCTAssertEqual(coreDataMany?.count, 2)
+        XCTAssertEqual(coreDataMany?.first?.id, 5)
+        XCTAssertEqual(coreDataMany?.first?.value, "five")
+        XCTAssertEqual(coreDataMany?.last?.id, 6)
+        XCTAssertEqual(coreDataMany?.last?.value, "six")
+        
+    }
+    
     // MARK: - Encode
     func testEncodeSimpleObject() {
         // given
@@ -660,5 +715,70 @@ class CodableTests: XCTestCase {
         let nestedDict = objectDict?["nested"] as? [String: Any]
         XCTAssertEqual(nestedDict?.count, 1)
         XCTAssertEqual(nestedDict?["two"] as? String, "keypath2")
+    }
+    
+    func testEncodeDefaultCodableObjects() {
+        // given
+        let context = self.container.viewContext
+        let container = CodableContainer(context: context)
+        
+        func newCodable(id: Int64, value: String) -> RelationshipCodable {
+            let item = RelationshipCodable(context: context)
+            item.id = id
+            item.value = value
+            return item
+        }
+        
+        container.codable = newCodable(id: 1, value: "one")
+
+        let codableMany = NSMutableSet()
+        codableMany.add(newCodable(id: 2, value: "two"))
+        codableMany.add(newCodable(id: 3, value: "three"))
+        container.codableMany = codableMany
+        
+        func newCoreDataCodable(id: Int64, value: String) -> RelationshipCoreDataCodable {
+            let item = RelationshipCoreDataCodable(context: context)
+            item.id = id
+            item.value = value
+            return item
+        }
+        
+        container.coreData = newCoreDataCodable(id: 4, value: "four")
+
+        let coreDataMany = NSMutableSet()
+        coreDataMany.add(newCoreDataCodable(id: 5, value: "five"))
+        coreDataMany.add(newCoreDataCodable(id: 6, value: "six"))
+        container.coreDataMany = coreDataMany
+        
+        // when
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(container)
+        let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable]
+        print(String(data: data, encoding: .utf8)!)
+        
+        // then
+        XCTAssertEqual(json?.count, 4)
+        
+        let expectedCodable = json?["codable"] as? [String: AnyHashable]
+        XCTAssertEqual(expectedCodable?["id"] as? Int, 1)
+        XCTAssertEqual(expectedCodable?["value"] as? String, "one")
+        
+        let expectedCodableMany = json?["codableMany"] as? [[String: Any]]
+        XCTAssertEqual(expectedCodableMany?.count, 2)
+        let firstCodable = expectedCodableMany?.first { $0["id"] as? Int == 2 }
+        XCTAssertEqual(firstCodable?["value"] as? String, "two")
+        let lastCodable = expectedCodableMany?.first { $0["id"] as? Int == 3 }
+        XCTAssertEqual(lastCodable?["value"] as? String, "three")
+        
+        let expectedCoreData = json?["coreData"] as? [String: AnyHashable]
+        XCTAssertEqual(expectedCoreData?["id"] as? Int, 4)
+        XCTAssertEqual(expectedCoreData?["value"] as? String, "four")
+        
+        let expectedCoreDataMany = json?["coreDataMany"] as? [[String: Any]]
+        XCTAssertEqual(expectedCoreDataMany?.count, 2)
+        let firstCoreDataCodable = expectedCoreDataMany?.first { $0["id"] as? Int == 5 }
+        XCTAssertEqual(firstCoreDataCodable?["value"] as? String, "five")
+        let lastCoreDataCodable = expectedCoreDataMany?.first { $0["id"] as? Int == 6 }
+        XCTAssertEqual(lastCoreDataCodable?["value"] as? String, "six")
     }
 }

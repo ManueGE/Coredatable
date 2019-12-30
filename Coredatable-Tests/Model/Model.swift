@@ -132,7 +132,6 @@ final class CustomDoubleId: NSManagedObject, CoreDataDecodable {
 }
 
 final class Card: NSManagedObject, CoreDataDecodable {
-
     @NSManaged var suit: String
     @NSManaged var value: String
     @NSManaged var numberOfTimesPlayed: Int
@@ -143,4 +142,49 @@ final class Card: NSManagedObject, CoreDataDecodable {
     }
     
     static var identityAttribute: IdentityAttribute = [#keyPath(Card.suit), #keyPath(Card.value)]
+}
+
+final class CodableContainer: NSManagedObject, CoreDataCodable {
+    @NSManaged var codable: RelationshipCodable
+    @NSManaged var codableMany: NSSet
+    @NSManaged var coreData: RelationshipCoreDataCodable
+    @NSManaged var coreDataMany: NSSet
+    
+    typealias CodingKeys = CoreDataDefaultCodingKeys
+}
+
+final class RelationshipCoreDataCodable: NSManagedObject, CoreDataCodable {
+    @NSManaged var id: Int64
+    @NSManaged var value: String
+    @NSManaged var inverse: CodableContainer
+    @NSManaged var inverseMany: CodableContainer
+    
+    typealias CodingKeys = CoreDataDefaultCodingKeys
+}
+
+final class RelationshipCodable: NSManagedObject, Codable {
+    @NSManaged var id: Int64
+    @NSManaged var value: String
+    @NSManaged var inverse: CodableContainer
+    @NSManaged var inverseMany: CodableContainer
+    
+    convenience init(from decoder: Decoder) throws {
+        guard let context = decoder.managedObjectContext else {
+            fatalError()
+        }
+        self.init(context: context)
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int64.self, forKey: .id)
+        value = try container.decode(String.self, forKey: .value)
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case id, value
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(value, forKey: .value)
+    }
 }
