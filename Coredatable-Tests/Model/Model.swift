@@ -30,7 +30,7 @@ final class Person: NSManagedObject, CoreDataCodable {
     
     static let identityAttribute: IdentityAttribute = #keyPath(Person.personId)
     
-    func initialize(from container: CoreDataDecodingContainer<CoreDataDefaultCodingKeys>) throws {
+    func initialize(from container: CoreDataKeyedDecodingContainer<CoreDataDefaultCodingKeys>) throws {
         try defaultInitialization(from: container)
         customValue = "custom"
     }
@@ -90,7 +90,10 @@ final class Custom: NSManagedObject, CoreDataDecodable {
     
     static var identityAttribute: IdentityAttribute = #keyPath(Custom.id)
     
-    func initialize(from container: CoreDataDecodingContainer<Custom.CodingKeys>) throws {
+    func initialize(from container: CoreDataKeyedDecodingContainer<Custom.CodingKeys>) throws {
+        var container = container
+        container[.id] = Int(try container.decode(String.self, forKey: .id)) ?? 0
+        
         try defaultInitialization(from: container, with: [.id])
         
         let first = try container.decode(String.self, forKey: .first)

@@ -9,23 +9,22 @@
 import Foundation
 
 internal extension CoreDataDecodable {
-    func applyValues<Keys: AnyCoreDataCodingKey>(from container: KeyedDecodingContainer<Keys.Standard>, policy: (Keys) -> Bool) throws {
+    func applyValues(from container: CoreDataKeyedDecodingContainer<CodingKeys>, policy: (CodingKeys) -> Bool) throws {
         try entity.properties.forEach { property in
-            guard let codingKey = Keys(propertyName: property.name),
+            guard let codingKey = CodingKeys(propertyName: property.name),
                 policy(codingKey),
-                let nestedContainer = container.nestedContainer(forCoreDataKey: codingKey),
-                nestedContainer.contains(codingKey.standarized)
+                container.contains(codingKey)
                 else { return }
 
             if let attribute = property as? NSAttributeDescription {
-                try set(attribute, from: nestedContainer, with: codingKey)
+                try set(attribute, from: container, with: codingKey)
             } else if let relationship =  property as? NSRelationshipDescription {
-                 try set(relationship, from: nestedContainer, with: codingKey)
+                 try set(relationship, from: container, with: codingKey)
             }
         }
     }
     
-    func setValue<Keys: AnyCoreDataCodingKey>(_ value: Any?, forKey codingKey: Keys) throws {
+    func setValue(_ value: Any?, forKey codingKey: CodingKeys) throws {
         try validateValue(value, forKey: codingKey)
         setValue(value, forKey: codingKey.propertyName)
     }
@@ -43,16 +42,15 @@ internal extension CoreDataDecodable {
         try validateValue(valuePointer, forKey: codingKey.propertyName)
     }
     
-    private func set<Keys: AnyCoreDataCodingKey>(_ attribute: NSAttributeDescription, from container: KeyedDecodingContainer<Keys.Standard>, with codingKey: Keys) throws {
-        let value = container.decodeAny(forKey: codingKey.standarized)
+    private func set(_ attribute: NSAttributeDescription, from container: CoreDataKeyedDecodingContainer<CodingKeys>, with codingKey: CodingKeys) throws {
+        let value = container.decodeAny(forKey: codingKey)
         try setValue(value, forKey: codingKey)
     }
     
-    private func set<Keys: AnyCoreDataCodingKey>(_ relationship: NSRelationshipDescription, from container: KeyedDecodingContainer<Keys.Standard>, with codingKey: Keys) throws {
+    private func set(_ relationship: NSRelationshipDescription, from container: CoreDataKeyedDecodingContainer<CodingKeys>, with codingKey: CodingKeys) throws {
         let className = relationship.destinationEntity?.managedObjectClassName ?? ""
         let theClass: AnyClass? = NSClassFromString(className)
-        let standardKey = codingKey.standarized
-        let childDecoder = try container.superDecoder(forKey: standardKey)
+        let childDecoder = try container.superDecoder(forKey: codingKey)
         
         if relationship.isToMany {
             let array: [Any]

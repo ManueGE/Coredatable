@@ -349,7 +349,7 @@ class CodableTests: XCTestCase {
     
     func testCustomSerialization() {
         // given
-        let data = Data.fromJson(["id": 1, "first": "FIRST", "second": "SECOND", "integer": "20"])!
+        let data = Data.fromJson(["id": "1", "first": "FIRST", "second": "SECOND", "integer": "20"])!
         
         // when
         let custom = try? jsonDecoder.decode(Custom.self, from: data)
@@ -364,8 +364,8 @@ class CodableTests: XCTestCase {
     func testCustomSerializationArray() {
         // given
         let data = Data.fromArray([
-            ["id": 1, "first": "FIRST", "second": "SECOND", "integer": "20"],
-            ["id": 2, "first": "UNO", "second": "DOS", "integer": "30"]
+            ["id": "1", "first": "FIRST", "second": "SECOND", "integer": "20"],
+            ["id": "2", "first": "UNO", "second": "DOS", "integer": "30"]
         ])!
         
         // when
@@ -387,8 +387,8 @@ class CodableTests: XCTestCase {
     func testCustomSerializationMany() {
         // given
         let data = Data.fromArray([
-            ["id": 1, "first": "FIRST", "second": "SECOND", "integer": "20"],
-            ["id": 2, "first": "UNO", "second": "DOS", "integer": "30"]
+            ["id": "1", "first": "FIRST", "second": "SECOND", "integer": "20"],
+            ["id": "2", "first": "UNO", "second": "DOS", "integer": "30"]
         ])!
         
         // when

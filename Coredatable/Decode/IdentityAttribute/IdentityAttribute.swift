@@ -9,7 +9,7 @@
 import Foundation
 
 public struct IdentityAttribute {
-    private let propertyNames: [String]
+    internal let propertyNames: [String]
     fileprivate init(_ propertyNames: Set<String>) {
         self.propertyNames = Array(propertyNames)
     }

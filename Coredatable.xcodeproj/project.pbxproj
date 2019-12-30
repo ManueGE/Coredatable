@@ -16,6 +16,7 @@
 		646E9855239F93F100D3BC6A /* personWithNil.json in Resources */ = {isa = PBXBuildFile; fileRef = 646E9854239F93F100D3BC6A /* personWithNil.json */; };
 		646E9857239FF96000D3BC6A /* nestedPerson.json in Resources */ = {isa = PBXBuildFile; fileRef = 646E9856239FF96000D3BC6A /* nestedPerson.json */; };
 		646E9859239FFA5B00D3BC6A /* Many.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646E9858239FFA5B00D3BC6A /* Many.swift */; };
+		6494F2F923B9FFE500885E00 /* CoreDataKeyedDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6494F2F823B9FFE500885E00 /* CoreDataKeyedDecodingContainer.swift */; };
 		649E746C239C28D600962EE1 /* Coredatable.h in Headers */ = {isa = PBXBuildFile; fileRef = 649E746A239C28D600962EE1 /* Coredatable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		649E747B239C2A0700962EE1 /* CodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649E747A239C2A0700962EE1 /* CodableTests.swift */; };
 		649E747D239C2A0700962EE1 /* Coredatable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 649E7467239C28D600962EE1 /* Coredatable.framework */; };
@@ -59,6 +60,7 @@
 		646E9854239F93F100D3BC6A /* personWithNil.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = personWithNil.json; sourceTree = "<group>"; };
 		646E9856239FF96000D3BC6A /* nestedPerson.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nestedPerson.json; sourceTree = "<group>"; };
 		646E9858239FFA5B00D3BC6A /* Many.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Many.swift; sourceTree = "<group>"; };
+		6494F2F823B9FFE500885E00 /* CoreDataKeyedDecodingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataKeyedDecodingContainer.swift; sourceTree = "<group>"; };
 		649E7467239C28D600962EE1 /* Coredatable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Coredatable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		649E746A239C28D600962EE1 /* Coredatable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Coredatable.h; sourceTree = "<group>"; };
 		649E746B239C28D600962EE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 			children = (
 				649E74C0239EED7300962EE1 /* CoreDataDecodable.swift */,
 				649E74C4239F005900962EE1 /* CoreDataDecoder.swift */,
+				6494F2F823B9FFE500885E00 /* CoreDataKeyedDecodingContainer.swift */,
 				649E74BE239ED0B900962EE1 /* NSManagedObject+Decodable.swift */,
 				649E74AB239C398400962EE1 /* Decodable+Extension.swift */,
 				649E74AD239C398400962EE1 /* Decoder+ManagedObjectContext.swift */,
@@ -368,6 +371,7 @@
 				649E74C1239EED7300962EE1 /* CoreDataDecodable.swift in Sources */,
 				649E74AF239C398400962EE1 /* Decodable+Extension.swift in Sources */,
 				646E9853239F057800D3BC6A /* IdentityAttribute.swift in Sources */,
+				6494F2F923B9FFE500885E00 /* CoreDataKeyedDecodingContainer.swift in Sources */,
 				649E74B1239C398400962EE1 /* Decoder+ManagedObjectContext.swift in Sources */,
 				6455D7C223A28016000E4F4C /* CoreDataEncoder.swift in Sources */,
 				649E74BF239ED0B900962EE1 /* NSManagedObject+Decodable.swift in Sources */,
