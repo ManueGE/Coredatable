@@ -43,7 +43,7 @@ internal extension CoreDataDecodable {
     }
     
     private func set(_ attribute: NSAttributeDescription, from container: CoreDataKeyedDecodingContainer<Self>, with codingKey: CodingKeys) throws {
-        let value = container.decodeAny(forKey: codingKey)
+        let value = container.decode(attribute, forKey: codingKey)
         try setValue(value, forKey: codingKey)
     }
     
@@ -60,14 +60,14 @@ internal extension CoreDataDecodable {
             } else if let codableClass = theClass as? Decodable.Type {
                 array = try codableClass.decodeArray(from: childDecoder)
             } else {
-                throw CoreDataDecodingError.relationshipNotDecodable(class: Self.self, relationship: relationship)
+                throw CoreDataDecodingError.propertyNotDecodable(class: Self.self, property: relationship)
             }
             let value = relationship.isOrdered ? NSOrderedSet(array: array) : NSSet(array: array)
             try validateValue(value, forKey: codingKey)
             setValue(value, forKey: codingKey.propertyName)
         } else {
             guard let codableClass = theClass as? Decodable.Type else {
-                throw CoreDataDecodingError.relationshipNotDecodable(class: Self.self, relationship: relationship)
+                throw CoreDataDecodingError.propertyNotDecodable(class: Self.self, property: relationship)
             }
             let value = try codableClass.init(from: childDecoder)
             try validateValue(value, forKey: codingKey)

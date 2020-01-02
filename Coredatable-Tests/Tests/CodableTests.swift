@@ -36,10 +36,26 @@ class CodableTests: XCTestCase {
         })
         
         jsonDecoder = JSONDecoder()
+        jsonDecoder.dateDecodingStrategy = .secondsSince1970
+        jsonDecoder.dataDecodingStrategy = .base64
         jsonDecoder.managedObjectContext = viewContext
     }
     
     // MARK: - Decode
+    func testDecodeWithoutContextFails() {
+        jsonDecoder.managedObjectContext = nil
+        let data = Data(resource: "person.json")!
+        
+        do {
+            _ = try jsonDecoder.decode(Person.self, from: data)
+            XCTFail()
+        } catch {
+            guard case CoreDataDecodingError.missingContext = error else {
+                XCTFail()
+                return
+            }
+        }
+    }
     
     func testDecodeSimpleObject() {
         // given
@@ -60,6 +76,7 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(person?.city, "Murcia")
         XCTAssertEqual(person?.country?.id, 1)
         XCTAssertEqual(person?.country?.name, "Spain")
+        XCTAssertEqual(person?.date?.timeIntervalSince1970, 100)
         XCTAssertEqual(person?.customValue, "custom")
         let attributes = person?.attributes.sorted { $0.id < $1.id }
         XCTAssertEqual(attributes?.count, 2)
@@ -628,7 +645,45 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(coreDataMany?.first?.value, "five")
         XCTAssertEqual(coreDataMany?.last?.id, 6)
         XCTAssertEqual(coreDataMany?.last?.value, "six")
+    }
+    
+    func testDecodeCompleteObject() {
+        // given
+        let json: [String: Any?] = [
+            "int16": 16,
+            "int32": 32,
+            "decimal": 10,
+            "double": 2.2,
+            "float": 1.1,
+            "boolean": true,
+            "date": 200,
+            "string": "string",
+            "int64": 64,
+            "binary": "aGVsbG8gd29ybGQ=",
+            "uuid": "16283C8B-4E41-41F4-B506-5EEF6F568C1D",
+            "uri": "https://github.com/ManueGE"
+        ]
         
+        let data = Data.fromJson(json)!
+        
+        // when
+        let complete = try? jsonDecoder.decode(Complete.self, from: data)
+        try! complete?.managedObjectContext?.save()
+        
+        // then
+        XCTAssertNotNil(complete)
+        XCTAssertEqual(complete?.int16, 16)
+        XCTAssertEqual(complete?.int32, 32)
+        XCTAssertEqual(complete?.decimal, 10)
+        XCTAssertEqual(complete?.double, 2.2)
+        XCTAssertEqual(complete?.float, 1.1)
+        XCTAssertEqual(complete?.boolean, true)
+        XCTAssertEqual(complete?.date?.timeIntervalSince1970, 200)
+        XCTAssertEqual(complete?.string, "string")
+        XCTAssertEqual(complete?.int64, 64)
+        XCTAssertEqual(complete?.binary, "hello world".data(using: .utf8))
+        XCTAssertEqual(complete?.uuid?.uuidString, "16283C8B-4E41-41F4-B506-5EEF6F568C1D")
+        XCTAssertEqual(complete?.uri?.absoluteString, "https://github.com/ManueGE")
     }
     
     // MARK: - Encode
@@ -642,14 +697,17 @@ class CodableTests: XCTestCase {
         }
                 
         // when
-        let data = try! JSONEncoder().encode(person)
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        let data = try! encoder.encode(person)
         let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
 
         // then
-        XCTAssertEqual(json?.count, 5)
+        XCTAssertEqual(json?.count, 6)
         XCTAssertEqual(json?["personId"] as? Int, 1)
         XCTAssertEqual(json?["fullName"] as? String, "Marco")
         XCTAssertEqual(json?["city"] as? String, "Murcia")
+        XCTAssertEqual(json?["date"] as? NSNumber, 100)
         
         var attributes = json?["attributesSet"] as? [[String: Any]]
         attributes?.sort(by: { (a, b) -> Bool in
@@ -683,7 +741,7 @@ class CodableTests: XCTestCase {
         let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
         
         // then
-        XCTAssertEqual(json?.count, 5)
+        XCTAssertEqual(json?.count, 6)
         XCTAssertEqual(json?["person_id"] as! Int, 1)
         XCTAssertEqual(json?["full_name"] as! String, "Marco")
     }
@@ -780,5 +838,45 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(firstCoreDataCodable?["value"] as? String, "five")
         let lastCoreDataCodable = expectedCoreDataMany?.first { $0["id"] as? Int == 6 }
         XCTAssertEqual(lastCoreDataCodable?["value"] as? String, "six")
+    }
+    
+    func testEncodeCompleteObject() {
+        // given
+        let context = self.container.viewContext
+        let complete = Complete(context: context)
+        complete.int16 = 16
+        complete.int32 = 32
+        complete.decimal = 10
+        complete.double = 2.2
+        complete.float = 1.1
+        complete.boolean = true
+        complete.date = Date(timeIntervalSince1970: 200)
+        complete.string = "string"
+        complete.int64 = 64
+        complete.binary = "hello world".data(using: .utf8)
+        complete.uuid = UUID(uuidString: "16283C8B-4E41-41F4-B506-5EEF6F568C1D")
+        complete.uri = URL(string: "https://github.com/ManueGE")
+        
+        // when
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.dataEncodingStrategy = .base64
+        let data = try! encoder.encode(complete)
+        let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyHashable]
+        print(String(data: data, encoding: .utf8)!)
+        
+        // then
+        XCTAssertEqual(json?["int16"] as? Int16, 16)
+        XCTAssertEqual(json?["int32"] as? Int32, 32)
+        XCTAssertEqual(json?["decimal"] as? Int, 10)
+        XCTAssertEqual(json?["double"] as? Double, 2.2)
+        XCTAssertEqual(json?["float"] as? Float, 1.1)
+        XCTAssertEqual(json?["boolean"] as? Bool, true)
+        XCTAssertEqual(json?["date"] as? Int, 200)
+        XCTAssertEqual(json?["string"] as? String, "string")
+        XCTAssertEqual(json?["int64"] as? Int64, 64)
+        XCTAssertEqual(json?["binary"] as? String, "aGVsbG8gd29ybGQ=")
+        XCTAssertEqual((json?["uuid"] as? String), "16283C8B-4E41-41F4-B506-5EEF6F568C1D")
+        XCTAssertEqual((json?["uri"] as? String), "https://github.com/ManueGE")
     }
 }

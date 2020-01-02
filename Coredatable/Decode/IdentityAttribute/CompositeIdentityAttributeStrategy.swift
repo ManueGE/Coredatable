@@ -13,7 +13,7 @@ internal struct CompositeIdentityAttributeStrategy: IdentityAttributeStrategy {
     func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: CoreDataKeyedDecodingContainer<ManagedObject>) throws -> ManagedObject? {
         
         let request = NSFetchRequest<ManagedObject>(entityName: ManagedObject.entity(inManagedObjectContext: context).name!)
-        request.predicate = try predicate(for: ManagedObject.self, in: container)
+        request.predicate = try predicate(for: ManagedObject.self, in: container, context: context)
         request.fetchLimit = 1
         return try context.fetch(request).first
     }
@@ -31,11 +31,12 @@ internal struct CompositeIdentityAttributeStrategy: IdentityAttributeStrategy {
     }
     
     // MARK: - Helpers
-    private func predicate<ManagedObject: CoreDataDecodable>(for _: ManagedObject.Type, in container: CoreDataKeyedDecodingContainer<ManagedObject>) throws -> NSPredicate {
+    private func predicate<ManagedObject: CoreDataDecodable>(for _: ManagedObject.Type, in container: CoreDataKeyedDecodingContainer<ManagedObject>, context: NSManagedObjectContext) throws -> NSPredicate {
         
         let predicates = try ManagedObject.identityAttribute.propertyNames.map { (propertyName) -> NSPredicate in
             guard let codingKey = ManagedObject.CodingKeys(propertyName: propertyName),
-                let identifier = container.decodeAny(forKey: codingKey) as? AnyHashable
+                let identityAttribute = ManagedObject.entity(inManagedObjectContext: context).propertiesByName[propertyName] as? NSAttributeDescription,
+                let identifier = container.decode(identityAttribute, forKey: codingKey) as? AnyHashable
                 else {
                     let receivedKeys = container.allKeys.map { $0.stringValue }
                     throw CoreDataDecodingError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: receivedKeys)

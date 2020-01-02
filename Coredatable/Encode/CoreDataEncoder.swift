@@ -50,11 +50,8 @@ internal final class CoreDataEncoder<ManagedObject: CoreDataEncodable> {
     
     private func encode(_ attribute: NSAttributeDescription, object: ManagedObject, key: Keys, container: KeyedContainer) throws {
         var container = container
-        if let value = object.value(forKey: key.propertyName) {
-            try container.encodeAny(value, forKey: key.standarized)
-        } else {
-            try container.encodeNil(forKey: key.standarized)
-        }
+        let value = object.value(forKey: key.propertyName) 
+        try container.encode(value, attribute: attribute, forKey: key.standarized)
     }
     
     private func encode(_ relationship: NSRelationshipDescription, object: ManagedObject, key: Keys, container: KeyedContainer) throws {

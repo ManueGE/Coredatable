@@ -12,20 +12,51 @@ import CoreData
 // MARK: - Keyed Container
 internal extension KeyedDecodingContainer {
 	
-	func decodeAny(forKey key: Key) -> Any? {
-		if let boolValue = try? decode(Bool.self, forKey: key) {
-			return boolValue
-		} else if let stringValue = try? decode(String.self, forKey: key) {
-			return stringValue
-		} else if let intValue = try? decode(Int.self, forKey: key) {
-			return intValue
-		} else if let doubleValue = try? decode(Double.self, forKey: key) {
-			return doubleValue
-		} else if (try? decodeNil(forKey: key)) == true {
-			return nil
-		}
-		return nil
-	}
+    func decode(_ attribute: NSAttributeDescription, forKey key: Key) -> Any? {
+        switch attribute.attributeType {
+        case .undefinedAttributeType:
+            return nil
+        case .integer16AttributeType:
+            return try? decode(Int16.self, forKey: key)
+        case .integer32AttributeType:
+            return try? decode(Int32.self, forKey: key)
+        case .integer64AttributeType:
+            return try? decode(Int64.self, forKey: key)
+        case .decimalAttributeType:
+            return try? decode(Decimal.self, forKey: key)
+        case .doubleAttributeType:
+            return try? decode(Double.self, forKey: key)
+        case .floatAttributeType:
+            return try? decode(Float.self, forKey: key)
+        case .stringAttributeType:
+            return try? decode(String.self, forKey: key)
+        case .booleanAttributeType:
+            return try? decode(Bool.self, forKey: key)
+        case .dateAttributeType:
+            return try? decode(Date.self, forKey: key)
+        case .binaryDataAttributeType:
+            return try? decode(Data.self, forKey: key)
+        case .UUIDAttributeType:
+            return try? decode(UUID.self, forKey: key)
+        case .URIAttributeType:
+            return try? decode(URL.self, forKey: key)
+        case .transformableAttributeType:
+            guard let className = attribute.attributeValueClassName,
+                let theClass = NSClassFromString(className),
+                let childDecoder = try? superDecoder(forKey: key),
+                let codableClass = theClass as? Decodable.Type else {
+                    return nil
+            }
+            return try? codableClass.init(from: childDecoder)
+            #warning("See what can we do with transformables")
+            // return try? decode(<#Type#>.self, forKey: key)
+            return nil
+        case .objectIDAttributeType:
+            return nil
+        @unknown default:
+            return nil
+        }
+    }
 }
 
 internal extension KeyedDecodingContainer where Key: CoreDataStandardCodingKey {
@@ -50,36 +81,83 @@ internal extension KeyedDecodingContainer where Key: CoreDataStandardCodingKey {
 // MARK: - Unkeyed Container
 internal extension UnkeyedDecodingContainer {
 	
-	mutating func decodeAny() -> Any? {
-		if let boolValue = try? decode(Bool.self) {
-			return boolValue
-		} else if let stringValue = try? decode(String.self) {
-			return stringValue
-		} else if let intValue = try? decode(Int.self) {
-			return intValue
-		} else if let doubleValue = try? decode(Double.self) {
-			return doubleValue
-		} else if (try? decodeNil()) == true {
-			return nil
-		}
-		return nil
-	}
+    mutating func decode(_ attribute: NSAttributeDescription) -> Any? {
+        switch attribute.attributeType {
+        case .undefinedAttributeType:
+            return nil
+        case .integer16AttributeType:
+            return try? decode(Int16.self)
+        case .integer32AttributeType:
+            return try? decode(Int32.self)
+        case .integer64AttributeType:
+            return try? decode(Int64.self)
+        case .decimalAttributeType:
+            return try? decode(Decimal.self)
+        case .doubleAttributeType:
+            return try? decode(Double.self)
+        case .floatAttributeType:
+            return try? decode(Float.self)
+        case .stringAttributeType:
+            return try? decode(String.self)
+        case .booleanAttributeType:
+            return try? decode(Bool.self)
+        case .dateAttributeType:
+            return try? decode(Date.self)
+        case .binaryDataAttributeType:
+            return try? decode(Data.self)
+        case .UUIDAttributeType:
+            return try? decode(UUID.self)
+        case .URIAttributeType:
+            return try? decode(URL.self)
+        case .transformableAttributeType:
+            // transofrmable is not a valid identity attribute, and this is only used for identity attribute serialization
+            return nil
+        case .objectIDAttributeType:
+            return nil
+        @unknown default:
+            return nil
+        }
+    }
 }
 
 // MARK: - Single Value Container
 
 internal extension SingleValueDecodingContainer {
     
-    mutating func decodeAny() -> Any? {
-        if let boolValue = try? decode(Bool.self) {
-            return boolValue
-        } else if let stringValue = try? decode(String.self) {
-            return stringValue
-        } else if let intValue = try? decode(Int.self) {
-            return intValue
-        } else if let doubleValue = try? decode(Double.self) {
-            return doubleValue
+    mutating func decode(_ attribute: NSAttributeDescription) -> Any? {
+        switch attribute.attributeType {
+        case .undefinedAttributeType:
+            return nil
+        case .integer16AttributeType:
+            return try? decode(Int16.self)
+        case .integer32AttributeType:
+            return try? decode(Int32.self)
+        case .integer64AttributeType:
+            return try? decode(Int64.self)
+        case .decimalAttributeType:
+            return try? decode(Decimal.self)
+        case .doubleAttributeType:
+            return try? decode(Double.self)
+        case .floatAttributeType:
+            return try? decode(Float.self)
+        case .stringAttributeType:
+            return try? decode(String.self)
+        case .booleanAttributeType:
+            return try? decode(Bool.self)
+        case .dateAttributeType:
+            return try? decode(Date.self)
+        case .binaryDataAttributeType:
+            return try? decode(Data.self)
+        case .UUIDAttributeType:
+            return try? decode(UUID.self)
+        case .URIAttributeType:
+            return try? decode(URL.self)
+        case .transformableAttributeType:
+            return nil
+        case .objectIDAttributeType:
+            return nil
+        @unknown default:
+            return nil
         }
-        return nil
     }
 }

@@ -55,11 +55,11 @@ public struct CoreDataKeyedDecodingContainer<ManagedObject: CoreDataDecodable> {
         return try nestedContainer(forKey: key).decode(T.self, forKey: key.standarized)
     }
     
-    internal func decodeAny(forKey key: Key) -> Any? {
+    internal func decode(_ attribute: NSAttributeDescription, forKey key: Key) -> Any? {
         if let value = manualValues[key.stringValue] {
             return value
         }
-        return nestedContainer(forKey: key).decodeAny(forKey: key.standarized)
+        return nestedContainer(forKey: key).decode(attribute, forKey: key.standarized)
     }
     
     public func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: Key) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {

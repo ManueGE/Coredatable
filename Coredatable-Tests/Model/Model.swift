@@ -16,6 +16,7 @@ final class Person: NSManagedObject, CoreDataCodable {
     @NSManaged var personId: Int
     @NSManaged var fullName: String?
     @NSManaged var city: String?
+    @NSManaged var date: Date?
     @NSManaged var country: Country?
     @NSManaged var attributesSet: NSSet
     var customValue = ""
@@ -91,9 +92,6 @@ final class Custom: NSManagedObject, CoreDataDecodable {
     static var identityAttribute: IdentityAttribute = #keyPath(Custom.id)
     
     func initialize(from container: CoreDataKeyedDecodingContainer<Custom>) throws {
-        var container = container
-        container[.id] = Int(try container.decode(String.self, forKey: .id)) ?? 0
-        
         try defaultInitialization(from: container, with: [.id])
         
         let first = try container.decode(String.self, forKey: .first)
@@ -102,6 +100,12 @@ final class Custom: NSManagedObject, CoreDataDecodable {
         
         let string = try container.decode(String.self, forKey: .integer)
         integer = Int(string) ?? 0
+    }
+    
+    static func prepare(_ container: CoreDataKeyedDecodingContainer<Custom>) throws -> CoreDataKeyedDecodingContainer<Custom> {
+        var container = container
+        container[.id] = Int(try container.decode(String.self, forKey: .id)) ?? 0
+        return container
     }
 }
 
@@ -187,4 +191,23 @@ final class RelationshipCodable: NSManagedObject, Codable {
         try container.encode(id, forKey: .id)
         try container.encode(value, forKey: .value)
     }
+}
+
+final class Complete: NSManagedObject, CoreDataCodable {
+    @NSManaged var int16: Int16
+    @NSManaged var int32: Int32
+    @NSManaged var decimal: NSDecimalNumber?
+    @NSManaged var double: Double
+    @NSManaged var float: Float
+    @NSManaged var boolean: Bool
+    @NSManaged var date: Date?
+    @NSManaged var string: String?
+    @NSManaged var int64: Int64
+    @NSManaged var binary: Data?
+    @NSManaged var uuid: UUID?
+    @NSManaged var uri: URL?
+    @NSManaged var transformable: NSObject?
+    
+    typealias CodingKeys = CoreDataDefaultCodingKeys
+    static var identityAttribute: IdentityAttribute = #keyPath(Complete.int16)
 }

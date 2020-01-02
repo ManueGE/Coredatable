@@ -11,6 +11,21 @@
         <relationship name="coreData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RelationshipCoreDataCodable" inverseName="inverse" inverseEntity="RelationshipCoreDataCodable"/>
         <relationship name="coreDataMany" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RelationshipCoreDataCodable" inverseName="inverseMany" inverseEntity="RelationshipCoreDataCodable"/>
     </entity>
+    <entity name="Complete" representedClassName=".Complete" syncable="YES">
+        <attribute name="binary" optional="YES" attributeType="Binary"/>
+        <attribute name="boolean" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="decimal" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="double" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="float" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="int16" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="int32" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="int64" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="string" optional="YES" attributeType="String"/>
+        <attribute name="transformable" optional="YES" attributeType="Transformable" valueTransformerName="" customClassName="."/>
+        <attribute name="uri" optional="YES" attributeType="URI"/>
+        <attribute name="uuid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+    </entity>
     <entity name="Country" representedClassName=".Country" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -27,6 +42,7 @@
     </entity>
     <entity name="Person" representedClassName=".Person" syncable="YES">
         <attribute name="city" optional="YES" attributeType="String"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="fullName" optional="YES" attributeType="String"/>
         <attribute name="personId" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="attributesSet" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PersonAttribute" inverseName="people" inverseEntity="PersonAttribute"/>
@@ -58,14 +74,15 @@
     </entity>
     <elements>
         <element name="Card" positionX="-446.828125" positionY="260.40234375" width="128" height="88"/>
+        <element name="CodableContainer" positionX="-230.58984375" positionY="374.16015625" width="128" height="103"/>
         <element name="Country" positionX="150.07421875" positionY="128.3828125" width="128" height="88"/>
         <element name="Custom" positionX="-448.95703125" positionY="37.33984375" width="128" height="88"/>
         <element name="CustomDoubleId" positionX="-447.05078125" positionY="156.78125" width="128" height="73"/>
-        <element name="Person" positionX="-138.05859375" positionY="-110.90625" width="128" height="118"/>
+        <element name="Person" positionX="-138.05859375" positionY="-110.90625" width="128" height="133"/>
         <element name="PersonAttribute" positionX="136.96484375" positionY="-124.16796875" width="128" height="88"/>
         <element name="PersonDiffKeys" positionX="-150.41015625" positionY="121.7734375" width="128" height="118"/>
-        <element name="CodableContainer" positionX="-230.58984375" positionY="374.16015625" width="128" height="103"/>
         <element name="RelationshipCodable" positionX="25.07421875" positionY="281.79296875" width="128" height="103"/>
         <element name="RelationshipCoreDataCodable" positionX="29.74609375" positionY="445.7734375" width="128" height="103"/>
+        <element name="Complete" positionX="-454.25390625" positionY="325.37890625" width="128" height="238"/>
     </elements>
 </model>

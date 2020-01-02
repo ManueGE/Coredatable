@@ -2,6 +2,7 @@
     "personId": 1,
     "fullName": "Marco",
     "city": "Murcia",
+    "date": 100,
     "attributesSet": [
         {"id": 1, "name": "funny"},
         {"id": 2, "name": "small"}

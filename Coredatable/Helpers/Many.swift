@@ -15,8 +15,8 @@ import CoreData
 /// It can be used in the same way that `Array`. Anyway, if you need to access the raw `Array` version of this class, you can use the `array` property.
 public struct Many<Element: NSManagedObject> {
     /// The array representation of the receiver
-    public fileprivate(set) var array: [Element]
-    fileprivate init(_ array: [Element]) {
+    public private(set) var array: [Element]
+    private init(_ array: [Element]) {
         self.array = array
     }
 }

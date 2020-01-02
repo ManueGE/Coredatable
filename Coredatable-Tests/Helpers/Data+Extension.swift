@@ -24,7 +24,7 @@ extension Data {
         try? self.init(contentsOf: url)
     }
     
-    internal static func fromJson(_ dictionary: [AnyHashable: Any]) -> Data? {
+    internal static func fromJson(_ dictionary: [AnyHashable: Any?]) -> Data? {
         return try? JSONSerialization.data(withJSONObject: dictionary, options: [])
     }
     

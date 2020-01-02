@@ -78,5 +78,5 @@ internal extension Decodable {
 public enum CoreDataDecodingError: Error {
     case missingContext(decoder: Decoder)
     case missingOrInvalidIdentityAttribute(class: AnyClass, identityAttributes: [String], receivedKeys: [String])
-    case relationshipNotDecodable(class: NSManagedObject.Type, relationship: NSRelationshipDescription)
+    case propertyNotDecodable(class: NSManagedObject.Type, property: NSPropertyDescription)
 }
