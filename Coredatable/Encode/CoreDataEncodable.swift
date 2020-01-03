@@ -8,6 +8,16 @@
 
 import Foundation
 
+/// A type erased protocol that is used internally to make the whole framework work.
+/// You shouldn't conform this protocol manually ever, use `CoreDataEncodable` instead
+public protocol AnyCoreDataEncodable: NSManagedObject, Encodable {
+    static func encode(_ array: [Any], to encoder: Encoder, skipping: Set<NSRelationshipDescription>) throws
+    func encode(to encoder: Encoder, skipping: Set<NSRelationshipDescription>) throws
+}
+
+
+/// A protocol that must conform any `NSManagedObject` that needs to be encoded using `Coredatable`.
+/// Just the `CodingKeys` typealias is required, all the other methods / properties are optional.
 public protocol CoreDataEncodable: AnyCoreDataEncodable {
     associatedtype CodingKeys: AnyCoreDataCodingKey
 }
@@ -27,13 +37,6 @@ extension CoreDataEncodable {
         let coreDataEncoder = CoreDataEncoder<Self>(encoder: encoder, skippingRelationships: skipping)
         try coreDataEncoder.encode(castArray)
     }
-}
-
-/// A type erased protocol that is used internally to make the whole framework work.
-/// You shouldn't conform this protocol manually ever, use `CoreDataEncodable` instead
-public protocol AnyCoreDataEncodable: NSManagedObject, Encodable {
-    static func encode(_ array: [Any], to encoder: Encoder, skipping: Set<NSRelationshipDescription>) throws
-    func encode(to encoder: Encoder, skipping: Set<NSRelationshipDescription>) throws
 }
 
 internal extension Encodable {

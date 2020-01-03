@@ -7,8 +7,6 @@
 //
 
 #import <CoreData/CoreData.h>
-@protocol DecodingContextType;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSManagedObject (Coredatable)

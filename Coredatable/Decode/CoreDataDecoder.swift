@@ -52,5 +52,3 @@ internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable> {
         }
     }
 }
-
-#warning("Check groot details: contexts run on their own blocks, remove objects if fails...")

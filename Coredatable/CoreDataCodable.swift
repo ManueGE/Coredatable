@@ -11,8 +11,9 @@ import Foundation
 // MARK: - Codable
 public typealias CoreDataCodable = CoreDataDecodable & CoreDataEncodable
 
+/// A protocol which used in combination with `CoreDataDecodable`,  `CoreDataEncodable` or `CoreDataCodable` indicates that the object uses `CoreDataDefaultcodingKeys`
 public protocol UsingDefaultCodingKeys {}
 
 public extension UsingDefaultCodingKeys {
-    public typealias CodingKeys = CoreDataDefaultCodingKeys
+    typealias CodingKeys = CoreDataDefaultCodingKeys
 }

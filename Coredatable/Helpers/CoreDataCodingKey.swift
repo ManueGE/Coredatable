@@ -13,12 +13,19 @@ import Foundation
 /// and we need it to use it as property name in a core data entity.
 /// For that reason, we build this protocol and any enum that implements it (and no `CodingKey`) can access its case name.
 public protocol AnyCoreDataCodingKey {
+    /// Creates  a new instance with the given string value
     init?(stringValue: String)
+    
+    /// Returns the string value of the receier
     var stringValue: String { get }
     
+    /// Creates a key for the given property name
     init?(propertyName: String)
+    
+    /// Returns the name of the equivalent property of the `NSManagedObject`
     var propertyName: String { get }
     
+    /// The string used to split the different path components. Default is `.`
     var keyPathDelimiter: String { get }
 }
 
@@ -49,6 +56,7 @@ public extension AnyCoreDataCodingKey where Self: RawRepresentable, RawValue == 
 
 /// An implementation of `AnyCoreDataCodingKey` where all the properties of the json are taken in account
 /// and they have exactly the same name as the json keys.
+/// It conforms `ExpressibleByStringLiteral`, so can be created as plain arrays. 
 public struct CoreDataDefaultCodingKeys: AnyCoreDataCodingKey {
     public let stringValue: String
     public init?(stringValue: String) {

@@ -7,7 +7,6 @@
 //
 
 #import "NSManagedObject+Coredatable.h"
-#import <Coredatable/Coredatable-Swift.h>
 
 @implementation NSManagedObject (Coredatable)
 

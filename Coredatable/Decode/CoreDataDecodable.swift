@@ -14,10 +14,19 @@ public protocol AnyCoreDataDecodable: NSManagedObject, Decodable {
     static func decodeArray(from decoder: Decoder) throws -> [Any]
 }
 
+/// A protocol that must conform any `NSManagedObject` that needs to be decoded using `Coredatable`.
+/// Just the `CodingKeys` typealias is required, all the other methods / properties are optional.
 public protocol CoreDataDecodable: AnyCoreDataDecodable {
+    /// The coding keys used to decode the objects
     associatedtype CodingKeys: AnyCoreDataCodingKey
+    
+    /// The identity attributes used to ensure uniqueness. Default is `.no`
     static var identityAttribute: IdentityAttribute { get }
+    
+    /// Allows modifying the container before start the decoding process
     static func prepare(_ container: CoreDataKeyedDecodingContainer<Self>) throws -> CoreDataKeyedDecodingContainer<Self>
+    
+    /// Override this method to perform custom decoding.
     func initialize(from container: CoreDataKeyedDecodingContainer<Self>) throws
 }
 
@@ -46,22 +55,26 @@ public extension CoreDataDecodable {
         try initialize(from: .from(container))
     }
     
+    /// Runs the default initialization process taking all the Keys in account
     func defaultInitialization(from container: CoreDataKeyedDecodingContainer<Self>) throws {
         try defaultInitialization(from: container) { _ in true }
     }
     
+    /// Runs the default initialization using only the specified keys
     func defaultInitialization(from container: CoreDataKeyedDecodingContainer<Self>, with keys: [CodingKeys]) throws {
         try defaultInitialization(from: container) { key in
             keys.contains { $0.stringValue == key.stringValue }
         }
     }
     
+    /// Runs the default initialization skipping the given keys
     func defaultInitialization(from container: CoreDataKeyedDecodingContainer<Self>, skipping skippedKeys: [CodingKeys]) throws {
         try defaultInitialization(from: container) { key in
             !skippedKeys.contains { $0.stringValue == key.stringValue }
         }
     }
     
+    /// Runs the default initialization including only the keys which return `true`in the given block
     func defaultInitialization(from container: CoreDataKeyedDecodingContainer<Self>, including where: @escaping (CodingKeys) -> Bool) throws {
         try applyValues(from: container, policy: `where`)
     }

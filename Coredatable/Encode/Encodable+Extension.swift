@@ -47,7 +47,6 @@ internal extension KeyedEncodingContainer {
         case (.URIAttributeType, let x as URL):
             try encode(x, forKey: key)
         case (.transformableAttributeType, let x as Encodable):
-            #warning("See what can we do with transformables")
             let childEncoder = superEncoder(forKey: key)
             try x.encode(to: childEncoder)
         case (.objectIDAttributeType, _):
