@@ -89,7 +89,7 @@ extension Many: ExpressibleByArrayLiteral {
 
 extension Many: CustomReflectable {
     public var customMirror: Mirror {
-        return array.customMirror
+        return Mirror(self, unlabeledChildren: array, displayStyle: .collection)
     }
 }
 

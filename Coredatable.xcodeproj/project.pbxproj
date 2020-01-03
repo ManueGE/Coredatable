@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		642E677F23BF81CC00E43E55 /* ManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642E677E23BF81CC00E43E55 /* ManyTests.swift */; };
 		6455D7BB23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6455D7BA23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift */; };
 		6455D7BD23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6455D7BC23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift */; };
 		6455D7BF23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6455D7BE23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift */; };
@@ -53,6 +54,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		642E677E23BF81CC00E43E55 /* ManyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManyTests.swift; sourceTree = "<group>"; };
 		6455D7BA23A18CB6000E4F4C /* NoIdentityAttributesStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoIdentityAttributesStrategy.swift; sourceTree = "<group>"; };
 		6455D7BC23A18CC6000E4F4C /* SingleIdentityAttributeStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleIdentityAttributeStrategy.swift; sourceTree = "<group>"; };
 		6455D7BE23A18CD7000E4F4C /* CompositeIdentityAttributeStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositeIdentityAttributeStrategy.swift; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				649E747A239C2A0700962EE1 /* CodableTests.swift */,
+				642E677E23BF81CC00E43E55 /* ManyTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -394,6 +397,7 @@
 			files = (
 				649E7488239C2A7700962EE1 /* Model.swift in Sources */,
 				649E748F239C2BCC00962EE1 /* Data+Extension.swift in Sources */,
+				642E677F23BF81CC00E43E55 /* ManyTests.swift in Sources */,
 				649E747B239C2A0700962EE1 /* CodableTests.swift in Sources */,
 				649E7486239C2A2800962EE1 /* Model.xcdatamodeld in Sources */,
 			);

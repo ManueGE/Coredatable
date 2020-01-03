@@ -691,7 +691,6 @@ class CodableTests: XCTestCase {
     // MARK: - Encode
     func testEncodeSimpleObject() {
         // given
-        // given
         let data1 = Data(resource: "person.json")!
         guard let person = try? jsonDecoder.decode(Person.self, from: data1) else {
             XCTFail()
@@ -704,6 +703,48 @@ class CodableTests: XCTestCase {
         let data = try! encoder.encode(person)
         let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
 
+        // then
+        XCTAssertEqual(json?.count, 6)
+        XCTAssertEqual(json?["personId"] as? Int, 1)
+        XCTAssertEqual(json?["fullName"] as? String, "Marco")
+        XCTAssertEqual(json?["city"] as? String, "Murcia")
+        XCTAssertEqual(json?["date"] as? NSNumber, 100)
+        
+        var attributes = json?["attributesSet"] as? [[String: Any]]
+        attributes?.sort(by: { (a, b) -> Bool in
+            guard let aId = a["id"] as? Int,
+                let bId = b["id"] as? Int
+                else { return false }
+            return aId < bId
+        })
+        XCTAssertEqual(attributes?.count, 2)
+        XCTAssertEqual(attributes?[0]["id"] as? Int, 1)
+        XCTAssertEqual(attributes?[0]["name"] as? String, "funny")
+        XCTAssertEqual(attributes?[1]["id"] as? Int, 2)
+        XCTAssertEqual(attributes?[1]["name"] as? String, "small")
+        
+        let country = json?["country"] as? [String: Any]
+        XCTAssertEqual(country?.count, 2)
+        XCTAssertEqual(country?["id"] as? Int, 1)
+        XCTAssertEqual(country?["name"] as? String, "Spain")
+    }
+    
+    func testEncodeMany() {
+        // given
+        // given
+        let data1 = Data(resource: "person.json")!
+        guard let person = try? jsonDecoder.decode(Person.self, from: data1) else {
+            XCTFail()
+            return
+        }
+                
+        // when
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        let data = try! encoder.encode(Many([person]))
+        let jsonArray = try? JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
+        let json = jsonArray?.first
+        
         // then
         XCTAssertEqual(json?.count, 6)
         XCTAssertEqual(json?["personId"] as? Int, 1)
