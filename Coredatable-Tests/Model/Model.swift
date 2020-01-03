@@ -10,9 +10,7 @@ import Foundation
 import Coredatable
 import CoreData
 
-final class Person: NSManagedObject, CoreDataCodable {
-    typealias CodingKeys = CoreDataDefaultCodingKeys
-    
+final class Person: NSManagedObject, CoreDataCodable, UsingDefaultCodingKeys {
     @NSManaged var personId: Int
     @NSManaged var fullName: String?
     @NSManaged var city: String?

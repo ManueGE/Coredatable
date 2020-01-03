@@ -10,3 +10,9 @@ import Foundation
 
 // MARK: - Codable
 public typealias CoreDataCodable = CoreDataDecodable & CoreDataEncodable
+
+public protocol UsingDefaultCodingKeys {}
+
+public extension UsingDefaultCodingKeys {
+    public typealias CodingKeys = CoreDataDefaultCodingKeys
+}
