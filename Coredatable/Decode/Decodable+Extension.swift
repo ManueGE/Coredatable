@@ -41,15 +41,6 @@ internal extension KeyedDecodingContainer {
         case .URIAttributeType:
             return try? decode(URL.self, forKey: key)
         case .transformableAttributeType:
-            guard let className = attribute.attributeValueClassName,
-                let theClass = NSClassFromString(className),
-                let childDecoder = try? superDecoder(forKey: key),
-                let codableClass = theClass as? Decodable.Type else {
-                    return nil
-            }
-            return try? codableClass.init(from: childDecoder)
-            #warning("See what can we do with transformables")
-            // return try? decode(<#Type#>.self, forKey: key)
             return nil
         case .objectIDAttributeType:
             return nil

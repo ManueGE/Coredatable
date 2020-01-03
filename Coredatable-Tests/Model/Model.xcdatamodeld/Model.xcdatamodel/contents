@@ -22,7 +22,7 @@
         <attribute name="int32" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="int64" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="string" optional="YES" attributeType="String"/>
-        <attribute name="transformable" optional="YES" attributeType="Transformable" valueTransformerName="" customClassName="."/>
+        <attribute name="transformable" optional="YES" attributeType="Transformable" valueTransformerName="" customClassName="[String]"/>
         <attribute name="uri" optional="YES" attributeType="URI"/>
         <attribute name="uuid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
     </entity>

@@ -661,7 +661,8 @@ class CodableTests: XCTestCase {
             "int64": 64,
             "binary": "aGVsbG8gd29ybGQ=",
             "uuid": "16283C8B-4E41-41F4-B506-5EEF6F568C1D",
-            "uri": "https://github.com/ManueGE"
+            "uri": "https://github.com/ManueGE",
+            "transformable": ["1", "2", "3"]
         ]
         
         let data = Data.fromJson(json)!
@@ -684,6 +685,7 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(complete?.binary, "hello world".data(using: .utf8))
         XCTAssertEqual(complete?.uuid?.uuidString, "16283C8B-4E41-41F4-B506-5EEF6F568C1D")
         XCTAssertEqual(complete?.uri?.absoluteString, "https://github.com/ManueGE")
+        XCTAssertEqual(complete?.transformable, ["1", "2", "3"])
     }
     
     // MARK: - Encode

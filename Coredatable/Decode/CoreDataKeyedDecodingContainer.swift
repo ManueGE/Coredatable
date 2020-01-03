@@ -55,6 +55,16 @@ public struct CoreDataKeyedDecodingContainer<ManagedObject: CoreDataDecodable> {
         return try nestedContainer(forKey: key).decode(T.self, forKey: key.standarized)
     }
     
+    public func decodeIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T : Decodable {
+        do {
+            return try decode(T.self, forKey: key)
+        } catch DecodingError.keyNotFound {
+            return nil
+        } catch DecodingError.valueNotFound {
+            return nil
+        }
+    }
+    
     internal func decode(_ attribute: NSAttributeDescription, forKey key: Key) -> Any? {
         if let value = manualValues[key.stringValue] {
             return value

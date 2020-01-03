@@ -206,7 +206,13 @@ final class Complete: NSManagedObject, CoreDataCodable {
     @NSManaged var binary: Data?
     @NSManaged var uuid: UUID?
     @NSManaged var uri: URL?
-    @NSManaged var transformable: NSObject?
+    @NSManaged var transformable: [String]?
+    
+    func initialize(from container: CoreDataKeyedDecodingContainer<Complete>) throws {
+        let key: CoreDataDefaultCodingKeys = #keyPath(Complete.transformable)
+        try self.defaultInitialization(from: container, skipping: [#keyPath(Complete.transformable)])
+        transformable = try container.decodeIfPresent([String].self, forKey: key)
+    }
     
     typealias CodingKeys = CoreDataDefaultCodingKeys
     static var identityAttribute: IdentityAttribute = #keyPath(Complete.int16)
