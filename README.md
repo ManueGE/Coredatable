@@ -33,9 +33,14 @@ final class PersonAttribute: NSManagedObject, CoreDataCodable {
     }
 }
 
+// Decode
 let decoder = JSONDecoder()
 decoder.managedObjectContext = myContext
 let person = try decoder.decode(Person.self, from: data)
+
+// Encode
+let encoder = JSONEncoder()
+let data = try encoder.encode(person)
 ```
 And yes, that's all. 
 
@@ -73,6 +78,27 @@ static let identityAttribute: IdentityAttribute = [#keyPath(Person.id), #keyPath
 However, only use composite identity attributes if it is really needed because the performance will be affected. The single identity attribute strategy requires one fetch for every array of JSON objects, whereas the composite identity attribute strategy requires one fetch for every single JSON object.
 
 If uniqueness is not required, you can exclude `identityAttribute` at all.
+
+### Serializing relationships from identifiers
+
+Suppose that our API does not return full objects for the relationships but only the identifiers.
+
+We don't need to change our model to support this situation:
+
+
+```swift
+let json: [String: Any] = [
+    "id": "1",
+    "name": "Marco",
+    "attributes": [1, 2]
+]
+let data = try JSONSerialization.data(withJSONObject: json, options: [])
+let person = try decoder.decode(Person.self, from: data)
+```
+
+The above code creates a `Person` object. In the case we already have in our context a `PersonAttribute` with ids `1` or `2`, those objects will be set in the relationship. If not, two `PersonAttribute` instances will be created with the given `id`.
+
+> Note that serializing relationships from identifiers only works with entities specifying only one attribute as the value of `identityAttribute`.
 
 ## KeyPath Coding Keys
 
@@ -170,6 +196,7 @@ static func prepare(_ container: CoreDataKeyedDecodingContainer<Custom>) throws 
 - `// 2`: Make `container` mutable. 
 - `// 3`: Convert the value to the needed one and assing it to the `.id` key
 - `// 4`: return the modified container
+
 
 ## Many
 
