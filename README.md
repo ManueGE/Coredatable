@@ -29,7 +29,7 @@ final class PersonAttribute: NSManagedObject, CoreDataCodable {
     
     enum CodingKeys: String, CoreDataCodingKey {
         case id
-        case attributeName = "name"
+        case name = "attributeName"
     }
 }
 
@@ -245,4 +245,4 @@ This library has been heavily inspired by [**Groot**](https://github.com/gonzale
 [@ManueGE](https://twitter.com/ManueGE)
 
 ## License
-Goya is available under the MIT License. See [LICENSE](https://github.com/ManueGE/Goya/blob/master/LICENSE).
+Coredatable is available under the MIT License. See [LICENSE](https://github.com/ManueGE/Goya/blob/master/LICENSE).
