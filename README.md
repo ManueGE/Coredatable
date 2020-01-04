@@ -2,6 +2,14 @@
 
 Easy `Codable` conformance in `NSManagedObject` subclasses. 
 
+## Installation
+### CocoaPods
+Add the following to your `Podfile`:
+
+```
+pod 'Coredatable'
+```
+
 ## Summary
 
 Adding `Decodable` and `Encodable` conformance to `NSManagedObject` subclasses is usually very tricky. `Coredatable` simplifies this process using equivalent protocols called `CoreDataDecodable`, `CoreDataEncodable` and `CoreDataCodable` this way:
@@ -38,7 +46,7 @@ You just need to add a `NSManagedObjectContext` to your decoder, and make the cl
 
 In the case you want a more customized `CodingKey`, you can create a `class` a `struct` or any other type and make it conforms `AnyCoreDataCodingKey`.
 
-### Identity Attributes.
+## Identity Attributes.
 
 Optionally, you can ensure uniqueness in your `NSManagedObject` instances. To do it, you can use  `identityAttribute` property:
 
@@ -66,7 +74,7 @@ However, only use composite identity attributes if it is really needed because t
 
 If uniqueness is not required, you can exclude `identityAttribute` at all.
 
-### KeyPath Coding Keys
+## KeyPath Coding Keys
 
 Let's supose we have  a value which is inside a nested json:
 
@@ -104,7 +112,7 @@ enum CodingKeys: String, CoreDataCodingKey {
 ```
 
 
-### Custom Decoding
+## Custom Decoding
 
 In the case that you need custom serialization, you'll need to do something slightly different from what you'd do in regular `Codable`. Instead of overriding `init(from decoder: Decoder)`  you should override `func initialize(from container: CoreDataKeyedDecodingContainer<Self>) throws`. 
 
@@ -163,7 +171,7 @@ static func prepare(_ container: CoreDataKeyedDecodingContainer<Custom>) throws 
 - `// 3`: Convert the value to the needed one and assing it to the `.id` key
 - `// 4`: return the modified container
 
-### Many
+## Many
 
 You can use `CoreDataDecodable` objects nested in another `Codable` object without any problem:
 
@@ -200,13 +208,14 @@ struct Response: Codable {
 Using `Many` will improve performance. `Many` is a replacement of `Array` and can be used in the same way. In any case, you can access the raw array using `many.array`. 
 
 
-### Inspiration:
+## Inspiration:
 
 This library has been heavily inspired by [**Groot**](https://github.com/gonzalezreal/groot)
 
-### Author
+
+## Author
 
 [@ManueGE](https://twitter.com/ManueGE)
 
-### License
+## License
 Goya is available under the MIT License. See [LICENSE](https://github.com/ManueGE/Goya/blob/master/LICENSE).
