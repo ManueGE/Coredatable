@@ -1,0 +1,16 @@
+PODS:
+  - Coredatable (0.0.1)
+
+DEPENDENCIES:
+  - Coredatable (from `.`)
+
+EXTERNAL SOURCES:
+  Coredatable:
+    :path: "."
+
+SPEC CHECKSUMS:
+  Coredatable: faae208022627238d0b874df6286307eef6b3145
+
+PODFILE CHECKSUM: 7cca6a15ec7ec26a86c2cb997d541c923e624a68
+
+COCOAPODS: 1.8.4

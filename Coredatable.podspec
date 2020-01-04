@@ -21,5 +21,5 @@ Pod::Spec.new do |spec|
   spec.framework = "UIKit"
   spec.framework = "CoreData"
 
-  spec.source_files = "Coredatable/*.{swift,h,m}"
+  spec.source_files = "Coredatable/**/*.{swift,h,m}"
 end
