@@ -104,3 +104,10 @@ public struct CoreDataKeyedDecodingContainer<ManagedObject: CoreDataDecodable> {
         set { manualValues[key.stringValue] = newValue }
     }
 }
+
+public extension Decoder {
+    func container<ManagedObject: CoreDataDecodable>(for _: ManagedObject.Type) throws -> CoreDataKeyedDecodingContainer<ManagedObject> {
+        let container = try self.container(keyedBy: ManagedObject.CodingKeys.Standard.self)
+        return try .from(container)
+    }
+}

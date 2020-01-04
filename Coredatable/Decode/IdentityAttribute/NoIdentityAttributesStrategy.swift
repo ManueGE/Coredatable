@@ -17,9 +17,8 @@ internal struct NoIdentityAttributesStrategy: IdentityAttributeStrategy {
         var container = container
         var objects: [ManagedObject] = []
         while !container.isAtEnd {
-            let objectContainer = try container.nestedContainer(keyedBy: ManagedObject.CodingKeys.Standard.self)
             let object = ManagedObject(context: context)
-            try object.initialize(from: objectContainer)
+            try object.initialize(from: container.superDecoder())
             objects.append(object)
         }
         return objects
