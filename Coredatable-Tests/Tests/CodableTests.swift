@@ -358,6 +358,38 @@ class CodableTests: XCTestCase {
         XCTAssertEqual(people?[1].customValue, "custom")
     }
     
+    func testDecodeArrayFromMixecIdentityAttributes() {
+        // given
+        let data = Data.fromArray([1, ["personId": 2], 3, 4, ["personId": 5], ["personId": 6], 7])!
+        
+        // when
+        let people = try? jsonDecoder.decode(Many<Person>.self, from: data)
+        
+        // then
+        let request: NSFetchRequest<Person> = NSFetchRequest(entityName: "Person")
+        XCTAssertEqual(try viewContext.count(for: request), 7)
+        
+        XCTAssertEqual(people?[0].personId, 1)
+        XCTAssertNil(people?[0].fullName)
+        XCTAssertNil(people?[0].city)
+        XCTAssertEqual(people?[0].customValue, "custom")
+        
+        XCTAssertEqual(people?[1].personId, 2)
+        XCTAssertNil(people?[1].fullName)
+        XCTAssertNil(people?[1].city)
+        XCTAssertEqual(people?[1].customValue, "custom")
+        
+        XCTAssertEqual(people?[2].personId, 3)
+        XCTAssertNil(people?[2].fullName)
+        XCTAssertNil(people?[2].city)
+        XCTAssertEqual(people?[2].customValue, "custom")
+        
+        XCTAssertEqual(people?[3].personId, 4)
+        XCTAssertEqual(people?[4].personId, 5)
+        XCTAssertEqual(people?[5].personId, 6)
+        XCTAssertEqual(people?[6].personId, 7)
+    }
+    
     func testDecodeArrayUpdateFromIdentityAttributes() {
         // given
         let existing1 = Person(context: viewContext)
@@ -397,13 +429,17 @@ class CodableTests: XCTestCase {
         let data = Data.fromJson(["id": "1", "first": "FIRST", "second": "SECOND", "integer": "20"])!
         
         // when
-        let custom = try? jsonDecoder.decode(Custom.self, from: data)
-        
-        // then
-        XCTAssertNotNil(custom)
-        XCTAssertEqual(custom?.id, 1)
-        XCTAssertEqual(custom?.compound, "FIRST SECOND")
-        XCTAssertEqual(custom?.integer, 20)
+        do {
+            let custom = try jsonDecoder.decode(Custom.self, from: data)
+            
+            // then
+            XCTAssertNotNil(custom)
+            XCTAssertEqual(custom.id, 1)
+            XCTAssertEqual(custom.compound, "FIRST SECOND")
+            XCTAssertEqual(custom.integer, 20)
+        } catch {
+            XCTFail()
+        }
     }
     
     func testCustomSerializationArray() {

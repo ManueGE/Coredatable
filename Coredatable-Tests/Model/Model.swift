@@ -29,8 +29,8 @@ final class Person: NSManagedObject, CoreDataCodable, UsingDefaultCodingKeys {
     
     static let identityAttribute: IdentityAttribute = #keyPath(Person.personId)
     
-    func initialize(from container: CoreDataKeyedDecodingContainer<Person>) throws {
-        try defaultInitialization(from: container)
+    func initialize(from decoder: Decoder) throws {
+        try defaultInitialization(from: decoder)
         customValue = "custom"
     }
 }
@@ -89,9 +89,10 @@ final class Custom: NSManagedObject, CoreDataDecodable {
     
     static var identityAttribute: IdentityAttribute = #keyPath(Custom.id)
     
-    func initialize(from container: CoreDataKeyedDecodingContainer<Custom>) throws {
-        try defaultInitialization(from: container, with: [.id])
+    func initialize(from decoder: Decoder) throws {
+        try defaultInitialization(from: decoder, with: [.id])
         
+        let container = try decoder.container(for: Custom.self)
         let first = try container.decode(String.self, forKey: .first)
         let second = try container.decode(String.self, forKey: .second)
         compound = [first, second].joined(separator: " ")
@@ -100,8 +101,8 @@ final class Custom: NSManagedObject, CoreDataDecodable {
         integer = Int(string) ?? 0
     }
     
-    static func prepare(_ container: CoreDataKeyedDecodingContainer<Custom>) throws -> CoreDataKeyedDecodingContainer<Custom> {
-        var container = container
+    static func container(for decoder: Decoder) throws -> AnyCoreDataKeyedDecodingContainer {
+        var container = try decoder.container(for: Custom.self)
         container[.id] = Int(try container.decode(String.self, forKey: .id)) ?? 0
         return container
     }
@@ -117,15 +118,11 @@ final class CustomDoubleId: NSManagedObject, CoreDataDecodable {
         case last
         case value
     }
-    
-    func initialize(from container: CoreDataKeyedDecodingContainer<CustomDoubleId>) throws {
-        try defaultInitialization(from: container)
-    }
-    
+        
     static var identityAttribute: IdentityAttribute = #keyPath(CustomDoubleId.id)
     
-    static func prepare(_ container: CoreDataKeyedDecodingContainer<CustomDoubleId>) throws -> CoreDataKeyedDecodingContainer<CustomDoubleId> {
-        var container = container
+    static func container(for decoder: Decoder) throws -> AnyCoreDataKeyedDecodingContainer {
+        var container = try decoder.container(for: CustomDoubleId.self)
         let first = try container.decode(String.self, forKey: .first)
         let last = try container.decode(String.self, forKey: .last)
         container[.id] = first + last
@@ -191,7 +188,7 @@ final class RelationshipCodable: NSManagedObject, Codable {
     }
 }
 
-final class Complete: NSManagedObject, CoreDataCodable {
+class Complete: NSManagedObject, CoreDataCodable {
     @NSManaged var int16: Int16
     @NSManaged var int32: Int32
     @NSManaged var decimal: NSDecimalNumber?
@@ -206,9 +203,10 @@ final class Complete: NSManagedObject, CoreDataCodable {
     @NSManaged var uri: URL?
     @NSManaged var transformable: [String]?
     
-    func initialize(from container: CoreDataKeyedDecodingContainer<Complete>) throws {
+    func initialize(from decoder: Decoder) throws {
         let key: CoreDataDefaultCodingKeys = #keyPath(Complete.transformable)
-        try self.defaultInitialization(from: container, skipping: [#keyPath(Complete.transformable)])
+        try self.defaultInitialization(from: decoder, skipping: [#keyPath(Complete.transformable)])
+        let container = try decoder.container(for: Complete.self)
         transformable = try container.decodeIfPresent([String].self, forKey: key)
     }
     

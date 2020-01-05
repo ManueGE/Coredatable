@@ -11,23 +11,27 @@ import Foundation
 internal struct SingleIdentityAttributeStrategy: IdentityAttributeStrategy {
     let propertyName: String
     
-    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: CoreDataKeyedDecodingContainer<ManagedObject>) throws -> ManagedObject? {
+    func existingObject<ManagedObject>(context: NSManagedObjectContext, decoder: Decoder) throws -> ManagedObject? where ManagedObject : CoreDataDecodable {
+        let container = try ManagedObject.preparedContainer(for: decoder)
         let identifier = try findIdentifier(for: ManagedObject.self, in: container, context: context)
         return try existingObjects(context: context, ids: [identifier]).first
     }
     
-    func decodeArray<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: UnkeyedDecodingContainer, decoder: Decoder) throws -> [ManagedObject] {
+    func decodeArray<ManagedObject>(context: NSManagedObjectContext, decoder: Decoder) throws -> [ManagedObject] where ManagedObject : CoreDataDecodable {
         var identifiers: [AnyHashable] = []
-        var objectContainersById: [AnyHashable: CoreDataKeyedDecodingContainer<ManagedObject>] = [:]
+        var decodersById: [AnyHashable: Decoder] = [:]
         // find the id for any object in the container
+        let container = try decoder.unkeyedContainer()
         var idsContainer = container
-        while !idsContainer.isAtEnd {
+        var decodersContainer = container
+        while !decodersContainer.isAtEnd {
             do {
-                let objectContainer = try idsContainer.nestedContainer(keyedBy: ManagedObject.CodingKeys.Standard.self)
-                let coreDataObjectContainer = try CoreDataKeyedDecodingContainer<ManagedObject>.from(objectContainer)
+                let objectDecoder = try decodersContainer.superDecoder()
+                let coreDataObjectContainer = try ManagedObject.preparedContainer(for: objectDecoder)
                 let identifier = try findIdentifier(for: ManagedObject.self, in: coreDataObjectContainer, context: context) as AnyHashable
                 identifiers.append(identifier)
-                objectContainersById[identifier] = coreDataObjectContainer
+                decodersById[identifier] = objectDecoder
+                try idsContainer.skip()
             } catch {
                 let identityAttribute = try self.identityAttribute(ManagedObject.self, context: context)
                 if let identifier = idsContainer.decode(identityAttribute) as? AnyHashable {
@@ -54,11 +58,11 @@ internal struct SingleIdentityAttributeStrategy: IdentityAttributeStrategy {
             
             let rootObject = existingObjectsById[identifier] ?? ManagedObject(context: context)
             
-            if let objectContainer = objectContainersById[identifier] {
+            if let objectContainer = decodersById[identifier] {
                 try rootObject.initialize(from: objectContainer)
             } else {
-                let valueContainer = AnyValueKeyedDecodingContainer<ManagedObject>(value: identifier, codingKey: key, rootCodingPath: container.codingPath, decoder: decoder)
-                try rootObject.initialize(from: valueContainer.standarized())
+                let identityAttributeDecoder = IdentityAttributeDecoder(key: key.stringValue, value: .raw(identifier), decoder: decoder)
+                try rootObject.initialize(from: identityAttributeDecoder)
             }
             
             return rootObject
@@ -73,8 +77,8 @@ internal struct SingleIdentityAttributeStrategy: IdentityAttributeStrategy {
             throw CoreDataDecodingError.missingOrInvalidIdentityAttribute(class: ManagedObject.self, identityAttributes: [propertyName], receivedKeys: [])
         }
         let object = try existingObjects(context: context, ids: [identifier]).first ?? ManagedObject(context: context)
-        let singleValueContainer = SingleValueKeyedDecodingContainer<ManagedObject>(singleValueContainer: container, codingKey: codingKey, decoder: decoder)
-        try object.initialize(from: singleValueContainer.standarized())
+        let identityAttributeDecoder = IdentityAttributeDecoder(key: codingKey.stringValue, value: .singleContainer(container), decoder: decoder)
+        try object.initialize(from: identityAttributeDecoder)
         return object
     }
     
@@ -108,26 +112,89 @@ internal struct SingleIdentityAttributeStrategy: IdentityAttributeStrategy {
     }
 }
 
-// MARK: - Custom Containers
-/// These containers are used to be able to create a new KeyedDecodingContainer from other values.
-private protocol IdentifierContainer: KeyedDecodingContainerProtocol {
-    associatedtype ManagedObject: CoreDataDecodable
-    var decoder: Decoder { get }
-    var codingKey: ManagedObject.CodingKeys { get }
-    var rootCodingPath: [CodingKey] { get }
+// MARK: - Custom Decoder
+
+private struct IdentityAttributeDecoder: Decoder {
+    
+    enum Value {
+        case raw(Any?)
+        case singleContainer(SingleValueDecodingContainer)
+    }
+    
+    struct Container<Key: CodingKey> {
+        let keyStringValue: String
+        let value: Value
+        let decoder: Decoder
+        
+        init(keyStringValue: String, value: Value, decoder: Decoder) {
+            self.keyStringValue = keyStringValue
+            self.value = value
+            self.decoder = decoder
+        }
+    }
+    
+    private let key: String
+    let value: Value
+    let codingPath: [CodingKey]
+    var userInfo: [CodingUserInfoKey : Any]
+    
+    init(key: String, value: Value, decoder: Decoder) {
+        self.key = key
+        self.value = value
+        self.codingPath = decoder.codingPath
+        self.userInfo = decoder.userInfo
+    }
+    
+    func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key : CodingKey {
+        let rootContainer = Container<Key>(keyStringValue: key, value: value, decoder: self)
+        return KeyedDecodingContainer(rootContainer)
+    }
+    
+    func unkeyedContainer() throws -> UnkeyedDecodingContainer {
+        fatalError("IdentityAttributeDecoder an just be used with keyed container")
+    }
+    
+    func singleValueContainer() throws -> SingleValueDecodingContainer {
+        fatalError("IdentityAttributeDecoder an just be used with keyed container")
+    }
 }
 
-extension IdentifierContainer {
+extension IdentityAttributeDecoder.Container: KeyedDecodingContainerProtocol {
+    var allKeys: [Key] { Key(stringValue: keyStringValue).map { [$0] } ?? [] }
+    var codingPath: [CodingKey] { decoder.codingPath }
     
-    var allKeys: [CoreDataCodingKeyStandarizer<ManagedObject.CodingKeys>] { [codingKey.standarized] }
+    func contains(_ key: Key) -> Bool {
+        return key.stringValue == self.keyStringValue
+    }
     
-    var codingPath: [CodingKey] { rootCodingPath + [codingKey.standarized] }
+    func decodeNil(forKey key: Key) throws -> Bool {
+        switch value {
+        case let .raw(raw):
+            return raw == nil
+        case let .singleContainer(container):
+            return container.decodeNil()
+        }
+    }
     
-    func contains(_ key: CoreDataCodingKeyStandarizer<ManagedObject.CodingKeys>) -> Bool {
-        return key.stringValue == codingKey.standarized.stringValue
+    func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T : Decodable {
+        let context = DecodingError.Context(codingPath: codingPath + [key], debugDescription: "")
+        switch value {
+        case let .raw(raw):
+            guard let _ = raw else {
+                throw DecodingError.valueNotFound(T.self, context)
+            }
+            guard let casted = raw as? T else {
+                throw DecodingError.typeMismatch(T.self, context)
+            }
+            return casted
+            
+        case let .singleContainer(container):
+            return try container.decode(T.self)
+        }
     }
     
     func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: Key) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
+        
         let context = DecodingError.Context(codingPath: codingPath, debugDescription: "")
         if contains(key) {
             throw DecodingError.typeMismatch(Dictionary<AnyHashable, Any>.self, context)
@@ -152,50 +219,11 @@ extension IdentifierContainer {
     func superDecoder(forKey key: Key) throws -> Decoder {
         decoder
     }
-
-    func standarized() -> KeyedDecodingContainer<Key> {
-        return KeyedDecodingContainer(self)
-    }
 }
 
-/// Creates a `KeyedDecodingContainer` using a `SingleValueDecodingContainer`
-private struct SingleValueKeyedDecodingContainer<ManagedObject: CoreDataDecodable>: IdentifierContainer {
-    typealias Key = ManagedObject.CodingKeys.Standard
-    
-    let singleValueContainer: SingleValueDecodingContainer
-    let codingKey: ManagedObject.CodingKeys
-    let decoder: Decoder
-    
-    var rootCodingPath: [CodingKey] { singleValueContainer.codingPath }
-        
-    func decodeNil(forKey key: CoreDataCodingKeyStandarizer<ManagedObject.CodingKeys>) throws -> Bool {
-        singleValueContainer.decodeNil()
-    }
-    
-    func decode<T>(_ type: T.Type, forKey key: CoreDataCodingKeyStandarizer<ManagedObject.CodingKeys>) throws -> T where T : Decodable {
-        try singleValueContainer.decode(T.self)
-    }
-}
-
-/// Creates a `KeyedDecodingContainer` using any value.
-private struct AnyValueKeyedDecodingContainer<ManagedObject: CoreDataDecodable>: IdentifierContainer {
-    typealias Key = ManagedObject.CodingKeys.Standard
-    
-    let value: Any
-    let codingKey: ManagedObject.CodingKeys
-    let rootCodingPath: [CodingKey]
-    let decoder: Decoder
-
-    func decodeNil(forKey key: CoreDataCodingKeyStandarizer<ManagedObject.CodingKeys>) throws -> Bool {
-        return false
-    }
-    
-    func decode<T>(_ type: T.Type, forKey key: CoreDataCodingKeyStandarizer<ManagedObject.CodingKeys>) throws -> T where T : Decodable {
-        if let value = value as? T {
-            return value
-        } else {
-            let context = DecodingError.Context(codingPath: codingPath, debugDescription: "")
-            throw DecodingError.typeMismatch(T.self, context)
-        }
+private struct Skip: Codable {}
+extension UnkeyedDecodingContainer {
+    mutating func skip() throws {
+        _ = try decode(Skip.self)
     }
 }

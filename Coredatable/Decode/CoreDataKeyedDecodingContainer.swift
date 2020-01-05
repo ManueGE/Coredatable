@@ -8,23 +8,29 @@
 
 import Foundation
 
+public protocol AnyCoreDataKeyedDecodingContainer {}
+
+internal extension AnyCoreDataKeyedDecodingContainer {
+    func casted<ManagedObject: CoreDataDecodable>() throws -> CoreDataKeyedDecodingContainer<ManagedObject> {
+        guard let result = self as? CoreDataKeyedDecodingContainer<ManagedObject> else {
+            throw CoreDataDecodingError.invalidContainer(ManagedObject.self, container: self)
+        }
+        return result
+    }
+    
+}
 /// A replacement for `KeyedDecodingContainer` where the Keys are `AnyCoreDataKey`.
 /// It is used in the `initialize` methods of a `CoreDataDecodable`.
 /// It can be used in the same way as the regular `KeyedDecodingContainer`
-public struct CoreDataKeyedDecodingContainer<ManagedObject: CoreDataDecodable> {
+public struct CoreDataKeyedDecodingContainer<ManagedObject: CoreDataDecodable>: AnyCoreDataKeyedDecodingContainer {
     public typealias Key = ManagedObject.CodingKeys
     private let container: KeyedDecodingContainer<Key.Standard>
     private var manualValues: [String: Any?] = [:]
     
     public var codingPath: [Key] { container.codingPath.compactMap { Key(stringValue: $0.stringValue) } }
     public var allKeys: [Key] { container.allKeys.compactMap { Key(stringValue: $0.stringValue) } }
-    
-    static func from(_ container: KeyedDecodingContainer<Key.Standard>) throws -> Self {
-        let container = Self(container: container)
-        return try ManagedObject.prepare(container)
-    }
-    
-    private init(container: KeyedDecodingContainer<Key.Standard>) {
+        
+    init(container: KeyedDecodingContainer<Key.Standard>) throws {
         self.container = container
     }
     
@@ -102,5 +108,12 @@ public struct CoreDataKeyedDecodingContainer<ManagedObject: CoreDataDecodable> {
             }
         }
         set { manualValues[key.stringValue] = newValue }
+    }
+}
+ 
+public extension Decoder {
+    func container<ManagedObject: CoreDataDecodable>(for _: ManagedObject.Type) throws -> CoreDataKeyedDecodingContainer<ManagedObject> {
+        let container = try self.container(keyedBy: ManagedObject.CodingKeys.Standard.self)
+        return try .init(container: container)
     }
 }

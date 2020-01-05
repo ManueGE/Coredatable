@@ -24,10 +24,10 @@ public protocol CoreDataDecodable: AnyCoreDataDecodable {
     static var identityAttribute: IdentityAttribute { get }
     
     /// Allows modifying the container before start the decoding process
-    static func prepare(_ container: CoreDataKeyedDecodingContainer<Self>) throws -> CoreDataKeyedDecodingContainer<Self>
+    static func container(for decoder: Decoder) throws -> AnyCoreDataKeyedDecodingContainer
     
     /// Override this method to perform custom decoding.
-    func initialize(from container: CoreDataKeyedDecodingContainer<Self>) throws
+    func initialize(from decoder: Decoder) throws
 }
 
 public extension CoreDataDecodable {
@@ -43,39 +43,40 @@ public extension CoreDataDecodable {
         return try coreDataDecoder.decodeArray()
     }
     
-    static func prepare(_ container: CoreDataKeyedDecodingContainer<Self>) throws -> CoreDataKeyedDecodingContainer<Self> {
-        return container
+    static func container(for decoder: Decoder) throws -> AnyCoreDataKeyedDecodingContainer {
+        return try decoder.container(for: Self.self)
     }
     
-    func initialize(from container: CoreDataKeyedDecodingContainer<Self>) throws {
-        try defaultInitialization(from: container)
+    internal static func preparedContainer(for decoder: Decoder) throws -> CoreDataKeyedDecodingContainer<Self> {
+        return try container(for: decoder).casted()
     }
-        
-    internal func initialize(from container: KeyedDecodingContainer<CodingKeys.Standard>) throws {
-        try initialize(from: .from(container))
+    
+    func initialize(from decoder: Decoder) throws {
+        try defaultInitialization(from: decoder)
     }
     
     /// Runs the default initialization process taking all the Keys in account
-    func defaultInitialization(from container: CoreDataKeyedDecodingContainer<Self>) throws {
-        try defaultInitialization(from: container) { _ in true }
+    func defaultInitialization(from decoder: Decoder) throws {
+        try defaultInitialization(from: decoder) { _ in true }
     }
     
     /// Runs the default initialization using only the specified keys
-    func defaultInitialization(from container: CoreDataKeyedDecodingContainer<Self>, with keys: [CodingKeys]) throws {
-        try defaultInitialization(from: container) { key in
+    func defaultInitialization(from decoder: Decoder, with keys: [CodingKeys]) throws {
+        try defaultInitialization(from: decoder) { key in
             keys.contains { $0.stringValue == key.stringValue }
         }
     }
     
     /// Runs the default initialization skipping the given keys
-    func defaultInitialization(from container: CoreDataKeyedDecodingContainer<Self>, skipping skippedKeys: [CodingKeys]) throws {
-        try defaultInitialization(from: container) { key in
+    func defaultInitialization(from decoder: Decoder, skipping skippedKeys: [CodingKeys]) throws {
+        try defaultInitialization(from: decoder) { key in
             !skippedKeys.contains { $0.stringValue == key.stringValue }
         }
     }
     
     /// Runs the default initialization including only the keys which return `true`in the given block
-    func defaultInitialization(from container: CoreDataKeyedDecodingContainer<Self>, including where: @escaping (CodingKeys) -> Bool) throws {
+    func defaultInitialization(from decoder: Decoder, including where: @escaping (CodingKeys) -> Bool) throws {
+        let container = try Self.preparedContainer(for: decoder)
         try applyValues(from: container, policy: `where`)
     }
 }
@@ -92,4 +93,5 @@ public enum CoreDataDecodingError: Error {
     case missingContext(decoder: Decoder)
     case missingOrInvalidIdentityAttribute(class: AnyClass, identityAttributes: [String], receivedKeys: [String])
     case propertyNotDecodable(class: NSManagedObject.Type, property: NSPropertyDescription)
+    case invalidContainer(Decodable.Type, container: AnyCoreDataKeyedDecodingContainer)
 }

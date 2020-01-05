@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "676C0CA9-4F7E-4FF2-9144-0B2275CC33A3"
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8B26193D-1AF1-42D5-8D9C-85B68687FD64"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Coredatable/Decode/IdentityAttribute/SingleIdentityAttributeStrategy.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "decodeArray(context:decoder:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "8B26193D-1AF1-42D5-8D9C-85B68687FD64 - 4de0bdd5d0d6df6a"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Coredatable.SingleIdentityAttributeStrategy.decodeArray&lt;A where A: Coredatable.CoreDataDecodable&gt;(context: __C.NSManagedObjectContext, decoder: Swift.Decoder) throws -&gt; Swift.Array&lt;A&gt;"
+                  moduleName = "Coredatable"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/manuel/Documents/Dev/Tools/Coredatable/Coredatable/Coredatable/Decode/IdentityAttribute/SingleIdentityAttributeStrategy.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "47"
+                  endingLineNumber = "47"
+                  offsetFromSymbolStart = "2008">
+               </Location>
+               <Location
+                  uuid = "8B26193D-1AF1-42D5-8D9C-85B68687FD64 - 6a4392fbe8dfc78d"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.AnyHashable) -&gt; Any in Coredatable.SingleIdentityAttributeStrategy.decodeArray&lt;A where A: Coredatable.CoreDataDecodable&gt;(context: __C.NSManagedObjectContext, decoder: Swift.Decoder) throws -&gt; Swift.Array&lt;A&gt;"
+                  moduleName = "Coredatable"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/manuel/Documents/Dev/Tools/Coredatable/Coredatable/Coredatable/Decode/IdentityAttribute/SingleIdentityAttributeStrategy.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "47"
+                  endingLineNumber = "47"
+                  offsetFromSymbolStart = "20">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "77AE3F4B-548D-43FA-8962-001FA6A3B3D4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Coredatable/Decode/IdentityAttribute/SingleIdentityAttributeStrategy.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
+            landmarkName = "findIdentifier(for:in:context:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "77AE3F4B-548D-43FA-8962-001FA6A3B3D4 - 1d6946283ee6a6b0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Coredatable.SingleIdentityAttributeStrategy.(findIdentifier in _7D7ED3F58071B4CDC49AAF65608E0E78)&lt;A where A: Coredatable.CoreDataDecodable&gt;(for: A.Type, in: Coredatable.CoreDataKeyedDecodingContainer&lt;A&gt;, context: __C.NSManagedObjectContext) throws -&gt; Swift.AnyHashable"
+                  moduleName = "Coredatable"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/manuel/Documents/Dev/Tools/Coredatable/Coredatable/Coredatable/Decode/IdentityAttribute/SingleIdentityAttributeStrategy.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "92"
+                  endingLineNumber = "92"
+                  offsetFromSymbolStart = "1380">
+               </Location>
+               <Location
+                  uuid = "77AE3F4B-548D-43FA-8962-001FA6A3B3D4 - 90b09afa43a83dc4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (A.CodingKeys) -&gt; Swift.String in Coredatable.SingleIdentityAttributeStrategy.(findIdentifier in _7D7ED3F58071B4CDC49AAF65608E0E78)&lt;A where A: Coredatable.CoreDataDecodable&gt;(for: A.Type, in: Coredatable.CoreDataKeyedDecodingContainer&lt;A&gt;, context: __C.NSManagedObjectContext) throws -&gt; Swift.AnyHashable"
+                  moduleName = "Coredatable"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/manuel/Documents/Dev/Tools/Coredatable/Coredatable/Coredatable/Decode/IdentityAttribute/SingleIdentityAttributeStrategy.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "92"
+                  endingLineNumber = "92"
+                  offsetFromSymbolStart = "111">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1A8BB317-44BD-405A-9514-9FDB4FD78BF8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Coredatable/Decode/IdentityAttribute/SingleIdentityAttributeStrategy.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "94"
+            endingLineNumber = "94"
+            landmarkName = "findIdentifier(for:in:context:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "16532C38-4A48-4B04-AFF5-CB965A39CE9F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Coredatable/Decode/IdentityAttribute/SingleIdentityAttributeStrategy.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "98"
+            endingLineNumber = "98"
+            landmarkName = "existingObjects(context:ids:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "059C66E6-3824-4150-8AA7-C8AD2249CA78"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Coredatable/Decode/NSManagedObject+Decodable.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "13"
+            endingLineNumber = "13"
+            landmarkName = "applyValues(from:policy:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "059C66E6-3824-4150-8AA7-C8AD2249CA78 - 12dfee74bd39e99a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(extension in Coredatable):Coredatable.CoreDataDecodable.applyValues(from: Coredatable.CoreDataKeyedDecodingContainer&lt;A&gt;, policy: (A.CodingKeys) -&gt; Swift.Bool) throws -&gt; ()"
+                  moduleName = "Coredatable"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/manuel/Documents/Dev/Tools/Coredatable/Coredatable/Coredatable/Decode/NSManagedObject+Decodable.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "13"
+                  endingLineNumber = "13"
+                  offsetFromSymbolStart = "176">
+               </Location>
+               <Location
+                  uuid = "059C66E6-3824-4150-8AA7-C8AD2249CA78 - 352aefa3e5b7ac2d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.NSPropertyDescription) throws -&gt; () in (extension in Coredatable):Coredatable.CoreDataDecodable.applyValues(from: Coredatable.CoreDataKeyedDecodingContainer&lt;A&gt;, policy: (A.CodingKeys) -&gt; Swift.Bool) throws -&gt; ()"
+                  moduleName = "Coredatable"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/manuel/Documents/Dev/Tools/Coredatable/Coredatable/Coredatable/Decode/NSManagedObject+Decodable.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "13"
+                  endingLineNumber = "13"
+                  offsetFromSymbolStart = "315">
+               </Location>
+               <Location
+                  uuid = "059C66E6-3824-4150-8AA7-C8AD2249CA78 - 352aefa3e5b7ac2d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.NSPropertyDescription) throws -&gt; () in (extension in Coredatable):Coredatable.CoreDataDecodable.applyValues(from: Coredatable.CoreDataKeyedDecodingContainer&lt;A&gt;, policy: (A.CodingKeys) -&gt; Swift.Bool) throws -&gt; ()"
+                  moduleName = "Coredatable"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/manuel/Documents/Dev/Tools/Coredatable/Coredatable/Coredatable/Decode/NSManagedObject+Decodable.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "13"
+                  endingLineNumber = "13"
+                  offsetFromSymbolStart = "1758">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "40DA02B2-F61D-4041-B7A2-BA065711FEDB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Coredatable/Decode/IdentityAttribute/SingleIdentityAttributeStrategy.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "decodeArray(context:decoder:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "11A5FE75-50D2-45B6-BBA0-3BEC8583ADA4"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Coredatable/Decode/IdentityAttribute/SingleIdentityAttributeStrategy.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
+            landmarkName = "decodeArray(context:decoder:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
