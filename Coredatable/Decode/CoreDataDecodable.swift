@@ -24,7 +24,7 @@ public protocol CoreDataDecodable: AnyCoreDataDecodable {
     static var identityAttribute: IdentityAttribute { get }
     
     /// Allows modifying the container before start the decoding process
-    static func prepare(_ container: CoreDataKeyedDecodingContainer<Self>) throws -> CoreDataKeyedDecodingContainer<Self>
+    static func container(for decoder: Decoder) throws -> Any
     
     /// Override this method to perform custom decoding.
     func initialize(from decoder: Decoder) throws
@@ -43,8 +43,13 @@ public extension CoreDataDecodable {
         return try coreDataDecoder.decodeArray()
     }
     
-    static func prepare(_ container: CoreDataKeyedDecodingContainer<Self>) throws -> CoreDataKeyedDecodingContainer<Self> {
-        return container
+    static func container(for decoder: Decoder) throws -> Any {
+        return try decoder.container(for: Self.self)
+    }
+    
+    #warning("This is not the right way to go. Maybe make it a protocol and type erased")
+    internal static func preparedContainer(for decoder: Decoder) throws -> CoreDataKeyedDecodingContainer<Self> {
+        return try container(for: decoder) as! CoreDataKeyedDecodingContainer<Self>
     }
     
     func initialize(from decoder: Decoder) throws {
@@ -72,7 +77,7 @@ public extension CoreDataDecodable {
     
     /// Runs the default initialization including only the keys which return `true`in the given block
     func defaultInitialization(from decoder: Decoder, including where: @escaping (CodingKeys) -> Bool) throws {
-        let container = try decoder.container(for: Self.self)
+        let container = try Self.preparedContainer(for: decoder)
         try applyValues(from: container, policy: `where`)
     }
 }

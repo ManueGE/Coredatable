@@ -11,25 +11,27 @@ import Foundation
 internal struct SingleIdentityAttributeStrategy: IdentityAttributeStrategy {
     let propertyName: String
     
-    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: CoreDataKeyedDecodingContainer<ManagedObject>) throws -> ManagedObject? {
+    func existingObject<ManagedObject>(context: NSManagedObjectContext, decoder: Decoder) throws -> ManagedObject? where ManagedObject : CoreDataDecodable {
+        let container = try ManagedObject.preparedContainer(for: decoder)
         let identifier = try findIdentifier(for: ManagedObject.self, in: container, context: context)
         return try existingObjects(context: context, ids: [identifier]).first
     }
     
-    func decodeArray<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: UnkeyedDecodingContainer, decoder: Decoder) throws -> [ManagedObject] {
+    func decodeArray<ManagedObject>(context: NSManagedObjectContext, decoder: Decoder) throws -> [ManagedObject] where ManagedObject : CoreDataDecodable {
         var identifiers: [AnyHashable] = []
         var decodersById: [AnyHashable: Decoder] = [:]
         // find the id for any object in the container
+        let container = try decoder.unkeyedContainer()
         var idsContainer = container
         var decodersContainer = container
-        while !idsContainer.isAtEnd {
+        while !decodersContainer.isAtEnd {
             do {
-                #warning("Maybe core data container not needed. Check with default container")
-                let objectContainer = try idsContainer.nestedContainer(keyedBy: ManagedObject.CodingKeys.Standard.self)
-                let coreDataObjectContainer = try CoreDataKeyedDecodingContainer<ManagedObject>.from(objectContainer)
+                let objectDecoder = try decodersContainer.superDecoder()
+                let coreDataObjectContainer = try ManagedObject.preparedContainer(for: objectDecoder)
                 let identifier = try findIdentifier(for: ManagedObject.self, in: coreDataObjectContainer, context: context) as AnyHashable
                 identifiers.append(identifier)
-                decodersById[identifier] = try decodersContainer.superDecoder()
+                decodersById[identifier] = objectDecoder
+                try idsContainer.skip()
             } catch {
                 let identityAttribute = try self.identityAttribute(ManagedObject.self, context: context)
                 if let identifier = idsContainer.decode(identityAttribute) as? AnyHashable {
@@ -216,5 +218,12 @@ extension IdentityAttributeDecoder.Container: KeyedDecodingContainerProtocol {
     
     func superDecoder(forKey key: Key) throws -> Decoder {
         decoder
+    }
+}
+
+private struct Skip: Codable {}
+extension UnkeyedDecodingContainer {
+    mutating func skip() throws {
+        _ = try decode(Skip.self)
     }
 }

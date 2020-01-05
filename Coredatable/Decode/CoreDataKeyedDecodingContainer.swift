@@ -18,13 +18,8 @@ public struct CoreDataKeyedDecodingContainer<ManagedObject: CoreDataDecodable> {
     
     public var codingPath: [Key] { container.codingPath.compactMap { Key(stringValue: $0.stringValue) } }
     public var allKeys: [Key] { container.allKeys.compactMap { Key(stringValue: $0.stringValue) } }
-    
-    static func from(_ container: KeyedDecodingContainer<Key.Standard>) throws -> Self {
-        let container = Self(container: container)
-        return try ManagedObject.prepare(container)
-    }
-    
-    private init(container: KeyedDecodingContainer<Key.Standard>) {
+        
+    init(container: KeyedDecodingContainer<Key.Standard>) throws {
         self.container = container
     }
     
@@ -104,10 +99,10 @@ public struct CoreDataKeyedDecodingContainer<ManagedObject: CoreDataDecodable> {
         set { manualValues[key.stringValue] = newValue }
     }
 }
-
+ 
 public extension Decoder {
     func container<ManagedObject: CoreDataDecodable>(for _: ManagedObject.Type) throws -> CoreDataKeyedDecodingContainer<ManagedObject> {
         let container = try self.container(keyedBy: ManagedObject.CodingKeys.Standard.self)
-        return try .from(container)
+        return try .init(container: container)
     }
 }

@@ -101,8 +101,8 @@ final class Custom: NSManagedObject, CoreDataDecodable {
         integer = Int(string) ?? 0
     }
     
-    static func prepare(_ container: CoreDataKeyedDecodingContainer<Custom>) throws -> CoreDataKeyedDecodingContainer<Custom> {
-        var container = container
+    static func container(for decoder: Decoder) throws -> Any {
+        var container = try decoder.container(for: Custom.self)
         container[.id] = Int(try container.decode(String.self, forKey: .id)) ?? 0
         return container
     }
@@ -121,8 +121,8 @@ final class CustomDoubleId: NSManagedObject, CoreDataDecodable {
         
     static var identityAttribute: IdentityAttribute = #keyPath(CustomDoubleId.id)
     
-    static func prepare(_ container: CoreDataKeyedDecodingContainer<CustomDoubleId>) throws -> CoreDataKeyedDecodingContainer<CustomDoubleId> {
-        var container = container
+    static func container(for decoder: Decoder) throws -> Any {
+        var container = try decoder.container(for: CustomDoubleId.self)
         let first = try container.decode(String.self, forKey: .first)
         let last = try container.decode(String.self, forKey: .last)
         container[.id] = first + last
@@ -188,8 +188,7 @@ final class RelationshipCodable: NSManagedObject, Codable {
     }
 }
 
-#warning("make this final to test")
-final class Complete: NSManagedObject, CoreDataCodable {
+class Complete: NSManagedObject, CoreDataCodable {
     @NSManaged var int16: Int16
     @NSManaged var int32: Int32
     @NSManaged var decimal: NSDecimalNumber?

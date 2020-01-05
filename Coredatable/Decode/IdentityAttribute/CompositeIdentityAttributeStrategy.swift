@@ -10,23 +10,20 @@ import Foundation
 
 internal struct CompositeIdentityAttributeStrategy: IdentityAttributeStrategy {
     let propertyNames: [String]
-    func existingObject<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: CoreDataKeyedDecodingContainer<ManagedObject>) throws -> ManagedObject? {
-        
+    func existingObject<ManagedObject>(context: NSManagedObjectContext, decoder: Decoder) throws -> ManagedObject? where ManagedObject : CoreDataDecodable {
         let request = NSFetchRequest<ManagedObject>(entityName: ManagedObject.entity(inManagedObjectContext: context).name!)
+        let container = try ManagedObject.preparedContainer(for: decoder)
         request.predicate = try predicate(for: ManagedObject.self, in: container, context: context)
         request.fetchLimit = 1
         return try context.fetch(request).first
     }
     
-    func decodeArray<ManagedObject: CoreDataDecodable>(context: NSManagedObjectContext, container: UnkeyedDecodingContainer, decoder: Decoder) throws -> [ManagedObject] {
-        var container = container
-        var decodersContainer = container
+    func decodeArray<ManagedObject>(context: NSManagedObjectContext, decoder: Decoder) throws -> [ManagedObject] where ManagedObject : CoreDataDecodable {
+        var container = try decoder.unkeyedContainer()
         var objects: [ManagedObject] = []
         while !container.isAtEnd {
-            #warning("Maybe core data container not needed. Check with default container")
-            let objectContainer = try container.nestedContainer(keyedBy: ManagedObject.CodingKeys.Standard.self)
-            let object = (try? existingObject(context: context, standardContainer: objectContainer)) ?? ManagedObject(context: context)
-            try object.initialize(from: decodersContainer.superDecoder())
+            let object = (try? existingObject(context: context, decoder: decoder)) ?? ManagedObject(context: context)
+            try object.initialize(from: container.superDecoder())
             objects.append(object)
         }
         return objects

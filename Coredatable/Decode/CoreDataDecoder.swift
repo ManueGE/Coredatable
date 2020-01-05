@@ -22,9 +22,8 @@ internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable> {
     
     func decode() throws -> ManagedObject {
         do {
-            let container = try decoder.container(keyedBy: ManagedObject.CodingKeys.Standard.self)
             return try context.tryPerformAndWait {
-                let object = try ManagedObject.identityAttribute.strategy.existingObject(context: context, standardContainer: container) ?? ManagedObject(context: context)
+                let object = try ManagedObject.identityAttribute.strategy.existingObject(context: context, decoder: decoder) ?? ManagedObject(context: context)
                 try object.initialize(from: decoder)
                 return object
             }
@@ -34,9 +33,8 @@ internal struct CoreDataDecoder<ManagedObject: CoreDataDecodable> {
     }
     
     func decodeArray() throws -> [ManagedObject] {
-        let container = try decoder.unkeyedContainer()
         return try context.tryPerformAndWait {
-            return try ManagedObject.identityAttribute.strategy.decodeArray(context: context, container: container, decoder: decoder)
+            return try ManagedObject.identityAttribute.strategy.decodeArray(context: context, decoder: decoder)
         }
     }
     
