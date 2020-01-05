@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "Coredatable"
-  spec.version      = "0.0.1"
+  spec.version      = "0.1.0"
   spec.summary      = "Easy Codable conformance in NSManagedObject subclasses."
   spec.description  = <<-DESC
   Adding `Decodable` and `Encodable` conformance to `NSManagedObject` subclasses is usually very tricky. 

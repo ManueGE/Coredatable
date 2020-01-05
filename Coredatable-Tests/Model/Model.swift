@@ -101,7 +101,7 @@ final class Custom: NSManagedObject, CoreDataDecodable {
         integer = Int(string) ?? 0
     }
     
-    static func container(for decoder: Decoder) throws -> Any {
+    static func container(for decoder: Decoder) throws -> AnyCoreDataKeyedDecodingContainer {
         var container = try decoder.container(for: Custom.self)
         container[.id] = Int(try container.decode(String.self, forKey: .id)) ?? 0
         return container
@@ -121,7 +121,7 @@ final class CustomDoubleId: NSManagedObject, CoreDataDecodable {
         
     static var identityAttribute: IdentityAttribute = #keyPath(CustomDoubleId.id)
     
-    static func container(for decoder: Decoder) throws -> Any {
+    static func container(for decoder: Decoder) throws -> AnyCoreDataKeyedDecodingContainer {
         var container = try decoder.container(for: CustomDoubleId.self)
         let first = try container.decode(String.self, forKey: .first)
         let last = try container.decode(String.self, forKey: .last)

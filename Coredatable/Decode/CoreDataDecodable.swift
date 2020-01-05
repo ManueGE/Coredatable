@@ -24,7 +24,7 @@ public protocol CoreDataDecodable: AnyCoreDataDecodable {
     static var identityAttribute: IdentityAttribute { get }
     
     /// Allows modifying the container before start the decoding process
-    static func container(for decoder: Decoder) throws -> Any
+    static func container(for decoder: Decoder) throws -> AnyCoreDataKeyedDecodingContainer
     
     /// Override this method to perform custom decoding.
     func initialize(from decoder: Decoder) throws
@@ -43,13 +43,12 @@ public extension CoreDataDecodable {
         return try coreDataDecoder.decodeArray()
     }
     
-    static func container(for decoder: Decoder) throws -> Any {
+    static func container(for decoder: Decoder) throws -> AnyCoreDataKeyedDecodingContainer {
         return try decoder.container(for: Self.self)
     }
     
-    #warning("This is not the right way to go. Maybe make it a protocol and type erased")
     internal static func preparedContainer(for decoder: Decoder) throws -> CoreDataKeyedDecodingContainer<Self> {
-        return try container(for: decoder) as! CoreDataKeyedDecodingContainer<Self>
+        return try container(for: decoder).casted()
     }
     
     func initialize(from decoder: Decoder) throws {
@@ -94,4 +93,5 @@ public enum CoreDataDecodingError: Error {
     case missingContext(decoder: Decoder)
     case missingOrInvalidIdentityAttribute(class: AnyClass, identityAttributes: [String], receivedKeys: [String])
     case propertyNotDecodable(class: NSManagedObject.Type, property: NSPropertyDescription)
+    case invalidContainer(Decodable.Type, container: AnyCoreDataKeyedDecodingContainer)
 }

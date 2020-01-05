@@ -2,6 +2,8 @@
 
 Easy `Codable` conformance in `NSManagedObject` subclasses. 
 
+> This library is in beta phase. Until version `1.0.0` is released, breaking changes might be added.
+
 ## Installation
 ### CocoaPods
 Add the following to your `Podfile`:
@@ -23,7 +25,7 @@ final class Person: NSManagedObject, CoreDataCodable, UsingDefaultCodingKeys {
     @NSManaged var attributes: NSSet
 }
 
-final class PersonAttribute: NSManagedObject, CoreDataCodable {    
+class PersonAttribute: NSManagedObject, CoreDataCodable {    
     @NSManaged private(set) var id: Int
     @NSManaged private(set) var name: String
     
@@ -140,7 +142,7 @@ enum CodingKeys: String, CoreDataCodingKey {
 
 ## Custom Decoding
 
-In the case that you need custom serialization, you'll need to do something slightly different from what you'd do in regular `Codable`. Instead of overriding `init(from decoder: Decoder)`  you should override `func initialize(from container: CoreDataKeyedDecodingContainer<Self>) throws`. 
+In the case that you need custom serialization, you'll need to do something slightly different from what you'd do in regular `Codable`. Instead of overriding `init(from decoder: Decoder)`  you should override `func initialize(from decoder: Decoder) throws`. 
 
 Let's see an example:
 
@@ -158,15 +160,18 @@ final class Custom: NSManagedObject, CoreDataDecodable {
     static var identityAttribute: IdentityAttribute = #keyPath(Custom.id)
     
     // 1
-    func initialize(from container: CoreDataKeyedDecodingContainer<Custom>) throws {
+    func initialize(from decoder: Decoder) throws {
         // 2
-        try defaultInitialization(from: container, with: [.id])
+        try defaultInitialization(from: decoder, with: [.id])
         
         // 3
+        let container = try decoder.container(for: Custom.self)
+        
+        // 4
         let first = try container.decode(String.self, forKey: .first)
         let second = try container.decode(String.self, forKey: .second)
         
-        // 4
+        // 5
         compound = [first, second].joined(separator: " ")
     }
 }
@@ -175,25 +180,28 @@ final class Custom: NSManagedObject, CoreDataDecodable {
 here, we have a propery  `compound` which is built joining two strings which come under different keys. What we do is:
 - `// 1`: Overreding  ` func initialize(from container: CoreDataKeyedDecodingContainer<Custom>)`
 - `// 2`: Call the default serialization only taking in account the `id` key. (Note: there are a few more default implementations where you can specify what keys are included or skipped)
-- `// 3`: Extract the `first` and `second` values from the container. 
-- `// 4`: Adding the joined string to the `compound` property.
+- `// 3`: Create a new container passing the own type as parameter. Passing another type will lead to errors.
+- `// 4: Extract the `first` and `second` values from the container. 
+- `// 5`: Adding the joined string to the `compound` property.
 
 If you need to perform some changes in the `identityAttributes` before the json is serialized, you need to use a different method. Let's supose that our json sends `id` as a `String` but we have it as an integer. We can modifiy the value using: 
 
 ```swift
 // 1
-static func prepare(_ container: CoreDataKeyedDecodingContainer<Custom>) throws -> CoreDataKeyedDecodingContainer<Custom> {
-    // 2
-    var container = container
-    // 3
-    container[.id] = Int(try container.decode(String.self, forKey: .id)) ?? 0
-    // 4
-    return container
+static func container(for decoder: Decoder) throws -> AnyCoreDataKeyedDecodingContainer {
+   // 2
+   var container = try decoder.container(for: CustomDoubleId.self)
+   
+   // 3
+   container[.id] = Int(try container.decode(String.self, forKey: .id)) ?? 0
+   
+   // 4
+   return container
 }
 ```
 
-- `// 1`: Override  `static func prepare(_ container: CoreDataKeyedDecodingContainer<Custom>) throws -> CoreDataKeyedDecodingContainer<Custom>`
-- `// 2`: Make `container` mutable. 
+- `// 1`: Override  `static func container(for decoder: Decoder) throws -> AnyCoreDataKeyedDecodingContainer`
+- `// 2`: Create a new mutable container passing the own type as parameter. Passing another type will lead to errors.
 - `// 3`: Convert the value to the needed one and assing it to the `.id` key
 - `// 4`: return the modified container
 
